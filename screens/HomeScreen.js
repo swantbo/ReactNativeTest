@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import { Card, ListItem, PricingCard } from 'react-native-elements'
-import moment from 'moment';
+import * as firebase from 'firebase';
 import { ScrollView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import * as firebase from 'firebase';
+
 import { formatPhoneNumber } from '../utils/DataFormatting';
 
 import { IconButton } from '../components';

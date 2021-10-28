@@ -1,14 +1,24 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 import HomeScreen from '../screens/HomeScreen';
+import AppointmentScreen from '../screens/AppointmentScreen';
+import AboutScreen from '../screens/AboutScreen';
+import SettingsScreen from '../screens/SettingsScreen';
 
-const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator()
 
 export default function HomeStack() {
   return (
-    <Stack.Navigator headerMode='none'>
-      <Stack.Screen name='Home' component={HomeScreen} />
-    </Stack.Navigator>
+    <Tab.Navigator screenOptions={{
+      headerStyle:{backgroundColor: '#000000'},
+      headerTintColor: 'white',
+      headerTitleAlign: 'center'
+  }}>
+      <Tab.Screen name='Home' component={HomeScreen} />
+      <Tab.Screen name='Appointment' component={AppointmentScreen} />
+      <Tab.Screen name='About' component={AboutScreen} />
+      <Tab.Screen name='Settings' component={SettingsScreen} />
+  </Tab.Navigator>
   );
 }

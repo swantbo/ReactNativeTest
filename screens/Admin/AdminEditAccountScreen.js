@@ -10,14 +10,21 @@ const AdminEditAccountScreen = ({ navigation }) => {
     const [userInfo, setUserInfo] = useState([]);
 
     async function getUsers() {
+        let data = []
         const snapshot = await firebase.firestore().collection('users').get()
-        const data = snapshot.docs.map(doc => doc.data());
+        snapshot.docs.map(doc => 
+            {let tempData = doc.data() ;
+                let id = doc.id;
+                data.push({ id, ...tempData })}
+            );
+            console.log('data', data)
         setUserInfo(data)
+        console.log('userInfo', userInfo)
     }
 
     const deleteUser = (user_id) => {
-        firebase.firestore().collection('Test').doc(user_id).delete.catch((e) => {
-        alert('Unable to sign out try again.')
+        firebase.firestore().collection('users').doc(user_id).delete.catch((e) => {
+        alert('Unable to delete user try again')
     })}
 
     useEffect(() => {
@@ -29,18 +36,18 @@ const AdminEditAccountScreen = ({ navigation }) => {
             <ScrollView>
                 { userInfo &&
                     userInfo.map((onekey, i) => (
-                        <><ListItem bottomDivider key={i} onPress={() => Alert.alert('Delete', `Are you sure you want to delete ${"\n"}Account Name: ${onekey.name ? onekey.name : 'N/A'} ${"\n"}Account Id: ${onekey.user_id ? onekey.user_id : 'N/A'}`, 
+                        <><ListItem bottomDivider key={i} onPress={() => Alert.alert('Delete', `Are you sure you want to delete ${"\n"}Account Name: ${onekey.name ? onekey.name : 'N/A'} ${"\n"}Account Id: ${onekey.id ? onekey.id : 'N/A'}`, 
                         [
                             {
                               text: "Cancel"
                             },
-                            { text: "Delete User", onPress: () => (deleteUser(onekey.user_id)) }
+                            { text: "Delete User", onPress: () => (deleteUser(onekey.id)) }
                           ]) }>
                             <ListItem.Content>
                                     <ListItem.Title style={{ fontWeight: 'bold', textAlign: 'center', alignSelf: 'center', paddingBottom: 10}} key={i}>{onekey.name} </ListItem.Title>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View style={{flex: 1, alignItems: 'flex-start' }}>
-                                        <ListItem.Subtitle>{onekey.phone ? formatPhoneNumber(onekey.phone) : 'N/A'}</ListItem.Subtitle>
+                                        <ListItem.Subtitle>{formatPhoneNumber(onekey.phone) ? formatPhoneNumber(onekey.phone) : onekey.phone}</ListItem.Subtitle>
                                     </View>
                                     <View style={{flex: 1, alignItems: 'flex-end'}}>
                                         <ListItem.Subtitle>{onekey.referral ? 'Referral: ' + onekey.referral : 'No Referral'} </ListItem.Subtitle>
@@ -48,12 +55,12 @@ const AdminEditAccountScreen = ({ navigation }) => {
                                 </View>
                                     <View style={{flex: 1, flexDirection: 'row'}}>
                                         <View style={{flex: 1, alignItems: 'flex-start' }}>
-                                            <ListItem.Subtitle>UserId: {onekey.user_id ? onekey.user_id : 'N/A'}</ListItem.Subtitle>
+                                            <ListItem.Subtitle>UserId: {onekey.id ? onekey.id : 'N/A'}</ListItem.Subtitle>
                                         </View>
                                         <View style={{flex: 1, alignItems: 'flex-end'}}>
                                             <Button title={`Goat Points: ${onekey.points}`} onPress={() => navigation.navigate('Points', {
                                                 name: onekey.name,
-                                                userId: onekey.user_id,
+                                                userId: onekey.id,
                                                 goatPoints: onekey.points,
                                             })}/>
                                         </View>

@@ -21,7 +21,7 @@ const AdminAddPointsScreen = ({ route }) => {
         const newPoints = {
             points: pointsTotal.toString()
         }
-        await firebase.firestore().collection('Test').doc(userId).set( newPoints, {merge: true}).then(() => {
+        await firebase.firestore().collection('users').doc(userId).set( newPoints, {merge: true}).then(() => {
             Alert.alert('Points Added',`${name}, now has ${pointsTotal} Goat Points`,
             [
                 {

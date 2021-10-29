@@ -4,6 +4,7 @@ import { Card, ListItem, PricingCard } from 'react-native-elements'
 import * as firebase from 'firebase';
 import { ScrollView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
+import moment from 'moment';
 
 import { formatPhoneNumber } from '../../utils/DataFormatting';
 
@@ -19,13 +20,38 @@ export default function HomeScreen() {
   const [barberData, setBarberData] = useState({'location': '', 'price': '', 'phone': ''})
   const [userAppointments, setUserAppointments] = useState({})
 
-  const handleSignOut = async () => {
-    try {
-      await auth.signOut();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  function subtractDiscount(goatPoints) {
+    const discount = Number(barberData.price.replace(/[$.]+/g, '')) - Number(goatPoints)
+    return (discount / 100).toFixed(2)
+ }
+ 
+ async function deleteAppointment(date, time) {
+	if (date > moment().format('YYYY-MM-DD')) {
+		await firebase.firestore()
+			.collection('users')
+			.doc(user.uid)
+			.collection('Haircuts').doc(moment(date).format('YYYY-MM-DD')).delete().then(() => {
+				Alert.alert('Success', 'Appointment Deleted')
+				}).catch((e) => {
+					Alert.alert('Error', `Unable to delete appointment. Try again. ${e}`)
+				})
+		await firebase.firestore()
+			.collection('Calendar')
+			.doc(moment(date).format('MMM YY'))
+			.collection(moment(date).format('YYYY-MM-DD')).doc(time).delete().then(() => {
+				}).catch((e) => {
+					Alert.alert('Error', `Unable to delete appointment. Try again. ${e}`)
+				})
+		await firebase.firestore()
+			.collection('user')
+			.doc(user.uid)
+			.collection('Haircuts').doc(moment(date).format('YYYY-MM-DD')).delete().then(() => {
+				Alert.alert('Success', 'Appointment Deleted')
+				}).catch((e) => {
+					Alert.alert('Error', `Unable to delete appointment. Try again. ${e}`)
+				})
+	}
+ }
 
   useEffect(() => {
     async function getUserInfo(){
@@ -51,7 +77,7 @@ export default function HomeScreen() {
             let data = {}
             snapshot.forEach(doc => {
                 let newdata = {
-                    [doc.id]: doc.data().time
+                    [doc.id]: doc.data(),
                 }
                 data =  {...data, ...newdata}
             });
@@ -82,22 +108,35 @@ export default function HomeScreen() {
                         </ListItem.Content>
                     </ListItem>
                     {Object.entries(userAppointments).map((onekey, i) => (
-                        <ListItem bottomDivider key={i}>
+                        <ListItem bottomDivider key={i} onPress={() =>deleteAppointment(onekey[0], onekey[1].time)}>
                             <ListItem.Content>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View style={{flex: 2, alignItems: 'flex-start' }}>
-                                        <ListItem.Title>{onekey[0]}, {onekey[1].toString().toLowerCase()}</ListItem.Title>
+                                        <ListItem.Title>{onekey[0]}, {onekey[1].time.toString().toLowerCase()}</ListItem.Title>
+                                    </View>
+                                    { onekey[1].points ?
+                                      <>
+                                        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                          <ListItem.Title>{onekey[1].points != '' ? '$' + subtractDiscount(onekey[1].points) : ''}</ListItem.Title>
+                                        </View>
+                                      </>
+                                        :
+                                        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                          <ListItem.Title>{barberData.price != '' ? barberData.price : ''}</ListItem.Title>
+                                        </View>
+                                    }
+                                </View>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <View style={{flex: 1, alignItems: 'flex-start' }}>
+                                        <Text>{barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} </Text>
                                     </View>
                                     <View style={{flex: 1, alignItems: 'flex-end'}}>
-                                        <ListItem.Title >{barberData.price != '' ? barberData.price : '' }</ListItem.Title>
+                                        <Text>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </Text>
                                     </View>
                                 </View>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View style={{flex: 1, alignItems: 'flex-start' }}>
                                         <Text>{barberData.location != '' ? barberData.location : ''} </Text>
-                                    </View>
-                                    <View style={{flex: 1, alignItems: 'flex-end'}}>
-                                        <Text>{barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} </Text>
                                     </View>
                                 </View>
                             </ListItem.Content>

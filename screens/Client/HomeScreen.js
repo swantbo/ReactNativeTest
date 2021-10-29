@@ -5,11 +5,11 @@ import * as firebase from 'firebase';
 import { ScrollView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 
-import { formatPhoneNumber } from '../utils/DataFormatting';
+import { formatPhoneNumber } from '../../utils/DataFormatting';
 
-import { IconButton } from '../components';
-import Firebase from '../config/firebase';
-import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
+import { IconButton } from '../../components';
+import Firebase from '../../config/firebase';
+import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider';
 
 const auth = Firebase.auth();
 

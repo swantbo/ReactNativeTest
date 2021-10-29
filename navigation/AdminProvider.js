@@ -1,15 +1,14 @@
-import React, { useEffect, useState} from 'react';
+import React, { useEffect, useState, useContext} from 'react';
 import * as firebase from 'firebase';
+import { AuthenticatedUserContext } from './AuthenticatedUserProvider';
 
-import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
-
-export default function AdminProvider() { 
-    const [admin, setAdmin] = useState(false)
+export default async function AdminProvider() { 
     const { user } = useContext(AuthenticatedUserContext);
-
-    firebase.firestore().collection('users').doc(user.uid).get.then((userData) => {
-        let tempAdmin = userData.data().admin
-        setAdmin(tempAdmin)
+    let admin
+    return await firebase.firestore().collection('users').doc(user.uid).get.then((userData) => {
+        console.log('test admin', userData.data().admin)
+        return admin = userData.data().admin
+    }).catch((err) => {
+        return admin = false
     })
-    return (admin)
 }

@@ -2,11 +2,11 @@ import React, { useEffect, useState, useContext } from "react";
 import { View, StyleSheet, TextInput } from "react-native";
 import { ListItem, Button } from 'react-native-elements'
 import * as firebase from 'firebase';
-import { formatPhoneNumber } from "../utils/DataFormatting";
+import { formatPhoneNumber } from "../../utils/DataFormatting";
 
-import Firebase from '../config/firebase';
+import Firebase from '../../config/firebase';
 
-import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
+import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider';
 
 const auth = Firebase.auth();
 

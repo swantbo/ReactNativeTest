@@ -5,7 +5,7 @@ import CalendarStrip from 'react-native-calendar-strip';
 import { Card, CheckBox, ListItem } from 'react-native-elements';
 import * as firebase from 'firebase';
 
-import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
+import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider';
 
 const AppointmentScreen = () => {
     const { user } = useContext(AuthenticatedUserContext);
@@ -21,6 +21,7 @@ const AppointmentScreen = () => {
     const [userPhone, setUserPhone] = useState('')
     const [text, onChangeText] = useState('')
     const [userPoints, setUserPoints] = useState('')
+    const [newTimes, setNewTimes] = useState({})
     const [previousAppointment, setPreviousAppointment] = useState('')
     const [isLoading, setIsLoading] = useState(false)
 
@@ -40,7 +41,6 @@ const AppointmentScreen = () => {
         
             await firebase.firestore().collection('Barber').doc('Nate').get().then((doc) => {
             const databaseAvailibility = {...availibility, ...doc.data()}
-            console.log('databaseAvailibility', databaseAvailibility)
             setAvailibility({ ...availibility, ...databaseAvailibility})
         })
     }
@@ -100,6 +100,16 @@ const AppointmentScreen = () => {
                 data = { ...data, ...newdata}
             });
             setTimes({ ...newIntervals, ...data})
+            let newTime ={}
+            Object.entries(times).map((key, i) => {
+                let tempTime = {}
+                if(key[1] != 'Taken') { 
+                    tempTime = {[key[0]]: key[1]}
+                }
+                newTime = {...newTime, ...tempTime}
+            })
+            setNewTimes(newTime)
+            console.log('key', newTimes)
             setIsLoading(false)
         })
     }
@@ -115,7 +125,6 @@ const AppointmentScreen = () => {
                 'price': testData.data().price,
                 'location': testData.data().location
             };
-            console.log('barberData', barberData)
             setBarberInfo({ ...barberInfo, ...barberData})
             setSelectedTime(time)
         });
@@ -201,7 +210,7 @@ const AppointmentScreen = () => {
                 </ListItem>
                 {!isLoading && times && !timePicked ?
                     <ScrollView style={{ borderColor: 'black', borderRadius: 15 }}>
-                        {Object.entries(times).map((onekey, i) => (
+                        {Object.entries(newTimes).map((onekey, i) => (
                             <ListItem bottomDivider onPress={() => scheduleAppointment(onekey[0])}>
                                 <ListItem.Content>
                                     <ListItem.Title key={i}>{onekey[1] ? null : onekey[0]}</ListItem.Title>

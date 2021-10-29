@@ -7,13 +7,14 @@ import { AuthenticatedUserContext } from './AuthenticatedUserProvider';
 import AdminProvider from './AdminProvider';
 import AuthStack from './AuthStack';
 import HomeStack from './HomeStack';
+import AdminStack from './AdminStack';
 
+import * as firebase from 'firebase';
 const auth = Firebase.auth();
 
 export default function RootNavigator() {
   const { user, setUser } = useContext(AuthenticatedUserContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [admin, setAdmin] = useState(false);
 
   useEffect(() => {
     // onAuthStateChanged returns an unsubscriber
@@ -37,10 +38,10 @@ export default function RootNavigator() {
       </View>
     );
   }
-
+  const admin = false
   return (
     <NavigationContainer>
-      {user ? <HomeStack /> : <AuthStack />}
+      {user && admin == false ? <HomeStack /> : user && admin ? <AdminStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }

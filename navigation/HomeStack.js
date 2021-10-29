@@ -13,6 +13,12 @@ export default function HomeStack() {
   return (
     <Tab.Navigator screenOptions={{
       headerStyle:{backgroundColor: '#000000'},
+      tabBarStyle: {
+        backgroundColor: '#000000',
+        position:'absolute',
+        bottom:0,
+        elevation:0
+        },
       headerTintColor: 'white',
       headerTitleAlign: 'center'
   }}>

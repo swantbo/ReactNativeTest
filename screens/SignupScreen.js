@@ -5,13 +5,17 @@ import { StyleSheet, Text, View, Button as RNButton } from 'react-native';
 
 import { Button, InputField, ErrorMessage } from '../components';
 import Firebase from '../config/firebase';
+import * as firebase from 'firebase';
 
 const auth = Firebase.auth();
 
 export default function SignupScreen({ navigation }) {
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisibility, setPasswordVisibility] = useState(true);
+  const [referral, setReferral] = useState('');
   const [rightIcon, setRightIcon] = useState('eye');
   const [signupError, setSignupError] = useState('');
 
@@ -28,8 +32,18 @@ export default function SignupScreen({ navigation }) {
   const onHandleSignup = async () => {
     try {
       if (email !== '' && password !== '') {
-        await auth.createUserWithEmailAndPassword(email, password);
-      }
+        await auth.createUserWithEmailAndPassword(email, password).then(data => {  
+          const user = {
+              email: email,
+              password: password,
+              user_id: data.user.uid,
+              phone: phone,
+              name: name,
+              referral: referral,
+              points: '0'
+          };
+          firebase.firestore().collection('users').doc(data.user.uid).set(user);
+      })}
     } catch (error) {
       setSignupError(error.message);
     }
@@ -39,6 +53,61 @@ export default function SignupScreen({ navigation }) {
     <View style={styles.container}>
       <StatusBar style='dark-content' />
       <Text style={styles.title}>Create new account</Text>
+      <InputField
+        inputStyle={{
+          fontSize: 14
+        }}
+        containerStyle={{
+          backgroundColor: '#fff',
+          marginBottom: 20,
+          borderColor: 'black', 
+          borderWidth: 1
+        }}
+        leftIcon='account'
+        placeholder='Enter name'
+        autoCapitalize='none'
+        textContentType='name'
+        autoFocus={true}
+        value={name}
+        onChangeText={text => setName(text)}
+      />
+      <InputField
+        inputStyle={{
+          fontSize: 14
+        }}
+        containerStyle={{
+          backgroundColor: '#fff',
+          marginBottom: 20,
+          borderColor: 'black', 
+          borderWidth: 1
+        }}
+        leftIcon='phone'
+        placeholder='Enter phone number'
+        autoCapitalize='none'
+        keyboardType='phone'
+        textContentType='phoneNumber'
+        autoFocus={true}
+        value={phone}
+        onChangeText={text => setPhone(text)}
+      />
+      <InputField
+        inputStyle={{
+          fontSize: 14,
+        }}
+        containerStyle={{
+          backgroundColor: '#fff',
+          marginBottom: 20,
+          borderColor: 'black', 
+          borderWidth: 1
+        }}
+        leftIcon='account-supervisor'
+        placeholder='Enter name of Referral'
+        autoCapitalize='none'
+        autoCorrect={false}
+        textContentType='referral'
+        value={referral}
+        onChangeText={text => setReferral(text)}
+      />
       <InputField
         inputStyle={{
           fontSize: 14

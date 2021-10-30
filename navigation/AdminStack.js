@@ -72,8 +72,9 @@ export default function AdminStack() {
   return (
     <Tab.Navigator 
         screenOptions={{
+            headerStyle:{backgroundColor: 'rgb(18, 18, 18)'},
             tabBarStyle: {
-            backgroundColor: '#080808',
+            backgroundColor: 'rgb(18, 18, 18)',
             //backgroundColor: 'transparent',
             position:'absolute',
             bottom:0,

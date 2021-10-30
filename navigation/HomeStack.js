@@ -12,15 +12,17 @@ const Tab = createBottomTabNavigator()
 export default function HomeStack() {
   return (
     <Tab.Navigator screenOptions={{
-      headerStyle:{backgroundColor: '#000000'},
+      headerStyle:{backgroundColor: '#121212'},
       tabBarStyle: {
-        backgroundColor: '#000000',
+        backgroundColor: '#121212',
         position:'absolute',
         bottom:0,
-        elevation:0
+        elevation:0,
+        borderTopWidth: 0
         },
       headerTintColor: 'white',
-      headerTitleAlign: 'center'
+      headerTitleAlign: 'center',
+      headerShadowVisible: false
   }}>
       <Tab.Screen name='Home' component={HomeScreen} options={{ tabBarIcon: ({ color, size }) => (<Ionicons name="home" color={color} size={size} />)}}/>
       <Tab.Screen name='Appointment' component={AppointmentScreen} options={{ tabBarIcon: ({ color, size }) => (<Ionicons name="calendar" color={color} size={size} />)}}/>

@@ -35,8 +35,6 @@ export default function SignupScreen({ navigation }) {
         await auth.createUserWithEmailAndPassword(email, password).then(data => {  
           const user = {
               email: email,
-              password: password,
-              user_id: data.user.uid,
               phone: phone,
               name: name,
               referral: referral,

@@ -5,6 +5,10 @@ import { Card, ListItem, Button, Icon } from 'react-native-elements'
 import * as firebase from 'firebase';
 import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider'
 
+import Firebase from '../../config/firebase';
+
+const auth = Firebase.auth();
+
 const AdminSettingsScreen = ({navigation}) => {
     const { user } = useContext(AuthenticatedUserContext);
     const [isLoading, setIsLoading] = useState(false);
@@ -13,9 +17,14 @@ const AdminSettingsScreen = ({navigation}) => {
     const [newUserInfo, setNewUserInfo] = useState('');
     const [userDataType, setUserDataType] = useState('');
     
-    const signOut = () => {FirebaseUtil.signOut().catch((e) => {
-        alert('Unable to sign out try again.')
-    })}
+    const handleSignOut = async () => {
+        try {
+          await auth.signOut();
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
 
     const changeInfo = (onekey) => {
         setChangeUserInfo(onekey[1])
@@ -78,7 +87,7 @@ const AdminSettingsScreen = ({navigation}) => {
                         <ListItem.Title style={{ color: 'white' }}>View Clients</ListItem.Title>
                     </ListItem.Content>
                 </ListItem>
-                <ListItem containerStyle={{backgroundColor: '#101010'}} bottomDivider onPress={() => signOut()}>
+                <ListItem containerStyle={{backgroundColor: '#101010'}} bottomDivider onPress={() => handleSignOut()}>
                     <ListItem.Content>
                         <ListItem.Title style={{ fontWeight: 'bold', alignSelf: 'center', color: 'white' }}>Sign Out</ListItem.Title>
                     </ListItem.Content>

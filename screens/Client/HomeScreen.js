@@ -5,6 +5,7 @@ import * as firebase from 'firebase';
 import { ScrollView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import moment from 'moment';
+import Colors from '../../constants/Colors';
 
 import { formatPhoneNumber } from '../../utils/DataFormatting';
 
@@ -93,50 +94,50 @@ export default function HomeScreen() {
 
   return(
     <View style={styles.container}>
-        <Card containerStyle={{ flex: 1, margin: 0}}>
-            <Card.Title style={{ fontSize: 20}}> {userTestData.name} </Card.Title>
-            <Card.Title style={{ fontSize: 15}}>Goat Points</Card.Title>
-            <Card.Title style={{ fontSize: 15}}>{userTestData.points}</Card.Title>
+        <Card containerStyle={{ flex: 1, margin: 0, backgroundColor: '#000', borderColor: '#000'}}>
+            <Card.Title style={{ fontSize: 20, color: '#fff' }}> {userTestData.name} </Card.Title>
+            <Card.Title style={{ fontSize: 15, color: '#fff' }}>Goat Points</Card.Title>
+            <Card.Title style={{ fontSize: 15, color: '#fff' }}>{userTestData.points}</Card.Title>
         </Card>
         <View style={{flex: 3}}>
             { userAppointments ?  
                 <>  
                 <ScrollView>
-                    <ListItem bottomDivider >
+                    <ListItem bottomDivider containerStyle={{ backgroundColor: '#000' }}>
                         <ListItem.Content>
-                            <ListItem.Title style={{ fontWeight: 'bold', alignSelf: 'center' }}><Text>Appointments</Text></ListItem.Title>
+                            <ListItem.Title style={{ fontWeight: 'bold', alignSelf: 'center', color: '#fff' }}><Text>Appointments</Text></ListItem.Title>
                         </ListItem.Content>
                     </ListItem>
                     {Object.entries(userAppointments).map((onekey, i) => (
-                        <ListItem bottomDivider key={i} onPress={() =>deleteAppointment(onekey[0], onekey[1].time)}>
+                        <ListItem bottomDivider key={i} onPress={() =>deleteAppointment(onekey[0], onekey[1].time)} containerStyle={{ backgroundColor: '#121212' }}>
                             <ListItem.Content>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View style={{flex: 2, alignItems: 'flex-start' }}>
-                                        <ListItem.Title>{onekey[0]}, {onekey[1].time.toString().toLowerCase()}</ListItem.Title>
+                                        <ListItem.Title style={{ color: '#fff'}}>{onekey[0]}, {onekey[1].time.toString().toLowerCase()}</ListItem.Title>
                                     </View>
                                     { onekey[1].points ?
                                       <>
                                         <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                                          <ListItem.Title>{onekey[1].points != '' ? '$' + subtractDiscount(onekey[1].points) : ''}</ListItem.Title>
+                                          <ListItem.Title style={{ color: '#fff'}}>{onekey[1].points != '' ? '$' + subtractDiscount(onekey[1].points) : ''}</ListItem.Title>
                                         </View>
                                       </>
                                         :
                                         <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                                          <ListItem.Title>{barberData.price != '' ? barberData.price : ''}</ListItem.Title>
+                                          <ListItem.Title style={{ color: '#fff'}}>{barberData.price != '' ? barberData.price : ''}</ListItem.Title>
                                         </View>
                                     }
                                 </View>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View style={{flex: 1, alignItems: 'flex-start' }}>
-                                        <Text>{barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} </Text>
+                                        <Text style={{ color: '#fff'}}>{barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} </Text>
                                     </View>
                                     <View style={{flex: 1, alignItems: 'flex-end'}}>
-                                        <Text>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </Text>
+                                        <Text style={{ color: '#fff'}}>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </Text>
                                     </View>
                                 </View>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View style={{flex: 1, alignItems: 'flex-start' }}>
-                                        <Text>{barberData.location != '' ? barberData.location : ''} </Text>
+                                        <Text style={{ color: '#fff'}}>{barberData.location != '' ? barberData.location : ''} </Text>
                                     </View>
                                 </View>
                             </ListItem.Content>

@@ -4,7 +4,7 @@ import { View, ActivityIndicator } from 'react-native';
 
 import Firebase from '../config/firebase';
 import { AuthenticatedUserContext } from './AuthenticatedUserProvider';
-import AdminProvider from './AdminProvider';
+import AdminProvider from '../utils/AdminProvider';
 import AuthStack from './AuthStack';
 import HomeStack from './HomeStack';
 import AdminStack from './AdminStack';
@@ -15,6 +15,9 @@ const auth = Firebase.auth();
 export default function RootNavigator() {
   const { user, setUser } = useContext(AuthenticatedUserContext);
   const [isLoading, setIsLoading] = useState(true);
+  // let admin = AdminProvider()
+  // console.log('admin', admin)
+  let admin = false
 
   useEffect(() => {
     // onAuthStateChanged returns an unsubscriber
@@ -38,10 +41,10 @@ export default function RootNavigator() {
       </View>
     );
   }
-  const admin = false
+
   return (
     <NavigationContainer>
-      {user && admin == false ? <HomeStack /> : user && admin ? <AdminStack /> : <AuthStack />}
+      {user && admin === false ? <HomeStack /> : user && admin === true ? <AdminStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }

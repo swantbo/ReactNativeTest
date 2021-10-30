@@ -203,17 +203,17 @@ const AppointmentScreen = () => {
                     datesBlacklist={calendarDatesRemoved} />
             </View>
             <View style={{ flex: 5 }}>
-                <ListItem bottomDivider>
-                    <ListItem.Content style={{ alignItems: 'center', marginTop: -5}}>
-                        <ListItem.Title> {formattedDate ? formattedDate : 'Choose a date'} </ListItem.Title>
+                <ListItem bottomDivider containerStyle={{backgroundColor: '#000'}}>
+                    <ListItem.Content style={{ alignItems: 'center', marginTop: -30}}>
+                        <ListItem.Title style={styles.text}> {formattedDate ? formattedDate : 'Choose a date'} </ListItem.Title>
                     </ListItem.Content>
                 </ListItem>
                 {!isLoading && times && !timePicked ?
-                    <ScrollView style={{ borderColor: 'black', borderRadius: 15 }}>
+                    <ScrollView>
                         {Object.entries(newTimes).map((onekey, i) => (
-                            <ListItem bottomDivider onPress={() => scheduleAppointment(onekey[0])}>
+                            <ListItem bottomDivider containerStyle={styles.ListItem} onPress={() => scheduleAppointment(onekey[0])}>
                                 <ListItem.Content>
-                                    <ListItem.Title key={i}>{onekey[1] ? null : onekey[0]}</ListItem.Title>
+                                    <ListItem.Title key={i} style={styles.text}>{onekey[1] ? null : onekey[0]}</ListItem.Title>
                                 </ListItem.Content>
                             </ListItem>
                         ))}
@@ -221,20 +221,20 @@ const AppointmentScreen = () => {
                     : isLoading ?
                     <ActivityIndicator color='#000' size='large'/>
                     : timePicked &&
-                    <Card containerStyle={{ flex: 2, borderRadius: 15 }}>
-                        <Card.Title style={{ fontSize: 15 }}>{selectedDate} @{selectedTime}</Card.Title>
+                    <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#000' }}>
+                        <Card.Title style={styles.text}>{selectedDate} @{selectedTime}</Card.Title>
                         <Card.Divider />
-                        <Button title={`Goat Points: ${userPoints}`} onPress={() => setDiscount(true)}/>
-                        <Text>Price: {barberInfo.price}</Text>
+                        <Button style={styles.text} title={`Goat Points: ${userPoints}`} onPress={() => setDiscount(true)}/>
+                        <Text style={styles.text}>Price: {barberInfo.price}</Text>
                         {discount !=false &&
                             <>
-                                <Text>Goat Points: -${insertDecimal(userPoints)}</Text>
-                                <Text>New Price: ${subtractDiscount(userPoints)}</Text>
+                                <Text style={styles.text}>Goat Points: -${insertDecimal(userPoints)}</Text>
+                                <Text style={styles.text}>New Price: ${subtractDiscount(userPoints)}</Text>
                             </>
                         }
-                        <Text>Address: {barberInfo.location}</Text>
-                        <Text>Total time: ~30 minutes</Text>
-                        <TextInput
+                        <Text style={styles.text}>Address: {barberInfo.location}</Text>
+                        <Text style={styles.text}>Total time: ~30 minutes</Text>
+                        <TextInput style = {styles.text}
                             onChangeText={onChangeText}
                             value={text}
                             placeholder="Comment" />
@@ -249,9 +249,15 @@ const AppointmentScreen = () => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
+      backgroundColor: '#000',
       justifyContent: 'center',
       alignContent: 'center'
+    },
+    text: {
+        color: '#fff'
+    },
+    ListItem: {
+        backgroundColor: '#121212'
     }
   });
 

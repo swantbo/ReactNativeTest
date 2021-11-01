@@ -53,74 +53,75 @@ const AdminEditProfileScreen = () => {
                 <View>
                 <><TextInput
                     placeholder={changeData.toString()}
+                    placeholderTextColor={'#fff'}
                     onChangeText={setNewBarberData}
                     value={newBarberData}
                     style={styles.textInput} />
-                    <Button title={`Change ${barberDataType}: ${changeData}`} onPress={() => setBarberData()}/>
+                    <Button color={'#E8BD70'} title={`Change ${barberDataType}: ${changeData}`} onPress={() => setBarberData()}/>
                 </>
             </View>
             : <Text></Text>
             } 
             { barberProfile && !isLoading ?
               <>
-                <ListItem bottomDivider >
+                <ListItem bottomDivider containerStyle={styles.ListItem} >
                   <ListItem.Content>
-                      <ListItem.Title style={{fontWeight: 'bold'}}>Info</ListItem.Title>
+                      <ListItem.Title style={{fontWeight: 'bold', color: '#E8BD70'}}>Info</ListItem.Title>
                   </ListItem.Content>
                 </ListItem>
-                <ListItem bottomDivider onPress={() => changeBarberData(barberProfile.price, 'price')} >
+                <ListItem bottomDivider containerStyle={styles.ListItem} onPress={() => changeBarberData(barberProfile.price, 'price')} >
                   <ListItem.Content>
-                      <ListItem.Title>Price: {barberProfile.price} </ListItem.Title>
+                      <ListItem.Title style={styles.text}>Price: {barberProfile.price} </ListItem.Title>
                   </ListItem.Content>
                 </ListItem>
-                <ListItem bottomDivider onPress={() => changeBarberData(barberProfile.website, 'website')} >
+                <ListItem bottomDivider containerStyle={styles.ListItem} onPress={() => changeBarberData(barberProfile.website, 'website')} >
                   <ListItem.Content>
-                      <ListItem.Title>Website: {barberProfile.website} </ListItem.Title>
+                      <ListItem.Title style={styles.text}>Website: {barberProfile.website} </ListItem.Title>
                   </ListItem.Content>
                 </ListItem>
-                <ListItem bottomDivider onPress={() => changeBarberData(barberProfile.instagram, 'instagram')} >
+                <ListItem bottomDivider containerStyle={styles.ListItem} onPress={() => changeBarberData(barberProfile.instagram, 'instagram')} >
                   <ListItem.Content>
-                      <ListItem.Title>Instagram: {barberProfile.instagram} </ListItem.Title>
+                      <ListItem.Title style={styles.text}>Instagram: {barberProfile.instagram} </ListItem.Title>
                   </ListItem.Content>
                 </ListItem>
-                <ListItem bottomDivider onPress={() => changeBarberData(barberProfile.phone, 'phone')} >
+                <ListItem bottomDivider containerStyle={styles.ListItem} onPress={() => changeBarberData(barberProfile.phone, 'phone')} >
                   <ListItem.Content>
-                      <ListItem.Title>Phone: {barberProfile.phone} </ListItem.Title>
+                      <ListItem.Title style={styles.text}>Phone: {barberProfile.phone} </ListItem.Title>
                   </ListItem.Content>
                 </ListItem>
-                <ListItem bottomDivider >
+                <ListItem bottomDivider containerStyle={styles.ListItem} >
                   <ListItem.Content>
-                      <ListItem.Title style={{fontWeight: 'bold'}}>Address and Location</ListItem.Title>
+                      <ListItem.Title style={{fontWeight: 'bold', color: '#E8BD70'}}>Address and Location</ListItem.Title>
                   </ListItem.Content>
                 </ListItem>
-                <ListItem bottomDivider onPress={() => changeBarberData(barberProfile.location, 'location')} >
+                <ListItem bottomDivider containerStyle={styles.ListItem} onPress={() => changeBarberData(barberProfile.location, 'location')} >
                   <ListItem.Content>
-                      <ListItem.Title>Address: {barberProfile.location} </ListItem.Title>
+                      <ListItem.Title style={styles.text}>Address: {barberProfile.location} </ListItem.Title>
                   </ListItem.Content>
                 </ListItem>
-                <ListItem bottomDivider onPress={() => changeBarberData(barberProfile.Tuesday, 'Tuesday')} >
+                <ListItem bottomDivider containerStyle={styles.ListItem} onPress={() => changeBarberData(barberProfile.Tuesday, 'Tuesday')} >
                     <ListItem.Content>
-                        <ListItem.Title>Tuesday: {barberProfile.Tuesday} </ListItem.Title>
+                        <ListItem.Title style={styles.text}>Tuesday: {barberProfile.Tuesday} </ListItem.Title>
                     </ListItem.Content>
                 </ListItem>
-                <ListItem bottomDivider onPress={() => changeBarberData(barberProfile.Wednesday, 'Wednesday')} >
+                <ListItem bottomDivider containerStyle={styles.ListItem} onPress={() => changeBarberData(barberProfile.Wednesday, 'Wednesday')} >
                   <ListItem.Content>
-                      <ListItem.Title>Wednesday: {barberProfile.Wednesday} </ListItem.Title>
+                      <ListItem.Title style={styles.text}>Wednesday: {barberProfile.Wednesday} </ListItem.Title>
                   </ListItem.Content>
                 </ListItem>
-                <ListItem bottomDivider onPress={() => changeBarberData(barberProfile.Thursday, 'Thursday')} >
+                <ListItem bottomDivider containerStyle={styles.ListItem} onPress={() => changeBarberData(barberProfile.Thursday, 'Thursday')} >
                   <ListItem.Content>
-                      <ListItem.Title>Thursday: {barberProfile.Thursday} </ListItem.Title>
+                      <ListItem.Title style={styles.text}>Thursday: {barberProfile.Thursday} </ListItem.Title>
                   </ListItem.Content>
                 </ListItem>
-                <ListItem bottomDivider onPress={() => changeBarberData(barberProfile.Friday, 'Friday')} >
+                <ListItem bottomDivider containerStyle={styles.ListItem} onPress={() => changeBarberData(barberProfile.Friday, 'Friday')} >
                   <ListItem.Content>
-                      <ListItem.Title>Friday: {barberProfile.Friday} </ListItem.Title>
+                      <ListItem.Title style={styles.text}>Friday: {barberProfile.Friday} </ListItem.Title>
                   </ListItem.Content>
                 </ListItem>
-                <ListItem bottomDivider onPress={() => changeBarberData(barberProfile.Saturday, 'Saturday')} >
+                <ListItem bottomDivider containerStyle={styles.ListItem} onPress={() => changeBarberData(barberProfile.Saturday, 'Saturday')} >
                   <ListItem.Content>
-                      <ListItem.Title>Saturday: {barberProfile.Saturday} </ListItem.Title>
+                      <ListItem.Title style={styles.text}>Saturday: {barberProfile.Saturday} </ListItem.Title>
                   </ListItem.Content>
                 </ListItem>
               </>
@@ -133,19 +134,23 @@ const AdminEditProfileScreen = () => {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      justifyContent: 'center',
-      alignContent: 'center',
-      padding: 10
-    },
-    textInput: {
-      borderWidth: 1,
-      borderColor: 'grey',
-      padding: 10,
-      marginBottom: 20,
-      borderRadius: 5,
+  container: {
+    flex: 1,
+    backgroundColor: '#000000'
+  },
+  text: {
+    color: '#fff'
+  },
+  ListItem: {
+      backgroundColor: '#121212'
+  }, 
+  textInput: {
+    borderWidth: 1,
+    borderColor: 'grey',
+    padding: 10,
+    margin: 10,
+    borderRadius: 5,
+    color: '#fff'
   },
   });
 

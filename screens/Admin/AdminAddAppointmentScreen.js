@@ -52,29 +52,30 @@ const AdminAddAppointmentScreen = ( { route, navigation } ) => {
                 <CalendarStrip
                 scrollable
                 style={{height:100, paddingTop: 10, paddingBottom: 10}}
-                calendarHeaderStyle={{color: 'white', fontSize: 17}}
-                calendarColor={'grey'}
+                calendarHeaderStyle={{color: '#E8BD70', fontSize: 17}}
+                calendarColor={'#000'}
                 dateNumberStyle={{color: 'white'}}
                 dateNameStyle={{color: 'white'}}
                 iconContainer={{flex: 0.1}}
                 highlightDateNameStyle={{color: 'white'}}
                 highlightDateNumberStyle={{fontWeight: 'bold', color: 'white'}}
-                highlightDateContainerStyle={{backgroundColor: 'black'}}
+                highlightDateContainerStyle={{backgroundColor: '#E8BD70'}}
                 selectedDate={selectedDate}
                 onDateSelected={onDateSelected}
                 />
                 
             </View>
-                <ListItem bottomDivider>
+            <View style={{flex: 7}}>
+                <ListItem bottomDivider containerStyle={styles.ListItem}>
                     <ListItem.Content style={{ alignItems: 'center', marginTop: -5}}>
-                        <ListItem.Title> {formattedDate ? formattedDate : 'Choose a date'} </ListItem.Title>
+                        <ListItem.Title style={styles.text}> {formattedDate ? formattedDate : 'Choose a date'} </ListItem.Title>
                     </ListItem.Content>
                 </ListItem>
-            <View style={{flex: 5, padding: 10}}>
                     { formattedDate &&
                         <>
                             <TextInput 
                             placeholder="Time"
+                            placeholderTextColor={'#fff'}
                             style={styles.textInput} 
                             onChangeText={onChangeTime}
                             value={time}
@@ -82,6 +83,7 @@ const AdminAddAppointmentScreen = ( { route, navigation } ) => {
 
                             <TextInput 
                             placeholder="Name"
+                            placeholderTextColor={'#fff'}
                             style={styles.textInput} 
                             onChangeText={onChangeName}
                             value={name}
@@ -89,6 +91,7 @@ const AdminAddAppointmentScreen = ( { route, navigation } ) => {
 
                             <TextInput 
                             placeholder="Phone"
+                            placeholderTextColor={'#fff'}
                             style={styles.textInput} 
                             onChangeText={onChangeNumber}
                             value={number}
@@ -96,12 +99,13 @@ const AdminAddAppointmentScreen = ( { route, navigation } ) => {
 
                             <TextInput 
                             placeholder="Comments"
+                            placeholderTextColor={'#fff'}
                             style={styles.textInput} 
                             onChangeText={onChangeComment}
                             value={comment}
                             />
 
-                            <Button title={'Add Appointment'} onPress={() => scheduleAppoint()}/>
+                            <Button title={'Add Appointment'} color={'#E8BD70'} onPress={() => scheduleAppoint()}/>
                         </>
                     }
             </View>
@@ -112,16 +116,23 @@ const AdminAddAppointmentScreen = ( { route, navigation } ) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        backgroundColor: '#fff',
-        padding: 0,
+        backgroundColor: '#000000'
       },
       textInput: {
         borderWidth: 1,
-        borderColor: 'grey',
+        borderColor: '#fff',
         padding: 10,
         marginBottom: 20,
         borderRadius: 5,
+        color: '#fff',
+        backgroundColor: '#121212',
+        margin: 10
+    },
+    ListItem: {
+        backgroundColor: '#121212'
+    },
+    text: {
+        color: '#fff'
     },
   });
 

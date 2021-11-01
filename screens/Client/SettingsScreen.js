@@ -80,7 +80,7 @@ const SettingsScreen = () => {
             ))}
             <ListItem bottomDivider containerStyle={{backgroundColor: '#121212'}} onPress={() => handleSignOut()}>
                 <ListItem.Content>
-                    <ListItem.Title style={{ fontWeight: 'bold', alignSelf: 'center', color: '#fff' }}>Sign Out</ListItem.Title>
+                    <ListItem.Title style={{ fontWeight: 'bold', alignSelf: 'center', color: '#E8BD70' }}>Sign Out</ListItem.Title>
                 </ListItem.Content>
             </ListItem>
         </View>

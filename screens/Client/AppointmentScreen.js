@@ -198,14 +198,14 @@ const AppointmentScreen = () => {
                 <CalendarStrip
                     scrollable
                     style={{ height: 100, paddingTop: 10, paddingBottom: 10 }}
-                    calendarHeaderStyle={{ color: 'white', fontSize: 17 }}
+                    calendarHeaderStyle={{ color: '#E8BD70', fontSize: 17 }}
                     calendarColor={'#121212'}
                     dateNumberStyle={{ color: 'white' }}
                     dateNameStyle={{ color: 'white' }}
                     iconContainer={{ flex: 0.1 }}
                     highlightDateNameStyle={{ color: 'white' }}
                     highlightDateNumberStyle={{ fontWeight: 'bold', color: 'white' }}
-                    highlightDateContainerStyle={{ backgroundColor: 'black' }}
+                    highlightDateContainerStyle={{ backgroundColor: '#E8BD70' }}
                     startingDate={moment()}
                     minDate={moment()}
                     maxDate={moment().add(30, 'days')}
@@ -213,7 +213,7 @@ const AppointmentScreen = () => {
                     onDateSelected={onDateSelected}
                     datesBlacklist={calendarDatesRemoved} />
             </View>
-            <View style={{ flex: 5 }}>
+            <View style={{ flex: 7 }}>
                 <ListItem bottomDivider containerStyle={{backgroundColor: '#000'}}>
                     <ListItem.Content style={{ alignItems: 'center' }}>
                         <ListItem.Title style={styles.text}> {formattedDate ? formattedDate : 'Choose a date'} </ListItem.Title>
@@ -233,9 +233,9 @@ const AppointmentScreen = () => {
                     <ActivityIndicator color='#000' size='large'/>
                     : timePicked &&
                     <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#000' }}>
-                        <Card.Title style={styles.text}>{selectedDate} @{selectedTime}</Card.Title>
+                        <Card.Title style={{ color: '#E8BD70' }}>{selectedDate} @{selectedTime}</Card.Title>
                         <Card.Divider />
-                        <Button style={styles.text} title={`Goat Points: ${userPoints}`} onPress={() => setDiscount(true)}/>
+                        <Button style={styles.text} color={'#E8BD70'} title={`Use Goat Points: ${userPoints}`} onPress={() => setDiscount(true)}/>
                         <Text style={styles.text}>Price: {barberInfo.price}</Text>
                         {discount !=false &&
                             <>
@@ -248,8 +248,9 @@ const AppointmentScreen = () => {
                         <TextInput style = {styles.text}
                             onChangeText={onChangeText}
                             value={text}
-                            placeholder="Comment" />
-                        <Button onPress={() => scheduleAppoint(formattedDate, selectedTime)} title='Confirm Appointment' />
+                            placeholder="Comment"
+                            placeholderTextColor={'#fff'} />
+                        <Button color={'#E8BD70'} onPress={() => scheduleAppoint(formattedDate, selectedTime)} title='Confirm Appointment' />
                     </Card> 
                 }
             </View>   

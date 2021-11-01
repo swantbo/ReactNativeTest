@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Alert, Text, Button } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
+import { Ionicons } from '@expo/vector-icons';
 import { formatPhoneNumber } from '../../utils/DataFormatting';
 
 import * as firebase from 'firebase';
@@ -36,7 +37,7 @@ const AdminEditAccountScreen = ({ navigation }) => {
             <ScrollView>
                 { userInfo &&
                     userInfo.map((onekey, i) => (
-                        <><ListItem bottomDivider key={i} onPress={() => Alert.alert('Delete', `Are you sure you want to delete ${"\n"}Account Name: ${onekey.name ? onekey.name : 'N/A'} ${"\n"}Account Id: ${onekey.id ? onekey.id : 'N/A'}`, 
+                        <><ListItem bottomDivider containerStyle={styles.ListItem} key={i} onPress={() => Alert.alert('Delete', `Are you sure you want to delete ${"\n"}Account Name: ${onekey.name ? onekey.name : 'N/A'} ${"\n"}Account Id: ${onekey.id ? onekey.id : 'N/A'}`, 
                         [
                             {
                               text: "Cancel"
@@ -44,21 +45,23 @@ const AdminEditAccountScreen = ({ navigation }) => {
                             { text: "Delete User", onPress: () => (deleteUser(onekey.id)) }
                           ]) }>
                             <ListItem.Content>
-                                    <ListItem.Title style={{ fontWeight: 'bold', textAlign: 'center', alignSelf: 'center', paddingBottom: 10}} key={i}>{onekey.name} </ListItem.Title>
+                                    <ListItem.Title style={{ fontWeight: 'bold', textAlign: 'center', alignSelf: 'center', paddingBottom: 10, color: '#fff'}} key={i}>{onekey.name} </ListItem.Title>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View style={{flex: 1, alignItems: 'flex-start' }}>
-                                        <ListItem.Subtitle>{formatPhoneNumber(onekey.phone) ? formatPhoneNumber(onekey.phone) : onekey.phone}</ListItem.Subtitle>
+                                        <ListItem.Subtitle style={styles.text}>{formatPhoneNumber(onekey.phone) ? formatPhoneNumber(onekey.phone) : onekey.phone}</ListItem.Subtitle>
                                     </View>
                                     <View style={{flex: 1, alignItems: 'flex-end'}}>
-                                        <ListItem.Subtitle>{onekey.referral ? 'Referral: ' + onekey.referral : 'No Referral'} </ListItem.Subtitle>
+                                        <ListItem.Subtitle style={styles.text}>{onekey.referral ? 'Referral: ' + onekey.referral : 'No Referral'} </ListItem.Subtitle>
                                     </View>
                                 </View>
                                     <View style={{flex: 1, flexDirection: 'row'}}>
                                         <View style={{flex: 1, alignItems: 'flex-start' }}>
-                                            <ListItem.Subtitle>UserId: {onekey.id ? onekey.id : 'N/A'}</ListItem.Subtitle>
+                                            <ListItem.Subtitle style={styles.text}>UserId: {onekey.id ? onekey.id : 'N/A'}</ListItem.Subtitle>
                                         </View>
                                         <View style={{flex: 1, alignItems: 'flex-end'}}>
-                                            <Button title={`Goat Points: ${onekey.points}`} onPress={() => navigation.navigate('Points', {
+                                            <ListItem.Subtitle style={styles.text}>Goat Points: {onekey.points}</ListItem.Subtitle>
+                                            <Ionicons name="add-circle" color={'#E8BD70'} size={30} color="#E8BD70"     
+                                            onPress={() => navigation.navigate('Points', {
                                                 name: onekey.name,
                                                 userId: onekey.id,
                                                 goatPoints: onekey.points,
@@ -77,11 +80,14 @@ const AdminEditAccountScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      justifyContent: 'center',
-      alignContent: 'center',
-      padding: 10
+        flex: 1,
+        backgroundColor: '#000000'
+    },
+    text: {
+        color: '#fff'
+    },
+    ListItem: {
+        backgroundColor: '#121212'
     }
   });
 

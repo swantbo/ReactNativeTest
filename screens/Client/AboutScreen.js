@@ -20,7 +20,7 @@ const AboutScreen = () => {
 
     return(
         <View style={styles.container}>
-            <Card containerStyle={{ flex: 1, margin: 0, backgroundColor: '#000', borderColor: '#000'}}>
+            <Card containerStyle={{ flex: 1, margin: 0, backgroundColor: '#E8BD70', borderColor: '#000'}}>
                     <Text style={styles.text}>Licensed Barber/Goat Studio</Text>
             </Card>
             <ScrollView>
@@ -29,7 +29,7 @@ const AboutScreen = () => {
                         <View style={{flex: 1}}>
                             <View style={{flex: 1, flexDirection: 'row' }}>
                                 <View style={{flex: 1, alignItems: 'flex-start', paddingBottom: 15}}>
-                                    <Card.Title style={{ fontSize: 15, textAlign:'left', color: '#fff'}}> INFO </Card.Title>
+                                    <Card.Title style={{ fontSize: 15, textAlign:'left', color: '#E8BD70'}}> INFO </Card.Title>
                                         <Text style={styles.text}> Fast fades in no time. </Text>
                                         <Text style={styles.text}> {barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} </Text>
                                 </View>
@@ -50,7 +50,7 @@ const AboutScreen = () => {
                             </View>
                             <View style={{flex: 1.5, alignItems: 'flex-start' }}>
 
-                                <Card.Title style={{ alignItems: 'flex-start', color: '#fff'}}> ADDRESS & HOURS </Card.Title>
+                                <Card.Title style={{ alignItems: 'flex-start', color: '#E8BD70'}}> ADDRESS & HOURS </Card.Title>
                                     <Text style={styles.text}> {barberData.location} </Text>
                                     <Text style={styles.text}> Tuesday: {barberData.Tuesday} </Text>
                                     <Text style={styles.text}> Wednesday: {barberData.Wednesday} </Text>
@@ -62,7 +62,7 @@ const AboutScreen = () => {
                     </Card>
                 </View>
                 <Card containerStyle={{ borderRadius: 5, backgroundColor: '#121212', borderColor: '#121212' }}>
-                    <Card.Title style={styles.text}> Photos </Card.Title>
+                    <Card.Title style={{color: '#E8BD70'}}> Photos </Card.Title>
                         <Text style={styles.text}> Haircut Pictures </Text>
                 </Card>
             </ScrollView>

@@ -95,7 +95,7 @@ export default function HomeScreen() {
 
   return(
     <View style={styles.container}>
-        <Card containerStyle={{ flex: 1, margin: 0, backgroundColor: '#000', borderColor: '#000'}}>
+        <Card containerStyle={{flex: 1, margin: 0, backgroundColor: '#E8BD70', borderColor: '#000'}}>
             <Card.Title style={{ fontSize: 20, color: '#fff' }}> {userTestData.name} </Card.Title>
             <Card.Title style={{ fontSize: 15, color: '#fff' }}>Goat Points</Card.Title>
             <Card.Title style={{ fontSize: 15, color: '#fff' }}>{userTestData.points}</Card.Title>
@@ -106,7 +106,7 @@ export default function HomeScreen() {
                 <ScrollView>
                     <ListItem bottomDivider containerStyle={{ backgroundColor: '#000' }}>
                         <ListItem.Content>
-                            <ListItem.Title style={{ fontWeight: 'bold', alignSelf: 'center', color: '#fff' }}><Text>Appointments</Text></ListItem.Title>
+                            <ListItem.Title style={{ fontWeight: 'bold', color: '#E8BD70' }}><Text>Appointments</Text></ListItem.Title>
                         </ListItem.Content>
                     </ListItem>
                     {Object.entries(userAppointments).map((onekey, i) => (
@@ -161,9 +161,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
-    paddingTop: 50,
-    paddingHorizontal: 12
+    backgroundColor: '#000000'
   },
   row: {
     flexDirection: 'row',

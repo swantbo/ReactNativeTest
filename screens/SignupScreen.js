@@ -1,13 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, View, Button as RNButton } from 'react-native';
+import { ImageBackground, StyleSheet, Text, View, Button as RNButton } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { Button, InputField, ErrorMessage } from '../components';
 import Firebase from '../config/firebase';
 import * as firebase from 'firebase';
 
 const auth = Firebase.auth();
+
 
 export default function SignupScreen({ navigation }) {
   const [name, setName] = useState('');
@@ -162,6 +164,9 @@ export default function SignupScreen({ navigation }) {
         title='Go to Login'
         color='#000000'
       />
+      <ImageBackground source={require('../assets/123_1.jpeg')} style={ styles.image} resizeMode="cover"> 
+        
+      </ImageBackground>
     </View>
   );
 }
@@ -179,5 +184,10 @@ const styles = StyleSheet.create({
     color: '#000000',
     alignSelf: 'center',
     paddingBottom: 24
-  }
+  },
+  image: {
+    flex: 1,
+    justifyContent: "center",
+    opacity:0.5
+  },
 });

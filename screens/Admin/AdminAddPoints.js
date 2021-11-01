@@ -33,15 +33,16 @@ const AdminAddPointsScreen = ({ route }) => {
 
     return(
         <View style={styles.container}>
-          <Card containerStyle={{ flex: 2, borderRadius: 15 }}>
-                        <Card.Title style={{ fontSize: 15 }}>{name}</Card.Title>
+          <Card containerStyle={styles.ListItem}>
+                        <Card.Title style={styles.text}>{name}</Card.Title>
                         <Card.Divider />
-                        <Text>User's Current Goat Points: {goatPoints}</Text>
-                        <Text>Enter the amount of points to add to the client</Text>
+                        <Text style={styles.text}>Current Goat Points: {goatPoints}</Text>
                         <TextInput
+                          style={styles.textInput}
                             onChangeText={onChangePoints}
                             value={points}
-                            placeholder="Add Goat Points" />
+                            placeholder="Goat Points"
+                            placeholderTextColor={'#fff'} />
                         <Button onPress={() => addPointsToUser()} title='Add Points' />
                     </Card> 
         </View>
@@ -49,20 +50,26 @@ const AdminAddPointsScreen = ({ route }) => {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      justifyContent: 'center',
-      alignContent: 'center',
-      padding: 10
-    },
-    textInput: {
-      borderWidth: 1,
-      borderColor: 'grey',
-      padding: 10,
-      marginBottom: 20,
-      borderRadius: 5,
+  container: {
+    flex: 1,
+    backgroundColor: '#000000'
   },
+  textInput: {
+    borderWidth: 1,
+    borderColor: '#fff',
+    padding: 10,
+    marginBottom: 20,
+    borderRadius: 5,
+    color: '#fff',
+    backgroundColor: '#121212',
+    margin: 10
+  },
+  text: {
+    color: '#fff'
+  },
+  ListItem: {
+      backgroundColor: '#121212'
+  }
   });
 
 export default AdminAddPointsScreen

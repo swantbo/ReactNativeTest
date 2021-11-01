@@ -75,21 +75,21 @@ const AdminSettingsScreen = ({navigation}) => {
             { isLoading ?
                 <>
                 {Object.entries(userInfo).map((onekey, index) => (
-                    <ListItem  key={index} containerStyle={{backgroundColor: '#101010'}} bottomDivider onPress={() => changeInfo(onekey)} >
+                    <ListItem  key={index} containerStyle={styles.ListItem} bottomDivider onPress={() => changeInfo(onekey)} >
                         <ListItem.Content>
                             <ListItem.Title style={{ color: 'white' }}> {onekey[0]}: {onekey[1]} </ListItem.Title>
                         </ListItem.Content>
                     </ListItem>
                 ))}
 
-                <ListItem containerStyle={{backgroundColor: '#101010'}} bottomDivider onPress={() => navigation.navigate('EditAccountScreen')}>
+                <ListItem containerStyle={styles.ListItem} bottomDivider onPress={() => navigation.navigate('EditAccountScreen')}>
                     <ListItem.Content>
                         <ListItem.Title style={{ color: 'white' }}>View Clients</ListItem.Title>
                     </ListItem.Content>
                 </ListItem>
-                <ListItem containerStyle={{backgroundColor: '#101010'}} bottomDivider onPress={() => handleSignOut()}>
+                <ListItem containerStyle={styles.ListItem} bottomDivider onPress={() => handleSignOut()}>
                     <ListItem.Content>
-                        <ListItem.Title style={{ fontWeight: 'bold', alignSelf: 'center', color: 'white' }}>Sign Out</ListItem.Title>
+                        <ListItem.Title style={{ fontWeight: 'bold', alignSelf: 'center', color: '#E8BD70' }}>Sign Out</ListItem.Title>
                     </ListItem.Content>
                 </ListItem>
             </>
@@ -104,17 +104,13 @@ const AdminSettingsScreen = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'black',
+        backgroundColor: '#000000'
     },
-    textInput: {
-        borderWidth: 1,
-        borderColor: 'grey',
-        padding: 10,
-        marginBottom: 20,
-        borderRadius: 5,
+    text: {
+        color: '#fff'
     },
-    containerStyle: {
-        backgroundColor: 'grey'
+    ListItem: {
+        backgroundColor: '#121212'
     }
   });
 

@@ -16,17 +16,21 @@ const AdminCalendarStack = createStackNavigator();
 
 function AdminCalendarStackScreen({ navigation }) {
     return (
-        <AdminCalendarStack.Navigator>
+        <AdminCalendarStack.Navigator 
+        screenOptions={{
+            headerStyle:{backgroundColor: '#121212', shadowColor: '#E8BD70'}, headerTintColor: '#E8BD70',
+            headerTitleAlign: 'center'
+            }}>
             <AdminCalendarStack.Screen name="Admin Calendar" 
             component={AdminCalendarScreen} 
-            options={{ title: 'Calendar', headerTitleAlign: 'center', headerRight: () => (
-                <Button
+            options={{ title: 'Calendar', headerRight: () => (
+                <Ionicons name="add-circle" color={'#E8BD70'} size={23} style={{padding: 10}}
                   onPress={() => navigation.navigate('AdminAddAppointmentScreen')}
                   title="Add"
-                  color="black"
+                  color="#E8BD70"
                 />
               ),}}/>
-            <AdminCalendarStack.Screen name="AdminAddAppointmentScreen" options={{ title: 'Add Appointments', headerTitleAlign: 'center' }} component={AdminAddAppointmentScreen} />
+            <AdminCalendarStack.Screen name="AdminAddAppointmentScreen" options={{ title: 'Add Appointments' }} component={AdminAddAppointmentScreen} />
         </AdminCalendarStack.Navigator>
     )
 }
@@ -35,8 +39,12 @@ const AdminSettingsStack = createStackNavigator();
 
 function AdminSettingsStackScreen() {
     return (
-        <AdminSettingsStack.Navigator>
-            <AdminSettingsStack.Screen name="Admin Settings" options={{ headerStyle:{backgroundColor: 'grey'}, headerTintColor: 'white', title: 'Admin Settings', headerTitleAlign: 'center' }} component={AdminSettingsScreen}/>
+        <AdminSettingsStack.Navigator
+        screenOptions={{
+            headerStyle:{backgroundColor: '#121212', shadowColor: '#E8BD70'}, headerTintColor: '#E8BD70',
+            headerTitleAlign: 'center'}}
+            >
+            <AdminSettingsStack.Screen name="Admin Settings" options={{ title: 'Admin Settings', headerTitleAlign: 'center' }} component={AdminSettingsScreen}/>
             <AdminSettingsStack.Screen name="EditAccountScreen" options={{ title: 'Edit Accounts', headerTitleAlign: 'center' }} component={AdminEditAccountScreen} />
             <AdminSettingsStack.Screen name="Points" options={{ title: 'Points', headerTitleAlign: 'center' }} component={AdminAddPointsScreen} />
         </AdminSettingsStack.Navigator>
@@ -45,21 +53,29 @@ function AdminSettingsStackScreen() {
 
 const AdminAboutStack = createStackNavigator();
 
-function AdminAdminStackScreen({ navigation }) {
+function AdminAboutStackScreen({ navigation }) {
     return (
         <AdminAboutStack.Navigator
         screenOptions={{
-            headerStyle:{backgroundColor: '#080808'},
-            headerTintColor: 'white',
-            headerTitleAlign: 'center'
+            headerStyle:{backgroundColor: '#121212', shadowColor: '#E8BD70'},
+            tabBarStyle: {
+                backgroundColor: '#121212',
+                position:'relative',
+                bottom:0,
+                elevation:0,
+                borderTopWidth: 0
+                },
+            headerTintColor: '#E8BD70',
+            headerTitleAlign: 'center',
+            headerShadowVisible: false
         }}>
             <AdminAboutStack.Screen name="Nate" options={{ title: 'Nate',
                 headerRight: () => (
-                    <Button
-                    onPress={() => navigation.navigate('Edit Profile')}
-                    title="Edit"
-                    color="#fff"
-                    />
+                    <Ionicons name="build" color={'#E8BD70'} size={23} style={{padding: 10}}
+                        onPress={() => navigation.navigate('Edit Profile')}
+                        title="Add"
+                        color="#E8BD70"
+                />
                 ),}} component={AboutScreen}/>
             <AdminAboutStack.Screen name="Edit Profile" options={{ title: 'Edit Profile', headerTitleAlign: 'center' }} component={AdminEditProfileScreen}/>
         </AdminAboutStack.Navigator>
@@ -76,15 +92,16 @@ export default function AdminStack() {
             tabBarStyle: {
             backgroundColor: 'rgb(18, 18, 18)',
             //backgroundColor: 'transparent',
-            position:'absolute',
+            position:'relative',
+            borderTopColor: '#E8BD70',
             bottom:0,
             elevation:0
             },
             headerShown: false,
-            tabBarActiveTintColor: 'white',
-            tabBarInactiveTintColor: 'white'
+            tabBarActiveTintColor: '#E8BD70',
+            tabBarInactiveTintColor: '#fff'
         }}>
-                <Tab.Screen name='About' component={AdminAdminStackScreen} options={{ tabBarIcon: ({ color, size }) => (<Ionicons name="home" color={color} size={size} />)}} />
+                <Tab.Screen name='About' component={AdminAboutStackScreen} options={{ tabBarIcon: ({ color, size }) => (<Ionicons name="home" color={color} size={size} />)}} />
                 <Tab.Screen name='Calendar' component={AdminCalendarStackScreen} options={{ tabBarIcon: ({ color, size }) => (<Ionicons name="calendar" color={color} size={size} />)}} />
                 <Tab.Screen name='Admin' component={AdminSettingsStackScreen} options={{ tabBarIcon: ({ color, size }) => (<Ionicons name="settings" color={color} size={size} />)}} />
         </Tab.Navigator>

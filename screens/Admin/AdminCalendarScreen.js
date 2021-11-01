@@ -90,23 +90,23 @@ const AdminCalendarScreen = ({ navigation }) => {
                 <CalendarStrip
                 scrollable
                 style={{height:100, paddingTop: 10, paddingBottom: 10}}
-                calendarHeaderStyle={{color: 'white', fontSize: 17}}
-                calendarColor={'grey'}
+                calendarHeaderStyle={{color: '#E8BD70', fontSize: 17}}
+                calendarColor={'#121212'}
                 dateNumberStyle={{color: 'white'}}
                 dateNameStyle={{color: 'white'}}
                 iconContainer={{flex: 0.1}}
                 highlightDateNameStyle={{color: 'white'}}
                 highlightDateNumberStyle={{fontWeight: 'bold', color: 'white'}}
-                highlightDateContainerStyle={{backgroundColor: 'black'}}
+                highlightDateContainerStyle={{backgroundColor: '#E8BD70'}}
                 selectedDate={selectedDate}
                 onDateSelected={onDateSelected}
                 />
                 
             </View>
-            <View style={{flex: 5}}>
-                <ListItem bottomDivider>
+            <View style={{flex: 7}}>
+                <ListItem bottomDivider containerStyle={styles.ListItem}>
                     <ListItem.Content style={{ alignItems: 'center', marginTop: -5}}>
-                        <ListItem.Title> {formattedDate ? formattedDate : 'Choose a date'} </ListItem.Title>
+                        <ListItem.Title style={{color: '#fff'}}> {formattedDate ? formattedDate : 'Choose a date'} </ListItem.Title>
                     </ListItem.Content>
                 </ListItem>
                 { isLoading ? 
@@ -115,7 +115,7 @@ const AdminCalendarScreen = ({ navigation }) => {
                     <ScrollView style={{ borderColor: 'black', borderRadius: 15}}>
                         {
                         calendarData.map((key, index) => (
-                            <ListItem key={`${key.name}_${key.phone}_${key.time}_${key.comment}`} bottomDivider 
+                            <ListItem key={`${key.name}_${key.phone}_${key.time}_${key.comment}`} bottomDivider containerStyle={styles.ListItem}
                             onPress={() => key.name ? Alert.alert('Delete', `Are you sure you want to delete this ${"\n"}Appointment Time ${key.time} ${"\n"} with Client: ${key.name}`, 
                             [
                                 {
@@ -125,24 +125,24 @@ const AdminCalendarScreen = ({ navigation }) => {
                               ]) : navigation.navigate('AdminAddAppointmentScreen', { formattedDate, time : [`${key.time}`] })}> 
                               <ListItem.Content>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
-                                  <View style={{flex: 1}}><ListItem.Title >{key.time}</ListItem.Title></View>
+                                  <View style={{flex: 1}}><ListItem.Title style={styles.text}>{key.time}</ListItem.Title></View>
                                     { !key.name ?
-                                      <View style={{flex: 2, alignItems: 'flex-end'}}><ListItem.Title>Avaliable</ListItem.Title></View>
+                                      <View style={{flex: 2, alignItems: 'flex-end'}}><ListItem.Title style={{color: '#E8BD70'}}>Avaliable</ListItem.Title></View>
                                       : 
-                                      <View style={{flex: 2, alignItems: 'flex-end'}}><ListItem.Title>Goat Points: {key.goatPoints ? key.goatPoints : '0'}</ListItem.Title></View>
+                                      <View style={{flex: 2, alignItems: 'flex-end'}}><ListItem.Title style={styles.text}>Goat Points: {key.goatPoints ? key.goatPoints : '0'}</ListItem.Title></View>
                                     }
                                 </View>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     { key.name ?
                                       <>
-                                        <View style={{flex: 2}}><ListItem.Subtitle>{key.name}</ListItem.Subtitle></View>
-                                        <View style={{flex: 2, alignItems: 'flex-end'}}><ListItem.Subtitle>{formatPhoneNumber(key.phone) ? formatPhoneNumber(key.phone) : key.phone }</ListItem.Subtitle></View>
+                                        <View style={{flex: 2}}><ListItem.Subtitle style={styles.text}>{key.name}</ListItem.Subtitle></View>
+                                        <View style={{flex: 2, alignItems: 'flex-end'}}><ListItem.Subtitle style={styles.text}>{formatPhoneNumber(key.phone) ? formatPhoneNumber(key.phone) : key.phone }</ListItem.Subtitle></View>
                                       </>
                                     : null
                                     }
                                 </View>
                                 { key.comment ?
-                                  <ListItem.Subtitle>Comment: {key.comment}</ListItem.Subtitle>
+                                  <ListItem.Subtitle style={styles.text}>Comment: {key.comment}</ListItem.Subtitle>
                                   : null
                                 }
                               </ListItem.Content>
@@ -157,12 +157,16 @@ const AdminCalendarScreen = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      justifyContent: 'center',
-      alignContent: 'center'
-    }
+  container: {
+    flex: 1,
+    backgroundColor: '#000000'
+  },
+  ListItem: {
+    backgroundColor: '#121212'
+  },
+  text: {
+    color: '#fff'
+  },
   });
 
 export default AdminCalendarScreen

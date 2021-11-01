@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import moment from 'moment';
 import Colors from '../../constants/Colors';
+import { Camera } from 'expo-camera';
 
 import { formatPhoneNumber } from '../../utils/DataFormatting';
 

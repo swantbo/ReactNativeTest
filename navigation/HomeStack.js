@@ -15,7 +15,7 @@ export default function HomeStack() {
       headerStyle:{backgroundColor: '#121212'},
       tabBarStyle: {
         backgroundColor: '#121212',
-        position:'absolute',
+        position:'relative',
         bottom:0,
         elevation:0,
         borderTopWidth: 0

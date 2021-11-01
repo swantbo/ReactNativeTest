@@ -54,15 +54,16 @@ const SettingsScreen = () => {
 
     return(
         <View style={styles.container}>
-            <ListItem bottomDivider>
+            <ListItem bottomDivider containerStyle={{backgroundColor: '#000'}}>
                 <ListItem.Content>
-                    <ListItem.Title style={{ fontWeight: 'bold', alignSelf: 'center' }}>My Account Details</ListItem.Title>
+                    <ListItem.Title style={{ fontWeight: 'bold', alignSelf: 'center', color: '#fff' }}>My Account Details</ListItem.Title>
                 </ListItem.Content>
             </ListItem>
             { changeUserInfo &&
                 <View>
                     <><TextInput
                         placeholder={changeUserInfo}
+                        placeholderTextColor="#fff"
                         onChangeText={setNewUserInfo}
                         value={newUserInfo}
                         style={styles.textInput} />
@@ -71,15 +72,15 @@ const SettingsScreen = () => {
                 </View>
             }
             { Object.entries(userInfo).map((onekey, index) => (
-                <ListItem key={index} bottomDivider onPress={() => changeInfo(onekey)} >
+                <ListItem key={index} containerStyle={{backgroundColor: '#121212'}} bottomDivider onPress={() => changeInfo(onekey)} >
                     <ListItem.Content>
-                        <ListItem.Title> {onekey[0]}: {onekey[1]} </ListItem.Title>
+                        <ListItem.Title style={styles.text}> {onekey[0]}: {onekey[1]} </ListItem.Title>
                     </ListItem.Content>
                 </ListItem>
             ))}
-            <ListItem bottomDivider onPress={() => handleSignOut()}>
+            <ListItem bottomDivider containerStyle={{backgroundColor: '#121212'}} onPress={() => handleSignOut()}>
                 <ListItem.Content>
-                    <ListItem.Title style={{ fontWeight: 'bold', alignSelf: 'center' }}>Sign Out</ListItem.Title>
+                    <ListItem.Title style={{ fontWeight: 'bold', alignSelf: 'center', color: '#fff' }}>Sign Out</ListItem.Title>
                 </ListItem.Content>
             </ListItem>
         </View>
@@ -88,9 +89,13 @@ const SettingsScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
-      alignContent: 'flex-start',
-      backgroundColor: '#fff',
-      justifyContent: 'center',
+        flex: 1,
+        backgroundColor: '#000000'
+    },
+    text: {
+        fontSize: 16,
+        fontWeight: 'normal',
+        color: '#fff'
     },
     textInput: {
         borderWidth: 1,
@@ -98,6 +103,7 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 20,
         borderRadius: 5,
+        color: '#fff'
     },
   });
 

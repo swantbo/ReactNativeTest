@@ -3,6 +3,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import { View, StyleSheet, Text, ScrollView, TextInput, Button, ActivityIndicator, Alert } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 import { Card, CheckBox, ListItem } from 'react-native-elements';
+
+import { InputField } from '../../components';
 import * as firebase from 'firebase';
 
 import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider';
@@ -232,7 +234,7 @@ const AppointmentScreen = () => {
                     : isLoading ?
                     <ActivityIndicator color='#000' size='large'/>
                     : timePicked &&
-                    <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#000' }}>
+                    <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#fff' }}>
                         <Card.Title style={{ color: '#E8BD70' }}>{selectedDate} @{selectedTime}</Card.Title>
                         <Card.Divider />
                         <Button style={styles.text} color={'#E8BD70'} title={`Use Goat Points: ${userPoints}`} onPress={() => setDiscount(true)}/>
@@ -245,11 +247,23 @@ const AppointmentScreen = () => {
                         }
                         <Text style={styles.text}>Address: {barberInfo.location}</Text>
                         <Text style={styles.text}>Total time: ~30 minutes</Text>
-                        <TextInput style = {styles.text}
-                            onChangeText={onChangeText}
+                        <InputField
+                            inputStyle={{
+                            fontSize: 14,
+                            }}
+                            containerStyle={{
+                            backgroundColor: '#fff',
+                            marginBottom: 20,
+                            borderColor: 'black', 
+                            borderWidth: 1
+                            }}
+                            leftIcon='comment'
+                            placeholder='Comment (optional)'
+                            autoCapitalize='first'
+                            autoFocus={true}
                             value={text}
-                            placeholder="Comment"
-                            placeholderTextColor={'#fff'} />
+                            onChangeText={text => onChangeText(text)}
+                        />
                         <Button color={'#E8BD70'} onPress={() => scheduleAppoint(formattedDate, selectedTime)} title='Confirm Appointment' />
                     </Card> 
                 }
@@ -266,7 +280,8 @@ const styles = StyleSheet.create({
       alignContent: 'center'
     },
     text: {
-        color: '#fff'
+        color: '#fff',
+        padding: 5
     },
     ListItem: {
         backgroundColor: '#121212'

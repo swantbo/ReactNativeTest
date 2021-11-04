@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import moment from 'moment';
 import Colors from '../../constants/Colors';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Camera } from 'expo-camera';
 
 import { formatPhoneNumber } from '../../utils/DataFormatting';
@@ -21,6 +22,7 @@ export default function HomeScreen() {
   const [userTestData, setUserData] = useState({'email': '', 'name': '', 'phone': '', 'previous': '', 'time': '', 'upcoming': '', 'points': ''});
   const [barberData, setBarberData] = useState({'location': '', 'price': '', 'phone': ''})
   const [userAppointments, setUserAppointments] = useState({})
+  const [useCamera, setUseCamera] = useState(false)
 
   function subtractDiscount(goatPoints) {
     const discount = Number(barberData.price.replace(/[$.]+/g, '')) - Number(goatPoints)
@@ -94,9 +96,20 @@ export default function HomeScreen() {
   }, [])
 
   return(
+    <>
+    {useCamera === true ?
+    <Camera />
+    :
     <View style={styles.container}>
         <Card containerStyle={{flex: 1, margin: 0, backgroundColor: '#E8BD70', borderColor: '#000'}}>
             <Card.Title style={{ fontSize: 20, color: '#fff' }}> {userTestData.name} </Card.Title>
+            <MaterialCommunityIcons
+              style={{alignSelf: 'center'}}
+              name={'camera-plus'}
+              size={20}
+              color={'#000'}
+              onPress={() => setUseCamera(true)}
+            />
             <Card.Title style={{ fontSize: 15, color: '#fff' }}>Goat Points</Card.Title>
             <Card.Title style={{ fontSize: 15, color: '#fff' }}>{userTestData.points}</Card.Title>
         </Card>
@@ -155,7 +168,9 @@ export default function HomeScreen() {
             }
         </View>
     </View>
-)
+    }
+    </>
+  )
 }
 
 const styles = StyleSheet.create({

@@ -26,6 +26,8 @@ const AppointmentScreen = () => {
     const [newTimes, setNewTimes] = useState({})
     const [previousAppointment, setPreviousAppointment] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [friend, setFriend] = useState('')
+    const [addFriend, setAddFriend] = useState(false)
 
     const clearState = () => {
         setSelectedDate(moment())
@@ -146,6 +148,7 @@ const AppointmentScreen = () => {
     const scheduleAppoint = async (selectedDate, selectedTime) => {
         const userAppointmentInfo = {
             name: userName,
+            friend: friend,
             comment: text,
             time : selectedTime,
             phone : userPhone,
@@ -247,6 +250,23 @@ const AppointmentScreen = () => {
                         }
                         <Text style={styles.text}>Address: {barberInfo.location}</Text>
                         <Text style={styles.text}>Total time: ~30 minutes</Text>
+                            <InputField
+                            inputStyle={{
+                            fontSize: 14,
+                            }}
+                            containerStyle={{
+                            backgroundColor: '#fff',
+                            marginBottom: 20,
+                            borderColor: 'black', 
+                            borderWidth: 1
+                            }}
+                            leftIcon='account-plus'
+                            placeholder='Friends Name'
+                            autoCapitalize='first'
+                            autoFocus={true}
+                            value={friend}
+                            onChangeText={text => setFriend(text)}
+                        />
                         <InputField
                             inputStyle={{
                             fontSize: 14,

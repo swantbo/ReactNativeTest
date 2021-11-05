@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
-import { Card, ListItem, PricingCard } from 'react-native-elements'
+import { View, Text, StyleSheet, Alert, Image } from 'react-native';
+import { Card, ListItem, PricingCard, Avatar } from 'react-native-elements'
 import * as firebase from 'firebase';
 import { ScrollView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
@@ -8,6 +8,8 @@ import moment from 'moment';
 import Colors from '../../constants/Colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Camera } from 'expo-camera';
+//import ImagePicker from '../../components/ImagePicker'
+import * as ImagePicker from 'expo-image-picker';
 
 import { formatPhoneNumber } from '../../utils/DataFormatting';
 
@@ -22,7 +24,7 @@ export default function HomeScreen() {
   const [userTestData, setUserData] = useState({'email': '', 'name': '', 'phone': '', 'previous': '', 'time': '', 'upcoming': '', 'points': ''});
   const [barberData, setBarberData] = useState({'location': '', 'price': '', 'phone': ''})
   const [userAppointments, setUserAppointments] = useState({})
-  const [useCamera, setUseCamera] = useState(false)
+  const [image, setImage] = useState(null);
 
   function subtractDiscount(goatPoints) {
     const discount = Number(barberData.price.replace(/[$.]+/g, '')) - Number(goatPoints)
@@ -56,6 +58,22 @@ export default function HomeScreen() {
 				})
 	}
  }
+
+ const pickImage = async () => {
+  let result = await ImagePicker.launchImageLibraryAsync({
+     mediaTypes: ImagePicker.MediaTypeOptions.All,
+     allowsEditing: true,
+     aspect: [4, 3],
+     quality: 1,
+   });
+
+   console.log(result);
+
+   if (!result.cancelled) {
+     setImage(result.uri);
+   }
+ }
+
 
   useEffect(() => {
     async function getUserInfo(){
@@ -93,13 +111,17 @@ export default function HomeScreen() {
       }
     }
     getUserInfo();
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!');
+        }
+      }
+    })()
   }, [])
 
   return(
-    <>
-    {useCamera === true ?
-    <Camera />
-    :
     <View style={styles.container}>
         <Card containerStyle={{flex: 1, margin: 0, backgroundColor: '#E8BD70', borderColor: '#000'}}>
             <Card.Title style={{ fontSize: 20, color: '#fff' }}> {userTestData.name} </Card.Title>
@@ -108,8 +130,9 @@ export default function HomeScreen() {
               name={'camera-plus'}
               size={20}
               color={'#000'}
-              onPress={() => setUseCamera(true)}
+              onPress={() => pickImage()}
             />
+            <Card.Title style={{ fontSize: 20, color: '#fff' }}> {userTestData.name} </Card.Title>
             <Card.Title style={{ fontSize: 15, color: '#fff' }}>Goat Points</Card.Title>
             <Card.Title style={{ fontSize: 15, color: '#fff' }}>{userTestData.points}</Card.Title>
         </Card>
@@ -168,8 +191,6 @@ export default function HomeScreen() {
             }
         </View>
     </View>
-    }
-    </>
   )
 }
 

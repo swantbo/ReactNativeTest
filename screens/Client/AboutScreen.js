@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Linking } from 'react-native';
-import { Card, SocialIcon } from 'react-native-elements'
+import { Card, SocialIcon, Avatar } from 'react-native-elements'
 import * as firebase from 'firebase';
 import { formatPhoneNumber } from '../../utils/DataFormatting';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const AboutScreen = () => {
     const [barberData, setBarberData] = useState({'Tuesday': '', 'Wednesday': '', 'Thursday': '',  'Friday': '', 'Saturday': '', 'instagram': '', 'location': '', 'name': '', 'phone': '', 'price': '', 'website': '' });
+    const [image, setImage] = useState(null)
 
     async function getBarberData() {
         await firebase.firestore().collection('Barber').doc('Nate').get().then((barber) => {
@@ -20,7 +22,9 @@ const AboutScreen = () => {
 
     return(
         <View style={styles.container}>
-            <Card containerStyle={{ flex: 1, margin: 0, backgroundColor: '#E8BD70', borderColor: '#000'}}>
+            <Card containerStyle={{ flex: 1, margin: 0, backgroundColor: '#E8BD70', borderColor: '#000', alignItems: 'center'}}>
+                <Card.Title style={{alignSelf: 'center'}}><Avatar rounded size="large" title={'N'} source={{ uri: image }} />
+                </Card.Title>
                     <Text style={styles.text}>Licensed Barber/Goat Studio</Text>
             </Card>
             <ScrollView>

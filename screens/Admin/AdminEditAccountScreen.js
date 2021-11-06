@@ -37,15 +37,24 @@ const AdminEditAccountScreen = ({ navigation }) => {
             <ScrollView>
                 { userInfo &&
                     userInfo.map((onekey, i) => (
-                        <><ListItem bottomDivider containerStyle={styles.ListItem} key={i} onPress={() => Alert.alert('Delete', `Are you sure you want to delete ${"\n"}Account Name: ${onekey.name ? onekey.name : 'N/A'} ${"\n"}Account Id: ${onekey.id ? onekey.id : 'N/A'}`, 
-                        [
-                            {
-                              text: "Cancel"
-                            },
-                            { text: "Delete User", onPress: () => (deleteUser(onekey.id)) }
-                          ]) }>
+                        <><ListItem bottomDivider containerStyle={styles.ListItem} key={i}>
                             <ListItem.Content>
-                                    <ListItem.Title style={{ fontWeight: 'bold', textAlign: 'center', alignSelf: 'center', paddingBottom: 10, color: '#fff'}} key={i}>{onekey.name} </ListItem.Title>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <View style={{flex: 1, alignItems: 'flex-start' }}>
+                                        <ListItem.Title style={{ fontWeight: 'bold', paddingBottom: 10, color: '#fff'}} key={i}>{onekey.name} </ListItem.Title>
+                                    </View>
+                                    <View style={{flex: 1, alignItems: 'flex-end'}}>
+                                        <Ionicons style={{alignSelf: 'flex-end'}} name="trash" color={'#E8BD70'} size={30} color="#E8BD70"     
+                                             onPress={() => Alert.alert('Delete', `Are you sure you want to delete ${"\n"}Account Name: ${onekey.name ? onekey.name : 'N/A'} ${"\n"}Account Id: ${onekey.id ? onekey.id : 'N/A'}`, 
+                                             [
+                                                 {
+                                                   text: "Cancel"
+                                                 },
+                                                 { text: "Delete User", onPress: () => (deleteUser(onekey.id)) }
+                                               ]) }
+                                        />
+                                    </View>
+                                </View>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View style={{flex: 1, alignItems: 'flex-start' }}>
                                         <ListItem.Subtitle style={styles.text}>{formatPhoneNumber(onekey.phone) ? formatPhoneNumber(onekey.phone) : onekey.phone}</ListItem.Subtitle>

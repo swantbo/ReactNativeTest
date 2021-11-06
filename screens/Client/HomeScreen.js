@@ -10,6 +10,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Camera } from 'expo-camera';
 //import ImagePicker from '../../components/ImagePicker'
 import * as ImagePicker from 'expo-image-picker';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import { formatPhoneNumber } from '../../utils/DataFormatting';
 
@@ -72,6 +73,7 @@ export default function HomeScreen() {
    if (!result.cancelled) {
      setImage(result.uri);
    }
+   uploadImageAsync(result.uri)
  }
 
 
@@ -119,24 +121,43 @@ export default function HomeScreen() {
         }
       }
     })()
+
+    async function getUserImage() {
+      await firebase.storage().ref('Users/' + user.uid).getDownloadURL().then((image) => {
+        setImage(image)
+        console.log('NewImage', image)
+      })
+    }
+    getUserImage()
   }, [])
+
+  async function uploadImageAsync(uri) {
+    const response = await fetch(uri);
+    const blob = await response.blob()
+    await firebase.storage().ref('Users/' + user.uid).put(blob)
+  }
 
   return(
     <View style={styles.container}>
         <Card containerStyle={{flex: 1, margin: 0, backgroundColor: '#E8BD70', borderColor: '#000'}}>
-            <Card.Title style={{ fontSize: 20, color: '#fff' }}> {userTestData.name} </Card.Title>
-            <MaterialCommunityIcons
-              style={{alignSelf: 'center'}}
-              name={'camera-plus'}
-              size={20}
-              color={'#000'}
-              onPress={() => pickImage()}
-            />
-            <Card.Title style={{ fontSize: 20, color: '#fff' }}> {userTestData.name} </Card.Title>
-            <Card.Title style={{ fontSize: 15, color: '#fff' }}>Goat Points</Card.Title>
-            <Card.Title style={{ fontSize: 15, color: '#fff' }}>{userTestData.points}</Card.Title>
+          <View style={{flexDirection: 'row'}}>
+            <View style={{flex: 1,}}>
+              <Card.Title style={{alignSelf: 'flex-start'}}><Avatar rounded size="large" title={userTestData.name[0]} source={{ uri: image }} />
+                <MaterialCommunityIcons
+                  name={'camera-plus'}
+                  size={20}
+                  color={'#000'}
+                  onPress={() => pickImage()}
+                />
+              </Card.Title>
+            </View>
+            <View style={{flex: 3, alignItems: 'center'}}>
+              <Card.Title style={{ fontSize: 20, color: '#fff' }}> {userTestData.name} </Card.Title>
+              <Card.Title style={{ fontSize: 15, color: '#fff' }}>Goat Points: {userTestData.points}</Card.Title>
+            </View>
+          </View>
         </Card>
-        <View style={{flex: 3}}>
+        <View style={{flex: 4}}>
             { userAppointments ?  
                 <>  
                 <ScrollView>

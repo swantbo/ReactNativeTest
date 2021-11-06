@@ -4,6 +4,7 @@ import CalendarStrip from 'react-native-calendar-strip';
 import moment from 'moment';
 import { Card, ListItem } from 'react-native-elements';
 import { TextInput } from 'react-native-gesture-handler';
+import { InputField } from '../../components';
 import * as firebase from 'firebase';
 
 const AdminAddAppointmentScreen = ( { route, navigation } ) => {
@@ -72,41 +73,82 @@ const AdminAddAppointmentScreen = ( { route, navigation } ) => {
                     </ListItem.Content>
                 </ListItem>
                     { formattedDate &&
-                        <>
-                            <TextInput 
-                            placeholder="Time"
-                            placeholderTextColor={'#fff'}
-                            style={styles.textInput} 
-                            onChangeText={onChangeTime}
-                            value={time}
+                        <View style={{padding: 5}}>
+                        
+                            <InputField
+                                inputStyle={{
+                                fontSize: 14,
+                                }}
+                                containerStyle={{
+                                backgroundColor: '#fff',
+                                marginBottom: 20,
+                                borderColor: 'black', 
+                                borderWidth: 1
+                                }}
+                                leftIcon='clock-time-eight'
+                                placeholder='Appointment Time'
+                                autoFocus={true}
+                                value={time}
+                                onChangeText={text => onChangeTime(text)}
                             />
 
-                            <TextInput 
-                            placeholder="Name"
-                            placeholderTextColor={'#fff'}
-                            style={styles.textInput} 
-                            onChangeText={onChangeName}
-                            value={name}
+                            <InputField
+                                inputStyle={{
+                                fontSize: 14,
+                                }}
+                                containerStyle={{
+                                backgroundColor: '#fff',
+                                marginBottom: 20,
+                                borderColor: 'black', 
+                                borderWidth: 1
+                                }}
+                                leftIcon='account'
+                                placeholder='Name'
+                                autoCapitalize='first'
+                                autoFocus={true}
+                                value={name}
+                                onChangeText={text => onChangeName(text)}
                             />
 
-                            <TextInput 
-                            placeholder="Phone"
-                            placeholderTextColor={'#fff'}
-                            style={styles.textInput} 
-                            onChangeText={onChangeNumber}
-                            value={number}
+                            <InputField
+                                inputStyle={{
+                                fontSize: 14,
+                                }}
+                                containerStyle={{
+                                backgroundColor: '#fff',
+                                marginBottom: 20,
+                                borderColor: 'black', 
+                                borderWidth: 1
+                                }}
+                                leftIcon='phone'
+                                placeholder='Phone Number'
+                                autoCapitalize='none'
+                                keyboardType='phone'
+                                autoFocus={true}
+                                value={number}
+                                onChangeText={text => onChangeNumber(text)}
                             />
 
-                            <TextInput 
-                            placeholder="Comments"
-                            placeholderTextColor={'#fff'}
-                            style={styles.textInput} 
-                            onChangeText={onChangeComment}
-                            value={comment}
+                            <InputField
+                                inputStyle={{
+                                fontSize: 14,
+                                }}
+                                containerStyle={{
+                                backgroundColor: '#fff',
+                                marginBottom: 20,
+                                borderColor: 'black', 
+                                borderWidth: 1
+                                }}
+                                leftIcon='comment'
+                                placeholder='Comment'
+                                autoCapitalize='first'
+                                autoFocus={true}
+                                value={comment}
+                                onChangeText={text => onChangeComment(text)}
                             />
 
                             <Button title={'Add Appointment'} color={'#E8BD70'} onPress={() => scheduleAppoint()}/>
-                        </>
+                        </View>
                     }
             </View>
         </View>

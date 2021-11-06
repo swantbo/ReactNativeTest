@@ -135,7 +135,7 @@ const AdminCalendarScreen = ({ navigation }) => {
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     { key.name ?
                                       <>
-                                        <View style={{flex: 2}}><ListItem.Subtitle style={styles.text}>{key.name}</ListItem.Subtitle></View>
+                                        <View style={{flex: 2}}><ListItem.Subtitle style={styles.text}>{key.name} {key.friend != '' && undefined ? 'Friend: ' + key.friend : ''}</ListItem.Subtitle></View>
                                         <View style={{flex: 2, alignItems: 'flex-end'}}><ListItem.Subtitle style={styles.text}>{formatPhoneNumber(key.phone) ? formatPhoneNumber(key.phone) : key.phone }</ListItem.Subtitle></View>
                                       </>
                                     : null

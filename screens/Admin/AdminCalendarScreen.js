@@ -59,7 +59,7 @@ const AdminCalendarScreen = ({ navigation }) => {
             const testIntervals = [ ...data, ...newIntervals ]
             setCalendarData( calendarTimes )
             setIsLoading(false)
-        })
+        }).catch((err))
     }
 
     useEffect(() => {

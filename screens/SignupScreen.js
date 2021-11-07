@@ -66,7 +66,6 @@ export default function SignupScreen({ navigation }) {
         leftIcon='account'
         placeholder='Enter name'
         autoCapitalize='none'
-        textContentType='name'
         autoFocus={true}
         value={name}
         onChangeText={text => setName(text)}
@@ -84,8 +83,7 @@ export default function SignupScreen({ navigation }) {
         leftIcon='phone'
         placeholder='Enter phone number'
         autoCapitalize='none'
-        keyboardType='phone'
-        textContentType='phoneNumber'
+        keyboardType='phone-pad'
         autoFocus={true}
         value={phone}
         onChangeText={text => setPhone(text)}
@@ -104,7 +102,6 @@ export default function SignupScreen({ navigation }) {
         placeholder='Enter name of Referral'
         autoCapitalize='none'
         autoCorrect={false}
-        textContentType='referral'
         value={referral}
         onChangeText={text => setReferral(text)}
       />
@@ -122,7 +119,6 @@ export default function SignupScreen({ navigation }) {
         placeholder='Enter email'
         autoCapitalize='none'
         keyboardType='email-address'
-        textContentType='emailAddress'
         autoFocus={true}
         value={email}
         onChangeText={text => setEmail(text)}
@@ -142,7 +138,6 @@ export default function SignupScreen({ navigation }) {
         autoCapitalize='none'
         autoCorrect={false}
         secureTextEntry={passwordVisibility}
-        textContentType='password'
         rightIcon={rightIcon}
         value={password}
         onChangeText={text => setPassword(text)}

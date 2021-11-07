@@ -24,7 +24,7 @@ const AdminEditAccountScreen = ({ navigation }) => {
     }
 
     const deleteUser = (user_id) => {
-        firebase.firestore().collection('users').doc(user_id).delete.catch((e) => {
+        firebase.firestore().collection('users').doc(user_id).delete().catch((e) => {
         alert('Unable to delete user try again')
     })}
 

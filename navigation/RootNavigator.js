@@ -17,7 +17,7 @@ export default function RootNavigator() {
   const [isLoading, setIsLoading] = useState(true);
   // let admin = AdminProvider()
   // console.log('admin', admin)
-  let admin = false
+  let admin = true
 
   useEffect(() => {
     // onAuthStateChanged returns an unsubscriber

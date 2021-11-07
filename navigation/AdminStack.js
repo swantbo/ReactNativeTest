@@ -9,6 +9,7 @@ import AdminCalendarScreen from '../screens/Admin/AdminCalendarScreen';
 import AdminEditAccountScreen from '../screens/Admin/AdminEditAccountScreen';
 import AdminEditProfileScreen from '../screens/Admin/AdminEditProfileScreen';
 import AdminSettingsScreen from '../screens/Admin/AdminSettingsScreen';
+import AdminBarberScreen from '../screens/Admin/AdminBarberScreen'
 import AboutScreen from '../screens/Client/AboutScreen'
 import { Ionicons } from '@expo/vector-icons';
 
@@ -76,7 +77,7 @@ function AdminAboutStackScreen({ navigation }) {
                         title="Add"
                         color="#E8BD70"
                 />
-                ),}} component={AboutScreen}/>
+                ),}} component={AdminBarberScreen}/>
             <AdminAboutStack.Screen name="Edit Profile" options={{ title: 'Edit Profile', headerTitleAlign: 'center' }} component={AdminEditProfileScreen}/>
         </AdminAboutStack.Navigator>
     )

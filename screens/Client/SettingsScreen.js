@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { View, StyleSheet, TextInput } from "react-native";
+import { View, StyleSheet, TextInput, Alert } from "react-native";
 import { ListItem, Button } from 'react-native-elements'
 import * as firebase from 'firebase';
 import { formatPhoneNumber } from "../../utils/DataFormatting";
@@ -35,7 +35,13 @@ const SettingsScreen = () => {
         const updateUserData = {
             [`${userDataType}`] : newUserInfo
         }
-        firebase.firestore().collection('users').doc(user.uid).update(updateUserData);
+        try {
+            firebase.firestore().collection('users').doc(user.uid).update(updateUserData)
+            Alert.alert('Success', `Your ${userDataType} has been changed to ${newUserInfo}`)
+        } catch (error) {
+            Alert.alert('There is an error.', err.message)
+        }
+        
     }
 
     function getUserData() {

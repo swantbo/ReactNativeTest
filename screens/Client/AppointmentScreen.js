@@ -24,10 +24,8 @@ const AppointmentScreen = () => {
     const [text, onChangeText] = useState('')
     const [userPoints, setUserPoints] = useState('')
     const [newTimes, setNewTimes] = useState({})
-    const [previousAppointment, setPreviousAppointment] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [friend, setFriend] = useState('')
-    const [addFriend, setAddFriend] = useState(false)
 
     const clearState = () => {
         setSelectedDate(moment())
@@ -263,7 +261,6 @@ const AppointmentScreen = () => {
                             leftIcon='account-plus'
                             placeholder='Friends Name'
                             autoCapitalize='first'
-                            autoFocus={true}
                             value={friend}
                             onChangeText={text => setFriend(text)}
                         />
@@ -280,7 +277,6 @@ const AppointmentScreen = () => {
                             leftIcon='comment'
                             placeholder='Comment (optional)'
                             autoCapitalize='first'
-                            autoFocus={true}
                             value={text}
                             onChangeText={text => onChangeText(text)}
                         />

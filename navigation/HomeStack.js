@@ -1,4 +1,5 @@
 import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Ionicons } from '@expo/vector-icons';
 
@@ -7,9 +8,30 @@ import AppointmentScreen from '../screens/Client/AppointmentScreen';
 import AboutScreen from '../screens/Client/AboutScreen';
 import SettingsScreen from '../screens/Client/SettingsScreen';
 
+const homeSettingStack = createStackNavigator()
+
+function homeSettingStackScreen({ navigation }) {
+  return (
+    <homeSettingStack.Navigator 
+    screenOptions={{
+        headerStyle:{backgroundColor: '#121212', shadowColor: '#E8BD70'}, headerTintColor: '#E8BD70',
+        headerTitleAlign: 'center'
+        }}>
+        <homeSettingStack.Screen name='Home' component={HomeScreen} options={{ headerRight: () => (
+                <Ionicons name="settings" color={'#E8BD70'} size={23} style={{padding: 10}}
+                  onPress={() => navigation.navigate('Settings')}
+                  title="Add"
+                  color="#E8BD70"
+                />
+              ),}}/>
+        <homeSettingStack.Screen name='Settings' options={{ title: 'Settings'}} component={SettingsScreen} />
+    </homeSettingStack.Navigator>
+)
+}
+
 const Tab = createBottomTabNavigator()
 
-export default function HomeStack() {
+export default function HomeStack({ navigation }) {
   return (
     <Tab.Navigator screenOptions={{
       headerStyle:{backgroundColor: '#121212', shadowColor: '#E8BD70'},
@@ -26,10 +48,9 @@ export default function HomeStack() {
       tabBarActiveTintColor: '#E8BD70',
       tabBarInactiveTintColor: '#fff'
   }}>
-      <Tab.Screen name='Home' component={HomeScreen} options={{ tabBarIcon: ({ color, size }) => (<Ionicons name="home" color={color} size={size} />)}}/>
+      <Tab.Screen name='Home' component={homeSettingStackScreen} options={{ headerShown: false, tabBarIcon: ({ color, size }) => (<Ionicons name="home" color={color} size={size} />)}}/>
       <Tab.Screen name='Appointment' component={AppointmentScreen} options={{ tabBarIcon: ({ color, size }) => (<Ionicons name="calendar" color={color} size={size} />)}}/>
-      <Tab.Screen name='About' component={AboutScreen} options={{ tabBarIcon: ({ color, size }) => (<Ionicons name="list-circle" color={color} size={size} />)}}/>
-      <Tab.Screen name='Settings' component={SettingsScreen} options={{ tabBarIcon: ({ color, size }) => (<Ionicons name="settings" color={color} size={size} />)}}/>
+      <Tab.Screen name='Nate' component={AboutScreen} options={{ headerShown: false, tabBarIcon: ({ color, size }) => (<Ionicons name="list-circle" color={color} size={size} />)}}/>
   </Tab.Navigator>
   );
 }

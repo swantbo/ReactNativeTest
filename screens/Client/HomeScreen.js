@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Alert, Image } from 'react-native';
-import { Card, ListItem, PricingCard, Avatar } from 'react-native-elements'
+import { View, Text, StyleSheet, Alert } from 'react-native';
+import { Card, ListItem, Button, Avatar } from 'react-native-elements'
 import * as firebase from 'firebase';
 import { ScrollView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
@@ -49,15 +49,9 @@ export default function HomeScreen() {
 				}).catch((e) => {
 					Alert.alert('Error', `Unable to delete appointment. Try again. ${e}`)
 				})
-		await firebase.firestore()
-			.collection('user')
-			.doc(user.uid)
-			.collection('Haircuts').doc(moment(date).format('YYYY-MM-DD')).delete().then(() => {
-				Alert.alert('Success', 'Appointment Deleted')
-				}).catch((e) => {
-					Alert.alert('Error', `Unable to delete appointment. Try again. ${e}`)
-				})
-	}
+	} else {
+      Alert.alert('Unable To Delete Appointment', 'The Appointment date has already passed, or is to close to Appoinment Time. Please contact Nate')
+  }
  }
 
  const pickImage = async () => {
@@ -167,7 +161,16 @@ export default function HomeScreen() {
                         </ListItem.Content>
                     </ListItem>
                     {Object.entries(userAppointments).map((onekey, i) => (
-                        <ListItem bottomDivider key={i} onPress={() =>deleteAppointment(onekey[0], onekey[1].time)} containerStyle={{ backgroundColor: '#121212' }}>
+                        <ListItem.Swipeable bottomDivider key={i} containerStyle={{ backgroundColor: '#121212' }}
+                        rightContent={
+                          <Button
+                            title="Delete"
+                            icon={{ name: 'delete', color: 'white' }}
+                            buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
+                            onPress={() =>deleteAppointment(onekey[0], onekey[1].time)}
+                          />
+                        }
+                        >
                             <ListItem.Content>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View style={{flex: 2, alignItems: 'flex-start' }}>
@@ -199,7 +202,7 @@ export default function HomeScreen() {
                                     </View>
                                 </View>
                             </ListItem.Content>
-                        </ListItem>
+                        </ListItem.Swipeable>
                     ))}
                 </ScrollView>
                 </>

@@ -17,10 +17,9 @@ export default function RootNavigator() {
   const [isLoading, setIsLoading] = useState(true);
   // let admin = AdminProvider()
   // console.log('admin', admin)
-  let admin = true
+  let admin = false
 
   useEffect(() => {
-    // onAuthStateChanged returns an unsubscriber
     const unsubscribeAuth = auth.onAuthStateChanged(async authenticatedUser => {
       try {
         await (authenticatedUser ? setUser(authenticatedUser) : setUser(null));
@@ -30,7 +29,6 @@ export default function RootNavigator() {
       }
     });
 
-    // unsubscribe auth listener on unmount
     return unsubscribeAuth;
   }, []);
 

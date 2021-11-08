@@ -18,7 +18,7 @@ const AdminBarberScreen = () => {
         })
     }
 
-    const pickImage = async (type) => {
+    const pickImage = async (type, id) => {
         let result = await ImagePicker.launchImageLibraryAsync({
            mediaTypes: ImagePicker.MediaTypeOptions.All,
            allowsEditing: true,
@@ -33,14 +33,14 @@ const AdminBarberScreen = () => {
          } if (!result.cancelled && !type === 'Profile') {
             setHaircutPictures(result.uri);
           }
-         uploadImageAsync(result.uri, type)
+         uploadImageAsync(result.uri, type, id)
          result = null
        }
 
-    async function uploadImageAsync(uri, type) {
+    async function uploadImageAsync(uri, type, id) {
         const response = await fetch(uri);
         const blob = await response.blob()
-        type === 'Profile' ? await firebase.storage().ref('Barber/ProfilePicture').put(blob) : await firebase.storage().ref('Barber/HaircutPictures/1').put(blob)
+        type === 'Profile' ? await firebase.storage().ref('Barber/ProfilePicture').put(blob) : await firebase.storage().ref('Barber/HaircutPictures/' + id).put(blob)
     }
 
     useEffect(() => {
@@ -68,8 +68,9 @@ const AdminBarberScreen = () => {
         }, [])
 
     return(
-        <View style={styles.container}>
-            <Card containerStyle={{ flex: 1, margin: 0, backgroundColor: '#E8BD70', borderColor: '#000', alignItems: 'center'}}>
+        <>
+        <View style={{flex: .3}}>
+            <Card containerStyle={{ flex: 1, margin: 0, backgroundColor: '#E8BD70', borderColor: '#000', alignItems: 'center' }}>
                 <Card.Title style={{alignSelf: 'center', marginTop: 10}}><Avatar rounded size="large" title={'N'} source={{ uri: image }} />
                 <MaterialCommunityIcons
                   name={'camera-plus'}
@@ -80,6 +81,8 @@ const AdminBarberScreen = () => {
                 </Card.Title>
                     <Text style={styles.text}>Licensed Barber/Goat Studio</Text>
             </Card>
+        </View>
+        <View style={styles.container}>
             <ScrollView>
                 <View style={{flex: 1 }}>
                     <Card containerStyle={{ borderRadius: 5, backgroundColor: '#121212', borderColor: '#121212' }}>
@@ -118,29 +121,97 @@ const AdminBarberScreen = () => {
                         </View>
                     </Card>
                 </View>
-                <Card containerStyle={{ borderRadius: 5, backgroundColor: '#121212', borderColor: '#121212'}}>
+                <View style={{ flex: 1, margin: 15, borderRadius: 10, backgroundColor: '#121212', borderColor: '#121212'}}>
                     <View style={{ flex: 1, flexDirection: 'row'}}>
-                        <View style={{flex: 1, alignItems: 'center'}}>
-                            <Card.Title style={{color: '#E8BD70', alignContent: 'center'}}> Photos </Card.Title>
+                        <View style={{flex: 1, alignItems: 'center', padding: 5 }}>
+                            <Text style={{color: '#E8BD70', alignContent: 'center', fontWeight: 'bold', fontSize: 15}}> Photos </Text>
                         </View>
-                        <Card.Title style={{ alignContent: 'flex-end'}}>
-                            <MaterialCommunityIcons
-                                name={'camera-plus'}
-                                size={20}
-                                color={'#E8BD70'}
-                                onPress={() => pickImage('Haircut')}
-                            />
-                        </Card.Title>
                     </View>
-                        {/* <Image
-                            style={{ flex: 1, width: 100, height: 100,
-                                resizeMode: 'contain' }}
-                            resizeMode="cover"
-                            source={{ uri: haircutPictures }}
-                        /> */}
-                </Card>
+                    <View style={{flex: 1, flexDirection: 'row'}}>
+                        <View style={{flex: 1, alignItems: 'flex-start', backgroundColor: '#121212' }}>
+                            <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#121212'}}>
+                                <Image
+                                    style={{ flex: 1, width: 150, height: 150,
+                                        resizeMode: 'contain' }}
+                                    resizeMode="cover"
+                                    source={{ uri: haircutPictures }}
+                                    onPress={() => pickImage('Haircut', '1')}
+                                />
+                                <Card.Title style={{color: '#fff'}}>Haircut 1</Card.Title>
+                            </Card>
+                        </View>
+                        <View style={{flex: 1, alignItems: 'flex-end', backgroundColor: '#121212'}}>
+                            <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#121212'}}>
+                                <Image
+                                    style={{ flex: 1, width: 150, height: 150,
+                                        resizeMode: 'contain' }}
+                                    resizeMode="cover"
+                                    source={{ uri: haircutPictures }}
+                                    onPress={() => pickImage('Haircut', '2')}
+                                />
+                                <Card.Title style={{color: '#fff'}}>Haircut 2</Card.Title>
+                            </Card>
+                        </View>
+                        
+                    </View>
+                    <View style={{flex: 1, flexDirection: 'row'}}>
+                        <View style={{flex: 1, alignItems: 'flex-start', backgroundColor: '#121212' }}>
+                            <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#121212'}}>
+                                <Image
+                                    style={{ flex: 1, width: 150, height: 150,
+                                        resizeMode: 'contain' }}
+                                    resizeMode="cover"
+                                    source={{ uri: haircutPictures }}
+                                    onPress={() => pickImage('Haircut', '3')}
+                                />
+                                <Card.Title style={{color: '#fff'}}>Haircut 3</Card.Title>
+                            </Card>
+                        </View>
+                        <View style={{flex: 1, alignItems: 'flex-end', backgroundColor: '#121212'}}>
+                            <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#121212'}}>
+                                <Image
+                                    style={{ flex: 1, width: 150, height: 150,
+                                        resizeMode: 'contain' }}
+                                    resizeMode="cover"
+                                    source={{ uri: haircutPictures }}
+                                    onPress={() => pickImage('Haircut', '4')}
+                                />
+                                <Card.Title style={{color: '#fff'}}>Haircut 4</Card.Title>
+                            </Card>
+                        </View>
+                        
+                    </View>
+                    <View style={{flex: 1, flexDirection: 'row'}}>
+                        <View style={{flex: 1, alignItems: 'flex-start', backgroundColor: '#121212' }}>
+                            <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#121212'}}>
+                                <Image
+                                    style={{ flex: 1, width: 150, height: 150,
+                                        resizeMode: 'contain' }}
+                                    resizeMode="cover"
+                                    source={{ uri: haircutPictures }}
+                                    onPress={() => pickImage('Haircut', '5')}
+                                />
+                                <Card.Title style={{color: '#fff'}}>Haircut 5</Card.Title>
+                            </Card>
+                        </View>
+                        <View style={{flex: 1, alignItems: 'flex-end', backgroundColor: '#121212'}}>
+                            <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#121212'}}>
+                                <Image
+                                    style={{ flex: 1, width: 150, height: 150,
+                                        resizeMode: 'contain' }}
+                                    resizeMode="cover"
+                                    source={{ uri: haircutPictures }}
+                                    onPress={() => pickImage('Haircut', '6')}
+                                />
+                                <Card.Title style={{color: '#fff'}}>Haircut 6</Card.Title>
+                            </Card>
+                        </View>
+                        
+                    </View>
+                </View>
             </ScrollView>
         </View>
+        </>
     )
 }
 

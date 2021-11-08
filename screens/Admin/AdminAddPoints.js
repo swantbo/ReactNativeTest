@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, TextInput, Alert } from 'react-native';
-import { Card, ListItem } from 'react-native-elements';
-import { ScrollView } from 'react-native-gesture-handler';
+import { Card } from 'react-native-elements';
 import * as firebase from 'firebase';
 
 import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider'

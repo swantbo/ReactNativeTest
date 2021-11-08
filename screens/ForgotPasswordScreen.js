@@ -8,27 +8,13 @@ import Firebase from '../config/firebase';
 
 const auth = Firebase.auth();
 
-export default function LoginScreen({ navigation }) {
+export default function ForgotPasswordScreen({ navigation }) {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordVisibility, setPasswordVisibility] = useState(true);
-  const [rightIcon, setRightIcon] = useState('eye');
-  const [loginError, setLoginError] = useState('');
 
-  const handlePasswordVisibility = () => {
-    if (rightIcon === 'eye') {
-      setRightIcon('eye-off');
-      setPasswordVisibility(!passwordVisibility);
-    } else if (rightIcon === 'eye-off') {
-      setRightIcon('eye');
-      setPasswordVisibility(!passwordVisibility);
-    }
-  };
-
-  const onLogin = async () => {
+  const onChangePassword = async () => {
     try {
       if (email !== '' && password !== '') {
-        await auth.signInWithEmailAndPassword(email, password);
+        await auth.sendPasswordResetEmail(email)
       }
     } catch (error) {
       setLoginError(error.message);
@@ -38,7 +24,7 @@ export default function LoginScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <StatusBar style='dark-content' />
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Forgot Password</Text>
       <InputField
         inputStyle={{
           fontSize: 14,
@@ -58,32 +44,10 @@ export default function LoginScreen({ navigation }) {
         value={email}
         onChangeText={text => setEmail(text)}
       />
-      <InputField
-        inputStyle={{
-          fontSize: 14
-        }}
-        containerStyle={{
-          backgroundColor: '#fff',
-          marginBottom: 20,
-          borderColor: 'black', 
-          borderWidth: 1
-        }}
-        leftIcon='lock'
-        placeholder='Enter password'
-        autoCapitalize='none'
-        autoCorrect={false}
-        secureTextEntry={passwordVisibility}
-        textContentType='password'
-        rightIcon={rightIcon}
-        value={password}
-        onChangeText={text => setPassword(text)}
-        handlePasswordVisibility={handlePasswordVisibility}
-      />
-      {loginError ? <ErrorMessage error={loginError} visible={true} /> : null}
       <Button
-        onPress={onLogin}
+        onPress={onChangePassword}
         backgroundColor='#000000'
-        title='Login'
+        title='Send Email'
         tileColor='#fff'
         titleSize={20}
         containerStyle={{
@@ -91,13 +55,8 @@ export default function LoginScreen({ navigation }) {
         }}
       />
       <RNButton
-        onPress={() => navigation.navigate('Signup')}
-        title='Go to Signup'
-        color='#000000'
-      />
-      <RNButton
-        onPress={() => navigation.navigate('ForgotPassword')}
-        title='Forgot Password?'
+        onPress={() => navigation.navigate('Login')}
+        title='Go to Login'
         color='#000000'
       />
       <ImageBackground source={require('../assets/123_1.jpeg')} style={ styles.image} resizeMode="cover"> 

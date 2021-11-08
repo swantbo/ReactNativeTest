@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, ScrollView, Linking } from 'react-native';
 import { Card, SocialIcon, Avatar } from 'react-native-elements'
 import * as firebase from 'firebase';
 import { formatPhoneNumber } from '../../utils/DataFormatting';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AboutScreen = () => {
     const [barberData, setBarberData] = useState({'Tuesday': '', 'Wednesday': '', 'Thursday': '',  'Friday': '', 'Saturday': '', 'instagram': '', 'location': '', 'name': '', 'phone': '', 'price': '', 'website': '' });

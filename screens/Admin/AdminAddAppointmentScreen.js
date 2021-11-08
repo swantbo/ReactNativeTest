@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Button, StyleSheet } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 import moment from 'moment';
-import { Card, ListItem } from 'react-native-elements';
-import { TextInput } from 'react-native-gesture-handler';
+import { ListItem } from 'react-native-elements';
 import { InputField } from '../../components';
 import * as firebase from 'firebase';
 
@@ -104,7 +103,7 @@ const AdminAddAppointmentScreen = ( { route, navigation } ) => {
                                 }}
                                 leftIcon='account'
                                 placeholder='Name'
-                                autoCapitalize='first'
+                                autoCapitalize='none'
                                 autoFocus={true}
                                 value={name}
                                 onChangeText={text => onChangeName(text)}
@@ -123,7 +122,7 @@ const AdminAddAppointmentScreen = ( { route, navigation } ) => {
                                 leftIcon='phone'
                                 placeholder='Phone Number'
                                 autoCapitalize='none'
-                                keyboardType='phone'
+                                keyboardType='phone-pad'
                                 autoFocus={true}
                                 value={number}
                                 onChangeText={text => onChangeNumber(text)}
@@ -141,7 +140,7 @@ const AdminAddAppointmentScreen = ( { route, navigation } ) => {
                                 }}
                                 leftIcon='comment'
                                 placeholder='Comment'
-                                autoCapitalize='first'
+                                autoCapitalize='none'
                                 autoFocus={true}
                                 value={comment}
                                 onChangeText={text => onChangeComment(text)}

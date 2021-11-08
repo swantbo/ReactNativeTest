@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
-import { View, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
-import { Card, ListItem, Button, Icon } from 'react-native-elements'
+import { View, StyleSheet, TextInput, ActivityIndicator } from "react-native";
+import { ListItem, Button } from 'react-native-elements'
 
 import * as firebase from 'firebase';
 import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider'

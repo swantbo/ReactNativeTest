@@ -13,7 +13,7 @@ const AdminCalendarScreen = ({ navigation }) => {
     const [calendarData, setCalendarData] = useState([]);
     const [selectedDate, setSelectedDate] = useState(moment());
     const [formattedDate, setFormattedDate] = useState();
-    const [availibility, setAvailibility] = useState({'Tuesday': '', 'Wednesday': '', 'Thursday': '', 'Friday': '', 'Saturday': '', 'goatPoints': ''})
+    const [availibility, setAvailibility] = useState({'Sunday': '','Monday': '', 'Tuesday': '', 'Wednesday': '', 'Thursday': '', 'Friday': '', 'Saturday': '' })
 
     async function getAvailibility() {
           await firebase.firestore().collection('Barber').doc('Nate').get().then((doc) => {
@@ -59,7 +59,9 @@ const AdminCalendarScreen = ({ navigation }) => {
             const testIntervals = [ ...data, ...newIntervals ]
             setCalendarData( calendarTimes )
             setIsLoading(false)
-        }).catch((err))
+        }).catch((e) => {
+          Alert.alert('Error', `Unable to get data, try again. ${e}`)
+      })
     }
 
     useEffect(() => {

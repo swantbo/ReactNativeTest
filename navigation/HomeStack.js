@@ -15,16 +15,14 @@ function homeSettingStackScreen({ navigation }) {
     <homeSettingStack.Navigator 
     screenOptions={{
         headerStyle:{backgroundColor: '#121212', shadowColor: '#E8BD70'}, headerTintColor: '#E8BD70',
-        headerTitleAlign: 'center'
+        headerTitleAlign: 'left'
         }}>
         <homeSettingStack.Screen name='Home' component={HomeScreen} options={{ headerRight: () => (
                 <Ionicons name="settings" color={'#E8BD70'} size={23} style={{padding: 10}}
                   onPress={() => navigation.navigate('Settings')}
-                  title="Add"
-                  color="#E8BD70"
                 />
               ),}}/>
-        <homeSettingStack.Screen name='Settings' options={{ title: 'Settings'}} component={SettingsScreen} />
+        <homeSettingStack.Screen name='Settings' options={{ title: 'Settings', headerTitleAlign: 'center'}} component={SettingsScreen} />
     </homeSettingStack.Navigator>
 )
 }
@@ -44,7 +42,7 @@ export default function HomeStack({ navigation }) {
         borderTopWidth: 0
         },
       headerTintColor: '#E8BD70',
-      headerTitleAlign: 'center',
+      headerTitleAlign: 'flex-start',
       tabBarActiveTintColor: '#E8BD70',
       tabBarInactiveTintColor: '#fff'
   }}>

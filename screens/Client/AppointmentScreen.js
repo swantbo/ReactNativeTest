@@ -1,8 +1,8 @@
 import moment from 'moment';
 import React, { useEffect, useState, useContext } from 'react';
-import { View, StyleSheet, Text, ScrollView, TextInput, Button, ActivityIndicator, Alert } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, Button, ActivityIndicator, Alert } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
-import { Card, CheckBox, ListItem } from 'react-native-elements';
+import { Card, ListItem } from 'react-native-elements';
 
 import { InputField } from '../../components';
 import * as firebase from 'firebase';
@@ -225,9 +225,9 @@ const AppointmentScreen = () => {
                 {!isLoading && times && !timePicked ?
                     <ScrollView>
                         {Object.entries(newTimes).map((onekey, i) => (
-                            <ListItem bottomDivider containerStyle={styles.ListItem} onPress={() => scheduleAppointment(onekey[0])}>
+                            <ListItem bottomDivider containerStyle={styles.ListItem} key={i} onPress={() => scheduleAppointment(onekey[0])}>
                                 <ListItem.Content>
-                                    <ListItem.Title key={i} style={styles.text}>{onekey[1] ? null : onekey[0]}</ListItem.Title>
+                                    <ListItem.Title style={styles.text}>{onekey[1] ? null : onekey[0]}</ListItem.Title>
                                 </ListItem.Content>
                             </ListItem>
                         ))}

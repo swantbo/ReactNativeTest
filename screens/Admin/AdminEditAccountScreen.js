@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Alert, Text, Button } from 'react-native';
-import { ListItem } from 'react-native-elements';
+import { View, StyleSheet, Alert, Text } from 'react-native';
+import { ListItem, Button } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Ionicons } from '@expo/vector-icons';
 import { formatPhoneNumber } from '../../utils/DataFormatting';
 
 import * as firebase from 'firebase';
@@ -28,6 +27,30 @@ const AdminEditAccountScreen = ({ navigation }) => {
         alert('Unable to delete user try again')
     })}
 
+    const removeStrike = (user_id, strikes) => {
+        if (strikes > 0) {
+            const strikesTotal = Number(strikes) - 1
+            const newStikes = {
+                strikes: strikesTotal.toString()
+            }
+            firebase.firestore().collection('users').doc(user_id).set(newStikes, {merge: true}).catch((e) => {
+                alert('Unable to remove Strikes to user, try again')
+            })
+        } else {
+            alert('User must have strikes to remove them')
+        }
+    }
+
+    const addStrike = (user_id, strikes) => {
+        const strikesTotal = 1 + Number(strikes)
+
+        const newStikes = {
+            strikes: strikesTotal.toString()
+        }
+        firebase.firestore().collection('users').doc(user_id).set(newStikes, {merge: true}).catch((e) => {
+        alert('Unable to add Strikes to user, try again')
+    })}
+
     useEffect(() => {
         getUsers()
         }, [])
@@ -37,22 +60,57 @@ const AdminEditAccountScreen = ({ navigation }) => {
             <ScrollView>
                 { userInfo &&
                     userInfo.map((onekey, i) => (
-                        <><ListItem bottomDivider containerStyle={styles.ListItem} key={i}>
-                            <ListItem.Content>
-                                <View style={{flex: 1, flexDirection: 'row'}}>
-                                    <View style={{flex: 1, alignItems: 'flex-start' }}>
-                                        <ListItem.Title style={{ fontWeight: 'bold', paddingBottom: 10, color: '#fff'}} key={i}>{onekey.name} </ListItem.Title>
-                                    </View>
-                                    <View style={{flex: 1, alignItems: 'flex-end'}}>
-                                        <Ionicons style={{alignSelf: 'flex-end'}} name="trash" color={'#E8BD70'} size={30} color="#E8BD70"     
-                                             onPress={() => Alert.alert('Delete', `Are you sure you want to delete ${"\n"}Account Name: ${onekey.name ? onekey.name : 'N/A'} ${"\n"}Account Id: ${onekey.id ? onekey.id : 'N/A'}`, 
+                        <><ListItem.Swipeable bottomDivider containerStyle={styles.ListItem} key={i}
+                            rightContent={
+                                <Button
+                                    title="Delete"
+                                    icon={{ name: 'delete', color: 'white' }}
+                                    buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
+                                    onPress={() => 
+                                        Alert.alert('Delete', `Are you sure you want to delete ${"\n"}Account Name: ${onekey.name ? onekey.name : 'N/A'} ${"\n"}Account Id: ${onekey.id ? onekey.id : 'N/A'}`, 
                                              [
                                                  {
                                                    text: "Cancel"
                                                  },
                                                  { text: "Delete User", onPress: () => (deleteUser(onekey.id)) }
                                                ]) }
-                                        />
+                                />
+                            }
+                            leftContent={
+                                <Button
+                                    title="Add Points"
+                                    icon={{ name: 'add-circle', color: 'white' }}
+                                    buttonStyle={{ minHeight: '100%', backgroundColor: 'green' }}
+                                    onPress={() => navigation.navigate('Points', {
+                                        name: onekey.name,
+                                        userId: onekey.id,
+                                        goatPoints: onekey.points,
+                                    })}
+                                />
+                            }>
+                            
+                            <ListItem.Content>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <View style={{flex: 1, alignItems: 'flex-start' }}>
+                                        <ListItem.Title style={{ fontWeight: 'bold', paddingBottom: 10, color: '#E8BD70'}}>{onekey.name}</ListItem.Title>
+                                    </View>
+                                    <View style={{flex: 1, alignItems: 'flex-end' }}>
+                                        <ListItem.Title style={{ fontWeight: 'bold', paddingBottom: 10, color: 'red'}} 
+                                            onPress={() => 
+                                                Alert.alert('Strikes', `Would you like to add or remove strikes from ${"\n"}Account Name: ${onekey.name ? onekey.name : 'N/A'} ${"\n"}Account Id: ${onekey.id ? onekey.id : 'N/A'}`, 
+                                                [
+                                                    {
+                                                    text: "Cancel"
+                                                    },
+                                                    { 
+                                                    text: "Remove Strike", onPress: () => (removeStrike(onekey.id, onekey.strikes)) 
+                                                    },
+                                                    {
+                                                    text: 'Add Strike', onPress: () => (addStrike(onekey.id, onekey.strikes))
+                                                    }
+                                            ])}>
+                                            Strikes: {onekey.strikes ? onekey.strikes : 'N/A'}
+                                        </ListItem.Title>
                                     </View>
                                 </View>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
@@ -64,21 +122,15 @@ const AdminEditAccountScreen = ({ navigation }) => {
                                     </View>
                                 </View>
                                     <View style={{flex: 1, flexDirection: 'row'}}>
-                                        <View style={{flex: 1, alignItems: 'flex-start' }}>
-                                            <ListItem.Subtitle style={styles.text}>UserId: {onekey.id ? onekey.id : 'N/A'}</ListItem.Subtitle>
+                                        <View style={{flex: 2, alignItems: 'flex-start' }}>
+                                            <ListItem.Subtitle style={styles.text}>{onekey.id ? onekey.id : 'N/A'}</ListItem.Subtitle>
                                         </View>
                                         <View style={{flex: 1, alignItems: 'flex-end'}}>
                                             <ListItem.Subtitle style={styles.text}>Goat Points: {onekey.points}</ListItem.Subtitle>
-                                            <Ionicons name="add-circle" color={'#E8BD70'} size={30} color="#E8BD70"     
-                                            onPress={() => navigation.navigate('Points', {
-                                                name: onekey.name,
-                                                userId: onekey.id,
-                                                goatPoints: onekey.points,
-                                            })}/>
                                         </View>
                                     </View>
                             </ListItem.Content>
-                        </ListItem>
+                        </ListItem.Swipeable>
                         </>
                         
                 ))}

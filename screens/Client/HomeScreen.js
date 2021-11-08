@@ -3,18 +3,12 @@ import { View, Text, StyleSheet, Alert } from 'react-native';
 import { Card, ListItem, Button, Avatar } from 'react-native-elements'
 import * as firebase from 'firebase';
 import { ScrollView } from 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
 import moment from 'moment';
-import Colors from '../../constants/Colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Camera } from 'expo-camera';
-//import ImagePicker from '../../components/ImagePicker'
 import * as ImagePicker from 'expo-image-picker';
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import { formatPhoneNumber } from '../../utils/DataFormatting';
 
-import { IconButton } from '../../components';
 import Firebase from '../../config/firebase';
 import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider';
 
@@ -134,7 +128,7 @@ export default function HomeScreen() {
   return(
     <View style={styles.container}>
         <Card containerStyle={{flex: 1, margin: 0, backgroundColor: '#E8BD70', borderColor: '#000'}}>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{flexDirection: 'row', marginTop: 25}}>
             <View style={{flex: 1,}}>
               <Card.Title style={{alignSelf: 'flex-start'}}><Avatar rounded size="large" title={userTestData.name[0]} source={{ uri: image }} />
                 <MaterialCommunityIcons
@@ -167,7 +161,7 @@ export default function HomeScreen() {
                             title="Delete"
                             icon={{ name: 'delete', color: 'white' }}
                             buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
-                            onPress={() =>deleteAppointment(onekey[0], onekey[1].time)}
+                            onPress={() => deleteAppointment(onekey[0], onekey[1].time)}
                           />
                         }
                         >

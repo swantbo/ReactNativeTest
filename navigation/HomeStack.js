@@ -7,6 +7,7 @@ import HomeScreen from '../screens/Client/HomeScreen';
 import AppointmentScreen from '../screens/Client/AppointmentScreen';
 import AboutScreen from '../screens/Client/AboutScreen';
 import SettingsScreen from '../screens/Client/SettingsScreen';
+import ViewImageScreen from '../screens/Client/ViewImageScreen';
 
 const homeSettingStack = createStackNavigator()
 
@@ -24,6 +25,21 @@ function homeSettingStackScreen({ navigation }) {
               ),}}/>
         <homeSettingStack.Screen name='Settings' options={{ title: 'Settings', headerTitleAlign: 'center'}} component={SettingsScreen} />
     </homeSettingStack.Navigator>
+)
+}
+
+const AboutStack = createStackNavigator()
+
+function AboutStackScreen({ navigation }) {
+  return (
+    <AboutStack.Navigator 
+    screenOptions={{
+        headerStyle:{backgroundColor: '#121212', shadowColor: '#E8BD70'}, headerTintColor: '#E8BD70',
+        headerTitleAlign: 'left'
+        }}>
+        <AboutStack.Screen name='Nate' component={AboutScreen} options={{ headerShown: false }}/>
+        <AboutStack.Screen name='ViewImage' options={{ title: 'View Image', headerTitleAlign: 'center'}} component={ViewImageScreen} />
+    </AboutStack.Navigator>
 )
 }
 
@@ -48,7 +64,7 @@ export default function HomeStack({ navigation }) {
   }}>
       <Tab.Screen name='Home' component={homeSettingStackScreen} options={{ headerShown: false, tabBarIcon: ({ color, size }) => (<Ionicons name="home" color={color} size={size} />)}}/>
       <Tab.Screen name='Appointment' component={AppointmentScreen} options={{ tabBarIcon: ({ color, size }) => (<Ionicons name="calendar" color={color} size={size} />)}}/>
-      <Tab.Screen name='Nate' component={AboutScreen} options={{ headerShown: false, tabBarIcon: ({ color, size }) => (<Ionicons name="list-circle" color={color} size={size} />)}}/>
+      <Tab.Screen name='Nate' component={AboutStackScreen} options={{ headerShown: false, tabBarIcon: ({ color, size }) => (<Ionicons name="list-circle" color={color} size={size} />)}}/>
   </Tab.Navigator>
   );
 }

@@ -14,10 +14,11 @@ const auth = Firebase.auth();
 
 export default function RootNavigator() {
   const { user, setUser } = useContext(AuthenticatedUserContext);
+  const [admin, setAdmin] = useState(false)
   const [isLoading, setIsLoading] = useState(true);
   // let admin = AdminProvider()
   // console.log('admin', admin)
-  let admin = false
+  //let admin = false
 
   useEffect(() => {
     const unsubscribeAuth = auth.onAuthStateChanged(async authenticatedUser => {
@@ -29,6 +30,14 @@ export default function RootNavigator() {
       }
     });
 
+    async function getAdmin() {
+      await firebase.firestore().collection('users').doc(user.uid).get().then((doc) => {
+          doc.data()?.admin === true ? setAdmin(true) : setAdmin(false)
+          console.log('admin', admin)
+      })
+    }
+      
+    getAdmin()
     return unsubscribeAuth;
   }, []);
 
@@ -42,7 +51,7 @@ export default function RootNavigator() {
 
   return (
     <NavigationContainer>
-      {user && admin === false ? <HomeStack /> : user && admin === true ? <AdminStack /> : <AuthStack />}
+      {user && admin !== true ? <HomeStack /> : user && admin === true ? <AdminStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }

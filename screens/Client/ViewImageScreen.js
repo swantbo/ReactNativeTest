@@ -10,12 +10,17 @@ const ViewImageScreen = ({ route }) => {
 
     return (
         <View style={styles.container}>
-            <Image
-                style={{ flex: 1, width: 150, height: 150,
-                    resizeMode: 'contain' }}
-                resizeMode="cover"
-                source={{ uri: selectedImage }}
-            />
+            <Card containerStyle={{ flex: 1, backgroundColor: '#121212', borderColor: '#121212'}}>
+                <Card.Title style={styles.text}>Image Title</Card.Title>
+                <Card.Divider/>
+                <View>
+                    <Image
+                        style={{ width: '100%', height: '75%', marginBottom: 10 }}
+                        source={{ uri: selectedImage }}
+                        resizeMode={'contain'}
+                    />
+                </View>
+            </Card>
         </View>
     )
 }

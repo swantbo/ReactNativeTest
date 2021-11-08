@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
-import { Card, ListItem, Button, Avatar } from 'react-native-elements'
+import { Card, ListItem, Button, Avatar, Image } from 'react-native-elements'
 import * as firebase from 'firebase';
 import { ScrollView } from 'react-native-gesture-handler';
 import moment from 'moment';
@@ -141,7 +141,9 @@ export default function HomeScreen() {
             </View>
             <View style={{flex: 3, alignItems: 'center'}}>
               <Card.Title style={{ fontSize: 20, color: '#fff' }}> {userTestData.name} </Card.Title>
-              <Card.Title style={{ fontSize: 15, color: '#fff' }}>Goat Points: {userTestData.points}</Card.Title>
+              <Card.Title style={{ fontSize: 15, color: '#fff' }}>
+                GP: {userTestData.points}
+              </Card.Title>
             </View>
           </View>
         </Card>
@@ -168,7 +170,9 @@ export default function HomeScreen() {
                             <ListItem.Content>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View style={{flex: 2, alignItems: 'flex-start' }}>
-                                        <ListItem.Title style={{ color: '#fff'}}>{onekey[0]}, {onekey[1].time.toString().toLowerCase()}</ListItem.Title>
+                                        <ListItem.Title style={{ color: '#fff'}}>
+                                          {onekey[0]}, {onekey[1].time.toString().toLowerCase()} 
+                                        </ListItem.Title>
                                     </View>
                                     { onekey[1].points ?
                                       <>
@@ -193,6 +197,11 @@ export default function HomeScreen() {
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View style={{flex: 1, alignItems: 'flex-start' }}>
                                         <Text style={{ color: '#fff'}}>{barberData.location != '' ? barberData.location : ''} </Text>
+                                    </View>
+                                </View>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <View style={{flex: 1, alignItems: 'flex-start' }}>
+                                        <Text style={{ color: '#fff'}}>{onekey[1]?.friend ? 'Friend: ' + onekey[1].friend : ''} </Text>
                                     </View>
                                 </View>
                             </ListItem.Content>

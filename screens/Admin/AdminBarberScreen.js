@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Linking } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Linking, ActivityIndicator } from 'react-native';
 import { Card, SocialIcon, Avatar, Image } from 'react-native-elements'
 import * as firebase from 'firebase';
 import { formatPhoneNumber } from '../../utils/DataFormatting';
@@ -9,7 +9,12 @@ import * as ImagePicker from 'expo-image-picker';
 const AdminBarberScreen = () => {
     const [barberData, setBarberData] = useState({'Tuesday': '', 'Wednesday': '', 'Thursday': '',  'Friday': '', 'Saturday': '', 'instagram': '', 'location': '', 'name': '', 'phone': '', 'price': '', 'website': '' });
     const [image, setImage] = useState(null)
-    const [haircutPictures, setHaircutPictures] = useState(null)
+    const [haircutPictures1, setHaircutPictures1] = useState(null)
+    const [haircutPictures2, setHaircutPictures2] = useState(null)
+    const [haircutPictures3, setHaircutPictures3] = useState(null)
+    const [haircutPictures4, setHaircutPictures4] = useState(null)
+    const [haircutPictures5, setHaircutPictures5] = useState(null)
+    const [haircutPictures6, setHaircutPictures6] = useState(null)
 
     async function getBarberData() {
         await firebase.firestore().collection('Barber').doc('Nate').get().then((barber) => {
@@ -57,12 +62,29 @@ const AdminBarberScreen = () => {
           async function getBarberImage() {
             await firebase.storage().ref('Barber/ProfilePicture').getDownloadURL().then((ProfileImage) => {
               setImage(ProfileImage)
-              console.log('NewImage', ProfileImage)
+            })
+            await firebase.storage().ref('Barber/ProfilePicture').getDownloadURL().then((ProfileImage) => {
+                setImage(ProfileImage)
             })
             await firebase.storage().ref('Barber/HaircutPictures/1').getDownloadURL().then((image) => {
-                setHaircutPictures(image)
-                console.log('NewImage', image)
-              })
+                setHaircutPictures1(image)
+            })
+            await firebase.storage().ref('Barber/HaircutPictures/2').getDownloadURL().then((image) => {
+                setHaircutPictures2(image)
+            })
+            await firebase.storage().ref('Barber/HaircutPictures/3').getDownloadURL().then((image) => {
+                setHaircutPictures3(image)
+            })
+            await firebase.storage().ref('Barber/HaircutPictures/4').getDownloadURL().then((image) => {
+                setHaircutPictures4(image)
+            })
+            await firebase.storage().ref('Barber/HaircutPictures/5').getDownloadURL().then((image) => {
+                setHaircutPictures5(image)
+            })
+            await firebase.storage().ref('Barber/HaircutPictures/6').getDownloadURL().then((image) => {
+                setHaircutPictures6(image)
+            })
+
           }
           getBarberImage()
         }, [])
@@ -134,8 +156,9 @@ const AdminBarberScreen = () => {
                                     style={{ flex: 1, width: 150, height: 150,
                                         resizeMode: 'contain' }}
                                     resizeMode="cover"
-                                    source={{ uri: haircutPictures }}
+                                    source={{ uri: haircutPictures1 }}
                                     onPress={() => pickImage('Haircut', '1')}
+                                    PlaceholderContent={<ActivityIndicator />}
                                 />
                                 <Card.Title style={{color: '#fff'}}>Haircut 1</Card.Title>
                             </Card>
@@ -146,8 +169,9 @@ const AdminBarberScreen = () => {
                                     style={{ flex: 1, width: 150, height: 150,
                                         resizeMode: 'contain' }}
                                     resizeMode="cover"
-                                    source={{ uri: haircutPictures }}
+                                    source={{ uri: haircutPictures2 }}
                                     onPress={() => pickImage('Haircut', '2')}
+                                    PlaceholderContent={<ActivityIndicator />}
                                 />
                                 <Card.Title style={{color: '#fff'}}>Haircut 2</Card.Title>
                             </Card>
@@ -161,8 +185,9 @@ const AdminBarberScreen = () => {
                                     style={{ flex: 1, width: 150, height: 150,
                                         resizeMode: 'contain' }}
                                     resizeMode="cover"
-                                    source={{ uri: haircutPictures }}
+                                    source={{ uri: haircutPictures3 }}
                                     onPress={() => pickImage('Haircut', '3')}
+                                    PlaceholderContent={<ActivityIndicator />}
                                 />
                                 <Card.Title style={{color: '#fff'}}>Haircut 3</Card.Title>
                             </Card>
@@ -173,8 +198,9 @@ const AdminBarberScreen = () => {
                                     style={{ flex: 1, width: 150, height: 150,
                                         resizeMode: 'contain' }}
                                     resizeMode="cover"
-                                    source={{ uri: haircutPictures }}
+                                    source={{ uri: haircutPictures4 }}
                                     onPress={() => pickImage('Haircut', '4')}
+                                    PlaceholderContent={<ActivityIndicator />}
                                 />
                                 <Card.Title style={{color: '#fff'}}>Haircut 4</Card.Title>
                             </Card>
@@ -188,8 +214,9 @@ const AdminBarberScreen = () => {
                                     style={{ flex: 1, width: 150, height: 150,
                                         resizeMode: 'contain' }}
                                     resizeMode="cover"
-                                    source={{ uri: haircutPictures }}
+                                    source={{ uri: haircutPictures5 }}
                                     onPress={() => pickImage('Haircut', '5')}
+                                    PlaceholderContent={<ActivityIndicator />}
                                 />
                                 <Card.Title style={{color: '#fff'}}>Haircut 5</Card.Title>
                             </Card>
@@ -200,8 +227,9 @@ const AdminBarberScreen = () => {
                                     style={{ flex: 1, width: 150, height: 150,
                                         resizeMode: 'contain' }}
                                     resizeMode="cover"
-                                    source={{ uri: haircutPictures }}
+                                    source={{ uri: haircutPictures6 }}
                                     onPress={() => pickImage('Haircut', '6')}
+                                    PlaceholderContent={<ActivityIndicator />}
                                 />
                                 <Card.Title style={{color: '#fff'}}>Haircut 6</Card.Title>
                             </Card>

@@ -21,6 +21,7 @@ const AppointmentScreen = () => {
     const [availibility, setAvailibility] = useState({'Tuesday': '', 'Wednesday': '', 'Thursday': '', 'Friday': '', 'Saturday': ''})
     const [userName, setUserName] = useState('')
     const [userPhone, setUserPhone] = useState('')
+    const [userStrikes, setUserStrikes] = useState('')
     const [text, onChangeText] = useState('')
     const [userPoints, setUserPoints] = useState('')
     const [newTimes, setNewTimes] = useState({})
@@ -38,7 +39,8 @@ const AppointmentScreen = () => {
                 const userNameData = doc.data().name
                 const userPhoneData = doc.data().phone
                 const userPoints = doc.data().points
-                setUserName(userNameData ), setUserPhone( userPhoneData), setUserPoints(userPoints)
+                const userStrikes =doc.data().strikes
+                setUserName(userNameData ), setUserPhone( userPhoneData), setUserPoints(userPoints), setUserStrikes(userStrikes)
             })
         
             await firebase.firestore().collection('Barber').doc('Nate').get().then((doc) => {
@@ -150,7 +152,9 @@ const AppointmentScreen = () => {
             comment: text,
             time : selectedTime,
             phone : userPhone,
-            goatPoints : discount !=false ? userPoints : ''
+            goatPoints : discount !=false ? userPoints : '',
+            strikes: userStrikes,
+            userId: user.uid
         };
 
         await firebase.firestore()

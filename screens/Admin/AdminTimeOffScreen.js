@@ -12,43 +12,52 @@ import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProv
 const AdminTimeOffScreen = ({ route }) => {
   const [selectedDate, setSelectedDate] = useState(moment());
   const [formattedDate, setFormattedDate] = useState();
-  const [time, onChangeTime] = useState(new Date().setHours(0,0,0,0));
-  const [interval, setMinInterval] = useState(1);
+  const [startTime, setStartTime] = useState(new Date('2020-08-22T17:00:00.000Z'))
+  const [endTime, setEndTime] = useState(new Date('2020-08-22T05:00:00.000Z'))
+  const [time, onChangeTime] = useState(null);
   const [allDay, setAllDay] = useState(false)
 
     useEffect(() => {
-    
+		//setStartTime(Date())
+		setEndTime(new Date('1995-12-17T00:00:00'))
     }, [])
 
     const onDateSelected = selectedDate => {
-      setSelectedDate( new Date(selectedDate))
-      setFormattedDate(selectedDate.format('YYYY-MM-DD'));
+		//setStartTime(Date(selectedDate))
+      	setFormattedDate(selectedDate.format('YYYY-MM-DD'));
     }
 	const timeOffAllDay = () => {
 		allDay === false ? setAllDay(true) : setAllDay(false) 
 	}
 
-	const onTimeChange = (event, newTime) => {
-		console.log('newTime', newTime)
-		onChangeTime(newTime);
-	  };
+	const onStartTimeChange = (event, selectedTime) => {
+		console.log('selectedTime', selectedTime)
+		const currentDate = selectedTime || time;
+		console.log('StartTime', currentDate.toString())
+		setStartTime(currentDate);
+	};
+
+	const onEndTimeChange = (newTime) => {
+		console.log('EndTime', newTime)
+		setEndTime(Date(newTime));
+	};
 
     return(
         <View style={styles.container}>
           <View style={{flex: 1}}>
                 <CalendarStrip
-                scrollable
-                style={{height:100, paddingTop: 10, paddingBottom: 10}}
-                calendarHeaderStyle={{color: '#E8BD70', fontSize: 17}}
-                calendarColor={'#121212'}
-                dateNumberStyle={{color: 'white'}}
-                dateNameStyle={{color: 'white'}}
-                iconContainer={{flex: 0.1}}
-                highlightDateNameStyle={{color: 'white'}}
-                highlightDateNumberStyle={{fontWeight: 'bold', color: 'white'}}
-                highlightDateContainerStyle={{backgroundColor: '#E8BD70'}}
-                selectedDate={selectedDate}
-                onDateSelected={onDateSelected}
+					scrollable
+					style={{height:100, paddingTop: 10, paddingBottom: 10}}
+					calendarHeaderStyle={{color: '#E8BD70', fontSize: 17}}
+					calendarColor={'#121212'}
+					dateNumberStyle={{color: 'white'}}
+					dateNameStyle={{color: 'white'}}
+					iconContainer={{flex: 0.1}}
+					highlightDateNameStyle={{color: 'white'}}
+					highlightDateNumberStyle={{fontWeight: 'bold', color: 'white'}}
+					highlightDateContainerStyle={{backgroundColor: '#E8BD70'}}
+					selectedDate={selectedDate}
+					onDateSelected={onDateSelected}
                 />
             </View>
             <View style={{flex: 7}}>
@@ -58,52 +67,41 @@ const AdminTimeOffScreen = ({ route }) => {
                     </ListItem.Content>
                 </ListItem>
 					{ formattedDate &&
-                        <View style={{padding: 5}}>
-                        
-                            {/* <InputField
-                                inputStyle={{
-                                fontSize: 14,
-                                }}
-                                containerStyle={{
-                                backgroundColor: '#fff',
-                                marginBottom: 20,
-                                borderColor: 'black', 
-                                borderWidth: 1
-                                }}
-                                leftIcon='clock-time-eight'
-                                placeholder='Appointment Time'
-                                autoFocus={true}
-                                value={time}
-                                onChangeText={text => onChangeTime(text)}
-                            /> */}
+                        <Card style={{flex: 1, padding: 5}}>
+							
 							<CheckBox
+								containerStyle={{backgroundColor: '#121212'}}
+								textStyle={{color: '#fff'}}
 								title='All Day'
 								checked={allDay}
 								onPress={() => timeOffAllDay()}
 							/>
-
+						
 							<DateTimePicker
-								value={time}
+								style={{backgroundColor: 'pink'}}
+								value={startTime}
 								mode='time'
 								//mode={mode}
 								//is24Hour={true}
 								display="default"
-								onChange={onTimeChange}
+								onChange={onStartTimeChange}
 								is24Hour={true}
-								minuteInterval={interval}
+								minuteInterval={30}
 							/>
 							
-							{/* <DateTimePicker
-								value={selectedDate}
-								mode={time}
+							<DateTimePicker
+								value={endTime}
+								mode='time'
 								//mode={mode}
-								//is24Hour={true}
+								//is24Hour={true} 
 								display="default"
-								//onChange={setTimeout(value)}
-							/> */}
-
-                            <Button title={'Add Appointment'} color={'#E8BD70'} onPress={() => scheduleAppoint()}/>
-                        </View>
+								onChange={onEndTimeChange}
+								is24Hour={true}
+								minuteInterval={30}
+							/>
+						
+						<Button title={'Schedule Time Off'} color={'#E8BD70'} onPress={() => 'scheduleAppoint()'}/>
+					</Card>
 				}
             </View>
         </View>

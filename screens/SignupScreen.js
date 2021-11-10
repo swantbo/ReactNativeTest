@@ -40,7 +40,8 @@ export default function SignupScreen({ navigation }) {
               phone: phone,
               name: name,
               referral: referral,
-              points: '0'
+              points: '0',
+              strikes: '0'
           };
           firebase.firestore().collection('users').doc(data.user.uid).set(user);
       })}

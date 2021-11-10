@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 import moment from 'moment';
-import { ListItem } from 'react-native-elements';
+import { ListItem, Button } from 'react-native-elements';
 import { formatPhoneNumber } from '../../utils/DataFormatting';
 import * as firebase from 'firebase';
 
@@ -85,6 +85,16 @@ const AdminCalendarScreen = ({ navigation }) => {
               Alert.alert('Error', `Unable to delete appointment. Try again. ${e}`)
           })
       }
+
+      const addStrike = (user_id, strikes) => {
+        const strikesTotal = 1 + Number(strikes)
+
+        const newStikes = {
+            strikes: strikesTotal.toString()
+        }
+        firebase.firestore().collection('users').doc(user_id).set(newStikes, {merge: true}).catch((e) => {
+        alert('Unable to add Strikes to user, try again')
+    })}
     
     return(
         <View style={styles.container}> 
@@ -117,14 +127,39 @@ const AdminCalendarScreen = ({ navigation }) => {
                     <ScrollView style={{ borderColor: 'black', borderRadius: 15}}>
                         {
                         calendarData.map((key, index) => (
-                            <ListItem key={`${key.name}_${key.phone}_${key.time}_${key.comment}`} bottomDivider containerStyle={styles.ListItem}
-                            onPress={() => key.name ? Alert.alert('Delete', `Are you sure you want to delete this ${"\n"}Appointment Time ${key.time} ${"\n"} with Client: ${key.name}`, 
+                            <ListItem.Swipeable key={`${key.name}_${key.phone}_${key.time}_${key.comment}`} bottomDivider containerStyle={styles.ListItem}
+                              rightContent={
+                                <Button
+                                  title="Delete"
+                                  icon={{ name: 'delete', color: 'white' }}
+                                  buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
+                                  onPress={() => key.name ? Alert.alert('Delete', `Are you sure you want to delete this ${"\n"}Appointment Time ${key.time} ${"\n"} with Client: ${key.name}`, 
                             [
                                 {
                                   text: "Cancel"
                                 },
                                 { text: "Delete Appointment", onPress: () => (deleteAppointment(key.time))}
-                              ]) : navigation.navigate('AdminAddAppointmentScreen', { formattedDate, time : [`${key.time}`] })}> 
+                              ]) : null }
+                                />
+                              }
+                              leftContent={
+                                <Button
+                                    title={key.strikes ? 'Strikes: ' +  key.strikes : 'Add Strike'}
+                                    icon={{ name: 'add-circle', color: 'white' }}
+                                    buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
+                                    onPress={() => 
+                                      Alert.alert('No Call No Show', `Would you like to add a strike to Account Name: ${key.name ? key.name : 'N/A'} ${"\n"}Account Id: ${key.id ? key.id : 'N/A'}`, 
+                                      [
+                                          {
+                                          text: "Cancel"
+                                          },
+                                          {
+                                          text: 'Add Strike', onPress: () => (addStrike(key.userId, key.strikes))
+                                          }
+                                  ])}
+                                />
+                            }
+                            onPress={() => !key.name ? navigation.navigate('AdminAddAppointmentScreen', { formattedDate, time : [`${key.time}`] }) : null}> 
                               <ListItem.Content>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                   <View style={{flex: 1}}><ListItem.Title style={styles.text}>{key.time}</ListItem.Title></View>
@@ -147,8 +182,9 @@ const AdminCalendarScreen = ({ navigation }) => {
                                   <ListItem.Subtitle style={styles.text}>Comment: {key.comment}</ListItem.Subtitle>
                                   : null
                                 }
+                                <ListItem.Subtitle>{key.userId}</ListItem.Subtitle>
                               </ListItem.Content>
-                            </ListItem>
+                            </ListItem.Swipeable>
                             ))
                         }  
                     </ScrollView > 

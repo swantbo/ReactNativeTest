@@ -14,13 +14,13 @@ const auth = Firebase.auth();
 
 export default function RootNavigator() {
   const { user, setUser } = useContext(AuthenticatedUserContext);
-  const [admin, setAdmin] = useState(false)
+  const [admin, setAdmin] = useState(true)
   const [isLoading, setIsLoading] = useState(true);
   // let admin = AdminProvider() 
   // console.log('admin', admin)
   //let admin = false
 
-  useEffect(() => {
+  useEffect(() => {  
     const unsubscribeAuth = auth.onAuthStateChanged(async authenticatedUser => {
       try {
         await (authenticatedUser ? setUser(authenticatedUser) : setUser(null));
@@ -30,14 +30,14 @@ export default function RootNavigator() {
       }
     });
 
-    async function getAdmin() {
-      await firebase.firestore().collection('users').doc(user.uid).get().then((doc) => {
-          doc.data()?.admin === true ? setAdmin(true) : setAdmin(true)
-          console.log('admin', admin)
-      })
-    }
+    // async function getAdmin() {
+    //   await firebase.firestore().collection('users').doc(user.uid).get().then((doc) => {
+    //       doc.data()?.admin === true ? setAdmin(true) : setAdmin(true)
+    //       console.log('admin', admin)
+    //   })
+    // }
       
-    getAdmin() 
+    // getAdmin() 
     return unsubscribeAuth;
   }, []);
 

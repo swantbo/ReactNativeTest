@@ -12,19 +12,26 @@ import AdminSettingsScreen from '../screens/Admin/AdminSettingsScreen';
 import AdminBarberScreen from '../screens/Admin/AdminBarberScreen'
 import AboutScreen from '../screens/Client/AboutScreen'
 import { Ionicons } from '@expo/vector-icons';
+import AdminTimeOffScreen from '../screens/Admin/AdminTimeOffScreen';
 
 const AdminCalendarStack = createStackNavigator();
 
 function AdminCalendarStackScreen({ navigation }) {
     return (
         <AdminCalendarStack.Navigator 
-        screenOptions={{
-            headerStyle:{backgroundColor: '#121212', shadowColor: '#E8BD70'}, headerTintColor: '#E8BD70',
-            headerTitleAlign: 'center'
+            screenOptions={{
+                headerStyle:{backgroundColor: '#121212', shadowColor: '#E8BD70'}, headerTintColor: '#E8BD70',
+                headerTitleAlign: 'center'
             }}>
             <AdminCalendarStack.Screen name="Admin Calendar" 
             component={AdminCalendarScreen} 
-            options={{ title: 'Calendar', headerRight: () => (
+            options={{ title: 'Calendar', headerLeft: () => (
+                <Ionicons name="airplane" color={'#E8BD70'} size={23} style={{padding: 10}}
+                  onPress={() => navigation.navigate('AdminTimeOff')}
+                  title="Add"
+                  color="#E8BD70"
+                />
+              ), headerRight: () => (
                 <Ionicons name="add-circle" color={'#E8BD70'} size={23} style={{padding: 10}}
                   onPress={() => navigation.navigate('AdminAddAppointmentScreen')}
                   title="Add"
@@ -32,6 +39,7 @@ function AdminCalendarStackScreen({ navigation }) {
                 />
               ),}}/>
             <AdminCalendarStack.Screen name="AdminAddAppointmentScreen" options={{ title: 'Add Appointments' }} component={AdminAddAppointmentScreen} />
+            <AdminCalendarStack.Screen name="AdminTimeOff" options={{ title: 'Time Off' }} component={AdminTimeOffScreen} />
         </AdminCalendarStack.Navigator>
     )
 }

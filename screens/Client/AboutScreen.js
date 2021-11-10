@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Linking, ActivityIndicator } from '
 import { Card, SocialIcon, Avatar, Image } from 'react-native-elements'
 import * as firebase from 'firebase';
 import { formatPhoneNumber } from '../../utils/DataFormatting';
+import MapView from 'react-native-maps';
 
 const AboutScreen = ({ navigation }) => {
     const [barberData, setBarberData] = useState({'Tuesday': '', 'Wednesday': '', 'Thursday': '',  'Friday': '', 'Saturday': '', 'instagram': '', 'location': '', 'name': '', 'phone': '', 'price': '', 'website': '' });
@@ -13,6 +14,14 @@ const AboutScreen = ({ navigation }) => {
     const [haircutPictures4, setHaircutPictures4] = useState(null)
     const [haircutPictures5, setHaircutPictures5] = useState(null)
     const [haircutPictures6, setHaircutPictures6] = useState(null)
+    const markers = [
+        {
+          latitude: 43.0218740049977,
+          longitude: -87.9119389619647,
+          title: 'Foo Place',
+          subtitle: '1234 Foo Drive'
+        }
+      ];
 
     async function getBarberData() {
         await firebase.firestore().collection('Barber').doc('Nate').get().then((barber) => {
@@ -89,15 +98,31 @@ const AboutScreen = ({ navigation }) => {
                                             type='google'
                                         />
                             </View>
-                            <View style={{flex: 1.5, alignItems: 'flex-start' }}>
+                            <View style={{flex: 1 }}>
 
-                                <Card.Title style={{ alignItems: 'flex-start', color: '#E8BD70'}}> ADDRESS & HOURS </Card.Title>
-                                    <Text style={styles.text}> {barberData.location} </Text>
-                                    <Text style={styles.text}> Tuesday: {barberData.Tuesday} </Text>
-                                    <Text style={styles.text}> Wednesday: {barberData.Wednesday} </Text>
-                                    <Text style={styles.text}> Thursday: {barberData.Thursday} </Text>
-                                    <Text style={styles.text}> Friday: {barberData.Friday} </Text>
-                                    <Text style={styles.text}> Saturday: {barberData.Saturday} </Text>
+                                <Card.Title style={{ alignSelf: 'flex-start', color: '#E8BD70'}}> ADDRESS & HOURS </Card.Title>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <View style={{flex: 1.5, alignItems: 'flex-start'}}>
+                                        <Text style={styles.text}> {barberData.location} </Text>
+                                        <Text></Text>
+                                        <Text style={styles.text}> Tuesday: {barberData.Tuesday} </Text>
+                                        <Text style={styles.text}> Wednesday: {barberData.Wednesday} </Text>
+                                        <Text style={styles.text}> Thursday: {barberData.Thursday} </Text>
+                                        <Text style={styles.text}> Friday: {barberData.Friday} </Text>
+                                        <Text style={styles.text}> Saturday: {barberData.Saturday} </Text>
+                                    </View>
+                                    <View style={{ flex: 1, alignItems: 'flex-end', backgroundColor: 'pink' }}>
+                                        <MapView
+                                            style={{ width: '100%', height: '100%'}}
+                                            region={{latitude: 43.0218740049977,
+                                                longitude: -87.9119389619647,
+                                                latitudeDelta: 0.005,
+                                                longitudeDelta: 0.005}}
+                                        />
+                                    </View>
+                                </View>
+                                <Text></Text>
+                                    
                             </View>
                         </View>
                     </Card>
@@ -220,7 +245,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#000000'
       },
       text: {
-        fontSize: 16,
+        fontSize: 13,
         fontWeight: 'normal',
         color: '#fff'
       }

@@ -16,14 +16,13 @@ const AdminTimeOffScreen = ({ route }) => {
   const [endTime, setEndTime] = useState(new Date('2020-08-22T05:00:00.000Z'))
   const [time, onChangeTime] = useState(null);
   const [allDay, setAllDay] = useState(false)
+  const [isStartPickerShow, setIsStartPickerShow] = useState(false);
+  const [isEndPickerShow, setIsEndPickerShow] = useState(false);
 
     useEffect(() => {
-		//setStartTime(Date())
-		setEndTime(new Date('1995-12-17T00:00:00'))
     }, [])
 
     const onDateSelected = selectedDate => {
-		//setStartTime(Date(selectedDate))
       	setFormattedDate(selectedDate.format('YYYY-MM-DD'));
     }
 	const timeOffAllDay = () => {
@@ -37,10 +36,62 @@ const AdminTimeOffScreen = ({ route }) => {
 		setStartTime(currentDate);
 	};
 
-	const onEndTimeChange = (newTime) => {
+	const onEndTimeChange = (event, newTime) => {
 		console.log('EndTime', newTime)
-		setEndTime(Date(newTime));
+		const currentDate = newTime || time;
+		console.log('EndTime', currentDate.toString())
+		setEndTime(currentDate)
 	};
+
+	const showStartPicker = () => {
+		isStartPickerShow === true ? setIsStartPickerShow(false) : setIsStartPickerShow(true)
+	};
+
+	const showEndPicker = () => {
+		isEndPickerShow === true ? setIsEndPickerShow(false) : setIsEndPickerShow(true)
+	};
+
+	const scheduleTimeOff = () => {
+
+	}
+
+    function createAvailableTimes(sTime, eTime, allDay) {
+		if (allDay === false) {
+			const startTime = moment(sTime, 'HH:mm a')
+			const endTime = moment(eTime, 'HH:mm a')
+			console.log('startTime', startTime, endTime)
+			let newIntervals = {}
+			while (startTime <= endTime) {
+				let newobj = {[moment(startTime, 'HH:mm a').format("hh:mm A").toString().replace(/^(?:00:)?0?/, '')] : {'name': 'Off' } }
+				newIntervals = {...newIntervals, ...newobj}
+				startTime.add(30, 'minutes')
+			}
+        	console.log('newIntervals', newIntervals)
+			const batch = firebase.firestore().batch();
+			Object.entries(newIntervals).map((doc) => {
+				let docRef = firebase.firestore()
+				.collection('Calendar')
+				.doc(moment(formattedDate).format('MMM YY'))
+				.collection(moment(formattedDate).format('YYYY-MM-DD'))
+				.doc(doc.id)
+				console.log(doc.id)
+				batch.set(docRef, doc.entries);
+			})
+			return batch.commit()
+		} else {
+			const start = moment('9:00 am', 'HH:mm a')
+			const end = moment('9:00 pm', 'HH:mm a')
+			let newIntervals = {}
+			while (start <= end) {
+				let newobj = {[moment(start, 'HH:mm a').format("hh:mm A").toString().replace(/^(?:00:)?0?/, '')] : {'name': 'Off' } }
+				newIntervals = {...newIntervals, ...newobj}
+				start.add(30, 'minutes')
+			}
+			console.log('newIntervals', newIntervals)
+		}
+		console.log('test', sTime, eTime)
+        //onGetData(selectedDate, newIntervals)
+    }
 
     return(
         <View style={styles.container}>
@@ -67,7 +118,7 @@ const AdminTimeOffScreen = ({ route }) => {
                     </ListItem.Content>
                 </ListItem>
 					{ formattedDate &&
-                        <Card style={{flex: 1, padding: 5}}>
+                        <Card containerStyle={{flex: 1, backgroundColor: '#121212', borderColor: '#000', alignContent: 'center'}}>
 							
 							<CheckBox
 								containerStyle={{backgroundColor: '#121212'}}
@@ -76,31 +127,45 @@ const AdminTimeOffScreen = ({ route }) => {
 								checked={allDay}
 								onPress={() => timeOffAllDay()}
 							/>
-						
-							<DateTimePicker
-								style={{backgroundColor: 'pink'}}
-								value={startTime}
-								mode='time'
-								//mode={mode}
-								//is24Hour={true}
-								display="default"
-								onChange={onStartTimeChange}
-								is24Hour={true}
-								minuteInterval={30}
-							/>
 							
-							<DateTimePicker
-								value={endTime}
-								mode='time'
-								//mode={mode}
-								//is24Hour={true} 
-								display="default"
-								onChange={onEndTimeChange}
-								is24Hour={true}
-								minuteInterval={30}
-							/>
+							
+							<View style={styles.pickedDateContainer}>
+								<Text style={styles.pickedDate} onPress={showStartPicker}>
+									{startTime.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
+								</Text>
+							</View>
+
+							{isStartPickerShow && (
+								<DateTimePicker
+									style={{backgroundColor: 'white'}}
+									value={startTime}
+									mode='time'
+									display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+									onChange={onStartTimeChange}
+									is24Hour={true}
+									minuteInterval={30}
+								/>
+							)}
+
+							<View style={styles.pickedDateContainer}>
+								<Text style={styles.pickedDate} onPress={showEndPicker}>
+									{endTime.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+								}</Text>
+							</View>
+							
+							{isEndPickerShow && (
+								<DateTimePicker
+									style={{backgroundColor: 'white'}}
+									value={endTime}
+									mode='time'
+									display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+									onChange={onEndTimeChange}
+									is24Hour={true}
+									minuteInterval={30}
+								/>
+							)}
 						
-						<Button title={'Schedule Time Off'} color={'#E8BD70'} onPress={() => 'scheduleAppoint()'}/>
+						<Button title={'Schedule Time Off'} color={'#E8BD70'} onPress={() => createAvailableTimes(startTime, endTime, allDay)}/>
 					</Card>
 				}
             </View>
@@ -128,7 +193,24 @@ const styles = StyleSheet.create({
   },
   ListItem: {
       backgroundColor: '#121212'
-  }
+  },
+  pickedDateContainer: {
+    padding: 20,
+    backgroundColor: '#121212',
+	color: 'white',
+	borderColor: '#fff',
+    borderRadius: 10,
+  },
+  pickedDate: {
+	padding: 10,
+	borderWidth: 1,
+	borderColor: '#fff',
+    fontSize: 18,
+    color: 'white',
+  },
+  btnContainer: {
+    padding: 30,
+  },
   });
 
 export default AdminTimeOffScreen

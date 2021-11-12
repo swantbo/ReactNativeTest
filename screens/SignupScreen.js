@@ -41,7 +41,8 @@ export default function SignupScreen({ navigation }) {
               name: name,
               referral: referral,
               points: '0',
-              strikes: '0'
+              strikes: '0',
+              created: firebase.firestore.Timestamp.now()
           };
           firebase.firestore().collection('users').doc(data.user.uid).set(user);
       })}

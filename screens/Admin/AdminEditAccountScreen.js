@@ -5,6 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { formatPhoneNumber } from '../../utils/DataFormatting';
 
 import * as firebase from 'firebase';
+import moment from 'moment';
 
 const AdminEditAccountScreen = ({ navigation }) => {
     const [userInfo, setUserInfo] = useState([]);
@@ -91,8 +92,13 @@ const AdminEditAccountScreen = ({ navigation }) => {
                             
                             <ListItem.Content>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
-                                    <View style={{flex: 1, alignItems: 'flex-start' }}>
-                                        <ListItem.Title style={{ fontWeight: 'bold', paddingBottom: 10, color: '#E8BD70'}}>{onekey.name}</ListItem.Title>
+                                    {onekey.created < moment().add(3, 'days') && 
+                                        <View style={{}}>
+                                            <ListItem.Title style={{ fontWeight: 'bold', paddingBottom: 10, color: 'red'}}>New </ListItem.Title>
+                                        </View>
+                                    }
+                                    <View style={{flex: 2, alignItems: 'flex-start' }}>
+                                        <ListItem.Title style={{ fontWeight: 'bold', paddingBottom: 10, color: '#E8BD70'}}>{onekey.name} </ListItem.Title>
                                     </View>
                                     <View style={{flex: 1, alignItems: 'flex-end' }}>
                                         <ListItem.Title style={{ fontWeight: 'bold', paddingBottom: 10, color: 'red'}} 

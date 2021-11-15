@@ -14,7 +14,7 @@ const auth = Firebase.auth();
 
 export default function RootNavigator() {
   const { user, setUser } = useContext(AuthenticatedUserContext);
-  const [admin, setAdmin] = useState(true)
+  const [admin, setAdmin] = useState(false)
   const [isLoading, setIsLoading] = useState(true);
   // let admin = AdminProvider() 
   // console.log('admin', admin)

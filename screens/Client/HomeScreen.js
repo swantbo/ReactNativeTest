@@ -93,6 +93,20 @@ export default function HomeScreen() {
                 }
                 data =  {...data, ...newdata}
             });
+            let upcomingAppointments = []
+            let previousAppointments = []
+            Object.entries(data).map((onekey, i) => {
+              onekey[0] > moment().format('YYYY-MM-DD') ? upcomingAppointments.push(onekey) : previousAppointments.push(onekey)
+
+              console.log('key', onekey[0])
+            });
+            console.log('upcomingAppointments', upcomingAppointments)
+            console.log('previousAppointments', previousAppointments)
+            //const testMaxDate = previousAppointments.length > 1 ? moment.max(previousAppointments[0]) : null
+            // new Date(Math.max.apply(null, previousAppointments.map(function(e) {
+            //   console.log('new Date(e.MeasureDate)', new Date(e.MeasureDate))
+            //   return new Date(e.MeasureDate);
+            // })));
             setUserAppointments(data)
             console.log('userAppointments', data)
         })

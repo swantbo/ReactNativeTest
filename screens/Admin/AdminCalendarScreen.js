@@ -55,8 +55,12 @@ const AdminCalendarScreen = ({ navigation }) => {
               const tempData = doc.data();
               data.push(tempData)
             });
-            const calendarTimes = newIntervals.map(obj => data.find(o => o.time === obj.time) || obj)
-            const testIntervals = [ ...data, ...newIntervals ]
+            console.log('data', data)
+            console.log('newIntervals.includes(data)', newIntervals.includes(data))
+            let test 
+            const calendarTimes = newIntervals.map(obj => test = data.find(o => o.time === obj.time) || obj)
+            console.log('test', test)
+            console.log('calendarTimes', calendarTimes)
             setCalendarData( calendarTimes )
             setIsLoading(false)
         }).catch((e) => {

@@ -94,7 +94,7 @@ const AdminCalendarScreen = ({ navigation }) => {
         const strikesTotal = 1 + Number(strikes)
 
         const newStikes = {
-            strikes: strikesTotal.toString()
+            strikes: strikesTotal?.toString()
         }
         firebase.firestore().collection('users').doc(user_id).set(newStikes, {merge: true}).catch((e) => {
         alert('Unable to add Strikes to user, try again')
@@ -177,7 +177,7 @@ const AdminCalendarScreen = ({ navigation }) => {
                                     { key.name ?
                                       <>
                                         <View style={{flex: 2}}><ListItem.Subtitle style={styles.text}>{key.name} {key.friend != '' && undefined ? 'Friend: ' + key.friend : ''}</ListItem.Subtitle></View>
-                                        <View style={{flex: 2, alignItems: 'flex-end'}}><ListItem.Subtitle style={styles.text}>{formatPhoneNumber(key.phone) ? formatPhoneNumber(key.phone) : key.phone }</ListItem.Subtitle></View>
+                                        <View style={{flex: 2, alignItems: 'flex-end'}}><ListItem.Subtitle style={styles.text}>{formatPhoneNumber(key?.phone) ? formatPhoneNumber(key?.phone) : key.phone }</ListItem.Subtitle></View>
                                       </>
                                     : null
                                     }

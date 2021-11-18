@@ -87,6 +87,11 @@ const AdminSettingsScreen = ({navigation}) => {
                         <ListItem.Title style={{ color: 'white' }}>View Clients</ListItem.Title>
                     </ListItem.Content>
                 </ListItem>
+                <ListItem containerStyle={styles.ListItem} bottomDivider onPress={() => navigation.navigate('OverView')}>
+                    <ListItem.Content>
+                        <ListItem.Title style={{ color: 'white' }}>OverView</ListItem.Title>
+                    </ListItem.Content>
+                </ListItem>
                 <ListItem containerStyle={styles.ListItem} bottomDivider onPress={() => handleSignOut()}>
                     <ListItem.Content>
                         <ListItem.Title style={{ fontWeight: 'bold', alignSelf: 'center', color: '#E8BD70' }}>Sign Out</ListItem.Title>

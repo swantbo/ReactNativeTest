@@ -20,6 +20,8 @@ export default function HomeScreen() {
   const [barberData, setBarberData] = useState({'location': '', 'price': '', 'phone': ''})
   const [userAppointments, setUserAppointments] = useState({})
   const [image, setImage] = useState(null);
+  const [upcomingAppointments, setUpcomingAppointments] = useState({})
+  const [previousAppointments, setPreviousAppointments] = useState({})
 
   function subtractDiscount(goatPoints) {
     const discount = Number(barberData.price.replace(/[$.]+/g, '')) - Number(goatPoints)
@@ -93,22 +95,41 @@ export default function HomeScreen() {
                 }
                 data =  {...data, ...newdata}
             });
-            let upcomingAppointments = []
-            let previousAppointments = []
+            let upcomingData = {}
+            let previousData = []
+            let removeAppointments = []
+            let removeDates = []
             Object.entries(data).map((onekey, i) => {
-              onekey[0] > moment().format('YYYY-MM-DD') ? upcomingAppointments.push(onekey) : previousAppointments.push(onekey)
-
+              if (onekey[0] > moment().format('YYYY-MM-DD')) {
+                let tempData = {
+                  [onekey[0]]: onekey[1]
+                }
+                upcomingData = {...upcomingData, ...tempData}
+              } else {
+                let tempPreviousData = {
+                  [onekey[0]]: onekey[1]
+                }
+                previousData.push(tempPreviousData)
+                removeDates.push(onekey[0])
+              }
               console.log('key', onekey[0])
-            });
-            console.log('upcomingAppointments', upcomingAppointments)
-            console.log('previousAppointments', previousAppointments)
-            //const testMaxDate = previousAppointments.length > 1 ? moment.max(previousAppointments[0]) : null
-            // new Date(Math.max.apply(null, previousAppointments.map(function(e) {
-            //   console.log('new Date(e.MeasureDate)', new Date(e.MeasureDate))
-            //   return new Date(e.MeasureDate);
-            // })));
-            setUserAppointments(data)
-            console.log('userAppointments', data)
+            })
+
+            let tempPrev = previousData.splice(previousData.length - 2, 2)
+            previousData = {...tempPrev[0], ...tempPrev[1]}
+
+            if(removeDates.length > 2) {
+              removeDates.splice(removeDates.length - 2, 2)
+              const docRef = firebase.firestore().collection('users').doc(user.uid).collection('Haircuts')
+
+              removeDates.map(date => 
+                docRef.doc(date).delete()
+              )
+            }
+            console.log('removedDates', removeDates)
+              setUpcomingAppointments(upcomingData)
+              setPreviousAppointments(previousData)
+              setUserAppointments(data)
         })
       } catch (err){
       Alert.alert('There is an error.', err.message)
@@ -167,17 +188,23 @@ export default function HomeScreen() {
                 <ScrollView>
                     <ListItem bottomDivider containerStyle={{ backgroundColor: '#000' }}>
                         <ListItem.Content>
-                            <ListItem.Title style={{ fontWeight: 'bold', color: '#E8BD70' }}><Text>Appointments</Text></ListItem.Title>
+                            <ListItem.Title style={{ fontWeight: 'bold', color: '#E8BD70' }}><Text>Upcoming Appointments</Text></ListItem.Title>
                         </ListItem.Content>
                     </ListItem>
-                    {Object.entries(userAppointments).map((onekey, i) => (
+                    {Object.entries(upcomingAppointments).map((onekey, i) => (
                         <ListItem.Swipeable bottomDivider key={i} containerStyle={{ backgroundColor: '#121212' }}
                         rightContent={
                           <Button
                             title="Delete"
                             icon={{ name: 'delete', color: 'white' }}
                             buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
-                            onPress={() => deleteAppointment(onekey[0], onekey[1].time)}
+                            onPress={() => Alert.alert('Delete Appointment', `Are you sure you want to delete this ${"\n"}Appointment on ${onekey[0]} ${"\n"} at ${onekey[1].time}`, 
+                            [
+                                {
+                                  text: "Cancel"
+                                },
+                                { text: "Delete Appointment", onPress: () => (deleteAppointment(onekey[0], onekey[1].time))}
+                              ])}
                           />
                         }
                         >
@@ -220,7 +247,54 @@ export default function HomeScreen() {
                                 </View>
                             </ListItem.Content>
                         </ListItem.Swipeable>
-                    ))}
+                    )).reverse()}
+                    <ListItem bottomDivider containerStyle={{ backgroundColor: '#000' }}>
+                        <ListItem.Content>
+                            <ListItem.Title style={{ fontWeight: 'bold', color: '#E8BD70' }}><Text>Previous Appointments</Text></ListItem.Title>
+                        </ListItem.Content>
+                    </ListItem>
+                    {Object.entries(previousAppointments).map((onekey, i) => ( 
+                      <ListItem bottomDivider key={i} containerStyle={{ backgroundColor: '#121212' }}>
+                        <ListItem.Content>
+                          <View style={{flex: 1, flexDirection: 'row'}}>
+                              <View style={{flex: 2, alignItems: 'flex-start' }}>
+                                  <ListItem.Title style={{ color: '#fff'}}>
+                                    {onekey[0]}, {onekey[1].time.toString().toLowerCase()} 
+                                  </ListItem.Title>
+                              </View>
+                              { onekey[1].points ?
+                                <>
+                                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                    <ListItem.Title style={{ color: '#fff'}}>{onekey[1].points != '' ? '$' + subtractDiscount(onekey[1].points) : ''}</ListItem.Title>
+                                  </View>
+                                </>
+                                  :
+                                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                    <ListItem.Title style={{ color: '#fff'}}>{barberData.price != '' ? barberData.price : ''}</ListItem.Title>
+                                  </View>
+                              }
+                          </View>
+                          <View style={{flex: 1, flexDirection: 'row'}}>
+                              <View style={{flex: 1, alignItems: 'flex-start' }}>
+                                  <Text style={{ color: '#fff'}}>{barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} </Text>
+                              </View>
+                              <View style={{flex: 1, alignItems: 'flex-end'}}>
+                                  <Text style={{ color: '#fff'}}>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </Text>
+                              </View>
+                          </View>
+                          <View style={{flex: 1, flexDirection: 'row'}}>
+                              <View style={{flex: 1, alignItems: 'flex-start' }}>
+                                  <Text style={{ color: '#fff'}}>{barberData.location != '' ? barberData.location : ''} </Text>
+                              </View>
+                          </View>
+                          <View style={{flex: 1, flexDirection: 'row'}}>
+                              <View style={{flex: 1, alignItems: 'flex-start' }}>
+                                  <Text style={{ color: '#fff'}}>{onekey[1]?.friend ? 'Friend: ' + onekey[1].friend : ''} </Text>
+                              </View>
+                          </View>
+                        </ListItem.Content>
+                      </ListItem>
+                    )).reverse()}
                 </ScrollView>
                 </>
             :

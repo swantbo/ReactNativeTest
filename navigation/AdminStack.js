@@ -13,6 +13,7 @@ import AdminBarberScreen from '../screens/Admin/AdminBarberScreen'
 import AboutScreen from '../screens/Client/AboutScreen'
 import { Ionicons } from '@expo/vector-icons';
 import AdminTimeOffScreen from '../screens/Admin/AdminTimeOffScreen';
+import AdminOverViewScreen from '../screens/Admin/AdminOverViewScreen';
 
 const AdminCalendarStack = createStackNavigator();
 
@@ -54,6 +55,7 @@ function AdminSettingsStackScreen() {
             headerTitleAlign: 'center'}}
             >
             <AdminSettingsStack.Screen name="Admin Settings" options={{ title: 'Admin Settings', headerTitleAlign: 'center' }} component={AdminSettingsScreen}/>
+            <AdminSettingsStack.Screen name="OverView" options={{ title: 'OverView', headerTitleAlign: 'center' }} component={AdminOverViewScreen}/>
             <AdminSettingsStack.Screen name="EditAccountScreen" options={{ title: 'Edit Accounts', headerTitleAlign: 'center' }} component={AdminEditAccountScreen} />
             <AdminSettingsStack.Screen name="Points" options={{ title: 'Points', headerTitleAlign: 'center' }} component={AdminAddPointsScreen} />
         </AdminSettingsStack.Navigator>

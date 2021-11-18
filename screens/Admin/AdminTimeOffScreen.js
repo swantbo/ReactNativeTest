@@ -55,7 +55,7 @@ const AdminTimeOffScreen = ({ route }) => {
 
 	}
 
-    function createAvailableTimes(sTime, eTime, allDay) {
+    async function createAvailableTimes(sTime, eTime, allDay) {
 		if (allDay === false) {
 			const startTime = moment(sTime, 'HH:mm a')
 			const endTime = moment(eTime, 'HH:mm a')
@@ -67,17 +67,9 @@ const AdminTimeOffScreen = ({ route }) => {
 				startTime.add(30, 'minutes')
 			}
         	console.log('newIntervals', newIntervals)
-			const batch = firebase.firestore().batch();
-			Object.entries(newIntervals).map((doc) => {
-				let docRef = firebase.firestore()
-				.collection('Calendar')
-				.doc(moment(formattedDate).format('MMM YY'))
-				.collection(moment(formattedDate).format('YYYY-MM-DD'))
-				.doc(doc.id)
-				console.log(doc.id)
-				batch.set(docRef, doc.entries);
+			Object.entries(newIntervals).map((key, i) => {
+                firebase.firestore().collection('Calendar').doc(moment(formattedDate).format('MMM YY')).collection(formattedDate).doc(key[0]).set(key[1], {merge: true})
 			})
-			return batch.commit()
 		} else {
 			const start = moment('9:00 am', 'HH:mm a')
 			const end = moment('9:00 pm', 'HH:mm a')
@@ -87,7 +79,13 @@ const AdminTimeOffScreen = ({ route }) => {
 				newIntervals = {...newIntervals, ...newobj}
 				start.add(30, 'minutes')
 			}
-			console.log('newIntervals', newIntervals)
+			Object.entries(newIntervals).map((key, i) => {
+				let tempData = {
+					...key[1],
+					time: key[0]
+				}
+                firebase.firestore().collection('Calendar').doc(moment(formattedDate).format('MMM YY')).collection(formattedDate).doc(key[0]).set(tempData, {merge: true})
+			})
 		}
 		console.log('test', sTime, eTime)
         //onGetData(selectedDate, newIntervals)

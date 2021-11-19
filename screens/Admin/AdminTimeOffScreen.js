@@ -30,16 +30,12 @@ const AdminTimeOffScreen = ({ route }) => {
 	}
 
 	const onStartTimeChange = (event, selectedTime) => {
-		console.log('selectedTime', selectedTime)
 		const currentDate = selectedTime || time;
-		console.log('StartTime', currentDate.toString())
 		setStartTime(currentDate);
 	};
 
 	const onEndTimeChange = (event, newTime) => {
-		console.log('EndTime', newTime)
 		const currentDate = newTime || time;
-		console.log('EndTime', currentDate.toString())
 		setEndTime(currentDate)
 	};
 
@@ -51,25 +47,30 @@ const AdminTimeOffScreen = ({ route }) => {
 		isEndPickerShow === true ? setIsEndPickerShow(false) : setIsEndPickerShow(true)
 	};
 
-	const scheduleTimeOff = () => {
-
-	}
-
     async function createAvailableTimes(sTime, eTime, allDay) {
 		if (allDay === false) {
 			const startTime = moment(sTime, 'HH:mm a')
 			const endTime = moment(eTime, 'HH:mm a')
-			console.log('startTime', startTime, endTime)
 			let newIntervals = {}
 			while (startTime <= endTime) {
 				let newobj = {[moment(startTime, 'HH:mm a').format("hh:mm A").toString().replace(/^(?:00:)?0?/, '')] : {'name': 'Off' } }
 				newIntervals = {...newIntervals, ...newobj}
 				startTime.add(30, 'minutes')
 			}
-        	console.log('newIntervals', newIntervals)
-			Object.entries(newIntervals).map((key, i) => {
-                firebase.firestore().collection('Calendar').doc(moment(formattedDate).format('MMM YY')).collection(formattedDate).doc(key[0]).set(key[1], {merge: true})
-			})
+			try {
+				Object.entries(newIntervals).map((key, i) => {
+					firebase.firestore().collection('Calendar').doc(moment(formattedDate).format('MMM YY')).collection(formattedDate).doc(key[0]).set(key[1], {merge: true})
+				})
+				Alert.alert('Time Off Scheduled', `Your time off has been scheduled for ${formattedDate} from ${[moment(startTime, 'HH:mm a').format("hh:mm A").toString().replace(/^(?:00:)?0?/, '')]} - ${[moment(endTime, 'HH:mm a').format("hh:mm A").toString().replace(/^(?:00:)?0?/, '')]}`, 
+					[
+						{
+						text: "Okay"
+						}
+					])
+			} catch (error) {
+				Alert.alert('Error', `Unable to schedule time off, try again. ${error}`)
+			}
+			
 		} else {
 			const start = moment('9:00 am', 'HH:mm a')
 			const end = moment('9:00 pm', 'HH:mm a')
@@ -79,16 +80,25 @@ const AdminTimeOffScreen = ({ route }) => {
 				newIntervals = {...newIntervals, ...newobj}
 				start.add(30, 'minutes')
 			}
-			Object.entries(newIntervals).map((key, i) => {
+			try {
+				Object.entries(newIntervals).map((key, i) => {
 				let tempData = {
 					...key[1],
 					time: key[0]
 				}
                 firebase.firestore().collection('Calendar').doc(moment(formattedDate).format('MMM YY')).collection(formattedDate).doc(key[0]).set(tempData, {merge: true})
 			})
+				Alert.alert('Time Off Scheduled', `Your time off has been scheduled for all day on ${formattedDate}`, 
+					[
+						{
+						text: "Okay"
+						}
+					])
+			} catch (error) {
+				Alert.alert('Error', `Unable to schedule time off, try again. ${error}`)
+			}
+			
 		}
-		console.log('test', sTime, eTime)
-        //onGetData(selectedDate, newIntervals)
     }
 
     return(

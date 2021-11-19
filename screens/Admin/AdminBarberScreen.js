@@ -19,7 +19,6 @@ const AdminBarberScreen = () => {
     async function getBarberData() {
         await firebase.firestore().collection('Barber').doc('Nate').get().then((barber) => {
             setBarberData({...barberData, ...barber.data()})
-            console.log('barber.data()', barber.data())
         })
     }
 
@@ -30,8 +29,6 @@ const AdminBarberScreen = () => {
            aspect: [4, 3],
            quality: 1,
          });
-      
-         console.log(result);
       
          if (!result.cancelled && type === 'Profile') {
            setImage(result.uri);

@@ -40,9 +40,7 @@ const AdminOverViewScreen = ({navigation}) => {
     useEffect(() => {
         async function getOverViewData() {
             await firebase.firestore().collection('Calendar').doc(moment().format('MMM YY')).collection('OverView').doc('data').get().then((doc) => {
-                //const tempData = {...currentMonthData, ...doc.data()}
                 setCurrentMonthData({...currentMonthData, ...doc.data()})
-                console.log('OverViewData', currentMonthData)
             })
         }
         getOverViewData()

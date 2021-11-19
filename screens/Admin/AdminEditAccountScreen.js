@@ -18,9 +18,7 @@ const AdminEditAccountScreen = ({ navigation }) => {
                 let id = doc.id;
                 data.push({ id, ...tempData })}
             );
-            console.log('data', data)
         setUserInfo(data)
-        console.log('userInfo', userInfo)
     }
 
     const deleteUser = (user_id) => {

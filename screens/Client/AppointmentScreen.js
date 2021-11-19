@@ -72,10 +72,8 @@ const AppointmentScreen = () => {
 
     const splitHours = (selectedDate) => {
         const weekDay = Promise.resolve(moment(selectedDate, "YYYY-MM-DD HH:mm:ss").format('dddd').toString())
-        console.log('weekDay', weekDay)
         Promise.all([weekDay]).then(values => {
             createAvailableTimes(availibility[`${values}`], selectedDate)
-            console.log('availibility[`${values}`]', availibility[`${values}`])
           });
     }
 
@@ -84,33 +82,28 @@ const AppointmentScreen = () => {
         const newSplitString = arr.toUpperCase().split("-").map(item => item.trim());
         const startTime = moment(newSplitString[0], 'HH:mm a')
         const endTime = moment(newSplitString[1], 'HH:mm a')
-        console.log('startTime', startTime, endTime)
         let newIntervals = {}
         while (startTime <= endTime) {
             let newobj = {[moment(startTime, 'HH:mm a').format("hh:mm A").toString().replace(/^(?:00:)?0?/, '')] : '' }
             newIntervals = {...newIntervals, ...newobj}
             startTime.add(30, 'minutes')
         }
-        console.log('newIntervals', newIntervals)
         onGetData(selectedDate, newIntervals)
     }
 
     const onGetData = async (selectedDate, newIntervals) => {
-        console.log('selectedDate', selectedDate)
         await firebase.firestore()
         .collection('Calendar')
         .doc(moment(selectedDate).format('MMM YY'))
         .collection(moment(selectedDate).format('YYYY-MM-DD')).get()
         .then(snapshot => {
             let data = {}
-            console.log('snapshot', snapshot)
             snapshot.forEach(doc => {
                 let newdata = {[doc.id] : 'Taken'}
                 data = { ...data, ...newdata}
-                console.log('newdata', newdata)
             });
+            console.log('data', data)
             const tempTimes = ({ ...newIntervals, ...data})
-            console.log('times', times)
             let newTime ={}
                 if (tempTimes) {
                     Object.entries(tempTimes).map((key, i) => {
@@ -123,8 +116,8 @@ const AppointmentScreen = () => {
                 } else {
                     newTime = {tempTime}
                 }
+                console.log('newTime', newTime)
             setNewTimes(newTime)
-            console.log('key', newTime)
             setIsLoading(false)
         })
     }
@@ -226,7 +219,16 @@ const AppointmentScreen = () => {
                         <ListItem.Title style={styles.text}> {formattedDate ? formattedDate : 'Choose a date'} </ListItem.Title>
                     </ListItem.Content>
                 </ListItem>
-                {!isLoading && times && !timePicked ?
+                {/* {!newTimes ? 
+                        <ScrollView>
+                            <ListItem bottomDivider containerStyle={styles.ListItem}>
+                                <ListItem.Content style={{ alignItems: 'center' }}>
+                                    <ListItem.Title style={styles.text}>No Available Appointments</ListItem.Title>
+                                </ListItem.Content>
+                            </ListItem>
+                        </ScrollView> : null
+                } */}
+                {!isLoading && newTimes && !timePicked ?
                     <ScrollView>
                         {Object.entries(newTimes).map((onekey, i) => (
                             <ListItem bottomDivider containerStyle={styles.ListItem} key={i} onPress={() => scheduleAppointment(onekey[0])}>

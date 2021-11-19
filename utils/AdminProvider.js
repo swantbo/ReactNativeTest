@@ -10,7 +10,6 @@ export default async function AdminProvider() {
     let admin
     await firebase.firestore().collection("users").doc(user.uid).get().then((userData) => {
         admin = userData.data().admin
-        console.log('userData.data().admin', userData.data().admin)
     })
     return (admin)
 }

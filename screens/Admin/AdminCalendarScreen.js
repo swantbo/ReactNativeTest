@@ -55,12 +55,8 @@ const AdminCalendarScreen = ({ navigation }) => {
               const tempData = doc.data();
               data.push(tempData)
             });
-            console.log('data', data)
-            console.log('newIntervals.includes(data)', newIntervals.includes(data))
             let test 
             const calendarTimes = newIntervals.map(obj => test = data.find(o => o.time === obj.time) || obj)
-            console.log('test', test)
-            console.log('calendarTimes', calendarTimes)
             setCalendarData( calendarTimes )
             setIsLoading(false)
         }).catch((e) => {
@@ -137,33 +133,51 @@ const AdminCalendarScreen = ({ navigation }) => {
                                   title="Delete"
                                   icon={{ name: 'delete', color: 'white' }}
                                   buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
-                                  onPress={() => key.name ? Alert.alert('Delete', `Are you sure you want to delete this ${"\n"}Appointment Time ${key.time} ${"\n"} with Client: ${key.name}`, 
+                                  onPress={() => key.name && key.name !== 'Off' ? Alert.alert('Delete', `Are you sure you want to delete this ${"\n"}Appointment Time ${key.time} ${"\n"} with Client: ${key.name}`, 
                             [
                                 {
                                   text: "Cancel"
                                 },
                                 { text: "Delete Appointment", onPress: () => (deleteAppointment(key.time))}
-                              ]) : null }
+                              ]) : key.name === 'Off' ?  Alert.alert('Delete Time Off', `Are you sure you want to remove ${"\n"} ${formattedDate} at ${key.time} from requested time off?`, 
+                              [
+                                  {
+                                    text: "Cancel"
+                                  },
+                                  { text: "Delete Time Off", onPress: () => (deleteAppointment(key.time))}
+                                ]) : null}
                                 />
                               }
-                              leftContent={
-                                <Button
-                                    title={key.strikes ? 'Strikes: ' +  key.strikes : 'Add Strike'}
-                                    icon={{ name: 'add-circle', color: 'white' }}
-                                    buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
-                                    onPress={() => 
-                                      Alert.alert('No Call No Show', `Would you like to add a strike to Account Name: ${key.name ? key.name : 'N/A'} ${"\n"}Account Id: ${key.id ? key.id : 'N/A'}`, 
-                                      [
-                                          {
-                                          text: "Cancel"
-                                          },
-                                          {
-                                          text: 'Add Strike', onPress: () => (addStrike(key.userId, key.strikes))
-                                          }
-                                  ])}
-                                />
-                            }
-                            onPress={() => !key.name ? navigation.navigate('AdminAddAppointmentScreen', { formattedDate, time : [`${key.time}`] }) : null}> 
+                                leftContent={key.name && key.name !== 'Off' &&
+                                  <Button
+                                      title={key.strikes ? 'Strikes: ' +  key.strikes : 'Add Strike'}
+                                      icon={{ name: 'add-circle', color: 'white' }}
+                                      buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
+                                      onPress={() => 
+                                        Alert.alert('No Call No Show', `Would you like to add a strike to Account Name: ${key.name ? key.name : 'N/A'} ${"\n"}Account Id: ${key.id ? key.id : 'N/A'}`, 
+                                        [
+                                            {
+                                            text: "Cancel"
+                                            },
+                                            {
+                                            text: 'Add Strike', onPress: () => (addStrike(key.userId, key.strikes))
+                                            }
+                                    ])}
+                                  /> 
+                                }
+                              
+                            onPress={() => !key.name ? navigation.navigate('AdminAddAppointmentScreen', { formattedDate, time : [`${key.time}`] }) 
+                              : key.name === 'Off' ? 
+                              Alert.alert('Time Off', `Would you like to schedule an appointment during your time off on ${formattedDate} at ${key.time}?`, 
+                                        [
+                                            {
+                                            text: "Cancel"
+                                            },
+                                            {
+                                            text: 'Schedule Appointment', onPress: () => navigation.navigate('AdminAddAppointmentScreen', { formattedDate, time : [`${key.time}`] })
+                                            }
+                                    ]) 
+                              : null}> 
                               <ListItem.Content>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                   <View style={{flex: 1}}><ListItem.Title style={styles.text}>{key.time}</ListItem.Title></View>

@@ -25,8 +25,6 @@ export default function TabTwoScreen() {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       setImage(result.uri);
     }

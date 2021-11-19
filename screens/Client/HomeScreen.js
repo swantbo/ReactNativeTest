@@ -14,7 +14,7 @@ import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProv
 
 const auth = Firebase.auth();
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const { user } = useContext(AuthenticatedUserContext);
   const [userTestData, setUserData] = useState({'email': '', 'name': '', 'phone': '', 'previous': '', 'time': '', 'upcoming': '', 'points': ''});
   const [barberData, setBarberData] = useState({'location': '', 'price': '', 'phone': ''})
@@ -58,7 +58,6 @@ export default function HomeScreen() {
      quality: 1,
    });
 
-   console.log(result);
 
    if (!result.cancelled) {
      setImage(result.uri);
@@ -76,7 +75,6 @@ export default function HomeScreen() {
           .doc(user.uid)
           .get().then((doc) => {
             setUserData({...userTestData, ...doc.data()})
-            console.log('dataObj.firstName', userTestData)
         })
         await firebase.firestore().collection('Barber').doc('Nate').get().then((barber) => {
           setBarberData({...barberData, ...barber.data()})
@@ -112,7 +110,6 @@ export default function HomeScreen() {
                 previousData.push(tempPreviousData)
                 removeDates.push(onekey[0])
               }
-              console.log('key', onekey[0])
             })
 
             let tempPrev = previousData.splice(previousData.length - 2, 2)
@@ -126,7 +123,6 @@ export default function HomeScreen() {
                 docRef.doc(date).delete()
               )
             }
-            console.log('removedDates', removeDates)
               setUpcomingAppointments(upcomingData)
               setPreviousAppointments(previousData)
               setUserAppointments(data)
@@ -148,7 +144,6 @@ export default function HomeScreen() {
     async function getUserImage() {
       await firebase.storage().ref('Users/' + user.uid).getDownloadURL().then((image) => {
         setImage(image)
-        console.log('NewImage', image)
       })
     }
     getUserImage()
@@ -178,6 +173,12 @@ export default function HomeScreen() {
               <Card.Title style={{ fontSize: 20, color: '#fff' }}> {userTestData.name} </Card.Title>
               <Card.Title style={{ fontSize: 15, color: '#fff' }}>
                 GP: {userTestData.points}
+                <MaterialCommunityIcons
+                  name={'information'}
+                  size={20}
+                  color={'#000'}
+                  onPress={() => navigation.navigate('GoatPoint')}
+                />
               </Card.Title>
             </View>
           </View>

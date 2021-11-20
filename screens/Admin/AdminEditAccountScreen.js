@@ -3,12 +3,15 @@ import { View, StyleSheet, Alert, Text } from 'react-native';
 import { ListItem, Button } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import { formatPhoneNumber } from '../../utils/DataFormatting';
+import { InputField } from '../../components';
 
 import * as firebase from 'firebase';
 import moment from 'moment';
 
 const AdminEditAccountScreen = ({ navigation }) => {
     const [userInfo, setUserInfo] = useState([]);
+    const [search, setSearch] = useState('')
+    const [searchResults, setSearchResults] = useState([])
 
     async function getUsers() {
         let data = []
@@ -50,6 +53,12 @@ const AdminEditAccountScreen = ({ navigation }) => {
         alert('Unable to add Strikes to user, try again')
     })}
 
+    const searchAccounts = (text) => {
+        setSearch(text)
+        const tempArray = userInfo.filter((o => o.name.toLowerCase().includes(text.toLowerCase())))
+        setSearchResults(tempArray)
+    }
+
     useEffect(() => {
         getUsers()
         }, [])
@@ -57,11 +66,28 @@ const AdminEditAccountScreen = ({ navigation }) => {
     return(
         <View style={styles.container}>
             <ScrollView>
+                <InputField
+                    inputStyle={{
+                    fontSize: 14,
+                    }}
+                    containerStyle={{
+                    backgroundColor: '#fff',
+                    marginBottom: 20,
+                    borderColor: 'black', 
+                    borderWidth: 1
+                    }}
+                    leftIcon='account-search'
+                    placeholder='Search Accounts'
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    value={search}
+                    onChangeText={text => searchAccounts(text)}
+                />
                 { userInfo &&
-                    userInfo.map((onekey, i) => (
+                    (search !== '' ? searchResults : userInfo).map((onekey, i) => (
                         <><ListItem.Swipeable bottomDivider containerStyle={styles.ListItem} key={i}
                             rightContent={
-                                <Button
+                                <Button 
                                     title="Delete"
                                     icon={{ name: 'delete', color: 'white' }}
                                     buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
@@ -90,9 +116,9 @@ const AdminEditAccountScreen = ({ navigation }) => {
                             
                             <ListItem.Content>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
-                                    {onekey.created < moment().add(3, 'days') && 
+                                    {onekey?.created && moment(onekey?.created).toDate() < moment().add(3, 'days') && 
                                         <View style={{}}>
-                                            <ListItem.Title style={{ fontWeight: 'bold', paddingBottom: 10, color: 'red'}}>New </ListItem.Title>
+                                            <ListItem.Title style={{ fontWeight: 'bold', paddingBottom: 10, color: 'red'}}>New {' '} </ListItem.Title>
                                         </View>
                                     }
                                     <View style={{flex: 2, alignItems: 'flex-start' }}>

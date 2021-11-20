@@ -77,7 +77,7 @@ const AboutScreen = ({ navigation }) => {
         {/* </View> */}
         <View style={styles.container}>
             <ScrollView>
-                <View style={{flex: 1 }}>
+            <View style={{flex: 1 }}>
                     <Card containerStyle={{ borderRadius: 5, backgroundColor: '#121212', borderColor: '#121212' }}>
                         <View style={{flex: 1}}>
                             <View style={{flex: 1, flexDirection: 'row' }}>
@@ -85,15 +85,15 @@ const AboutScreen = ({ navigation }) => {
                                     <Card.Title style={{ fontSize: 15, textAlign:'left', color: '#E8BD70'}}> INFO </Card.Title>
                                         <Text style={styles.text}> Fast fades in no time. </Text>
                                         <Text style={styles.text}> 
-                                            {barberData.phone != '' ? formatPhoneNumber(barberData.phone) + '' : ''}
+                                            {barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} 
                                             <MaterialCommunityIcons
                                                 style={{margin: 50}}
                                                 name={'cellphone-message'}
                                                 size={20}
                                                 color={'#fff'}
-                                                onPress={() => Linking.openURL("sms:123456789")
+                                                onPress={() => Linking.openURL(`sms:${barberData?.phone}`)
                                                     .catch(() => {
-                                                        Linking.openURL("sms:123456789");
+                                                        Linking.openURL(`sms:${barberData?.phone}`);
                                                 })}
                                             />
                                         </Text>

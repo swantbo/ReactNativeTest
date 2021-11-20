@@ -5,6 +5,7 @@ import * as firebase from 'firebase';
 import { formatPhoneNumber } from '../../utils/DataFormatting';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import MapView from 'react-native-maps';
 
 const AdminBarberScreen = () => {
     const [barberData, setBarberData] = useState({'Tuesday': '', 'Wednesday': '', 'Thursday': '',  'Friday': '', 'Saturday': '', 'instagram': '', 'location': '', 'name': '', 'phone': '', 'price': '', 'website': '' });
@@ -110,7 +111,19 @@ const AdminBarberScreen = () => {
                                 <View style={{flex: 1, alignItems: 'flex-start', paddingBottom: 15}}>
                                     <Card.Title style={{ fontSize: 15, textAlign:'left', color: '#E8BD70'}}> INFO </Card.Title>
                                         <Text style={styles.text}> Fast fades in no time. </Text>
-                                        <Text style={styles.text}> {barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} </Text>
+                                        <Text style={styles.text}> 
+                                            {barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} 
+                                            <MaterialCommunityIcons
+                                                style={{margin: 50}}
+                                                name={'cellphone-message'}
+                                                size={20}
+                                                color={'#fff'}
+                                                onPress={() => Linking.openURL(`sms:${barberData?.phone}`)
+                                                    .catch(() => {
+                                                        Linking.openURL(`sms:${barberData?.phone}`);
+                                                })}
+                                            />
+                                        </Text>
                                 </View>
                                         <SocialIcon
                                             onPress={() => Linking.openURL(`instagram://user?username=${barberData.instagram}`)
@@ -127,15 +140,44 @@ const AdminBarberScreen = () => {
                                             type='google'
                                         />
                             </View>
-                            <View style={{flex: 1.5, alignItems: 'flex-start' }}>
+                            <View style={{flex: 1 }}>
 
-                                <Card.Title style={{ alignItems: 'flex-start', color: '#E8BD70'}}> ADDRESS & HOURS </Card.Title>
-                                    <Text style={styles.text}> {barberData.location} </Text>
-                                    <Text style={styles.text}> Tuesday: {barberData.Tuesday} </Text>
-                                    <Text style={styles.text}> Wednesday: {barberData.Wednesday} </Text>
-                                    <Text style={styles.text}> Thursday: {barberData.Thursday} </Text>
-                                    <Text style={styles.text}> Friday: {barberData.Friday} </Text>
-                                    <Text style={styles.text}> Saturday: {barberData.Saturday} </Text>
+                                <Card.Title style={{ alignSelf: 'flex-start', color: '#E8BD70'}}> ADDRESS & HOURS </Card.Title>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <View style={{flex: 1.5, alignItems: 'flex-start'}}>
+                                        <Text style={styles.text}> {barberData.location} </Text>
+                                        <Text></Text>
+                                        <Text style={styles.text}> Tuesday: {barberData.Tuesday} </Text>
+                                        <Text style={styles.text}> Wednesday: {barberData.Wednesday} </Text>
+                                        <Text style={styles.text}> Thursday: {barberData.Thursday} </Text>
+                                        <Text style={styles.text}> Friday: {barberData.Friday} </Text>
+                                        <Text style={styles.text}> Saturday: {barberData.Saturday} </Text>
+                                    </View>
+                                    <View style={{ flex: 1, alignItems: 'flex-end', backgroundColor: 'pink' }}>
+                                        <MapView
+                                            style={{ width: '100%', height: '100%'}}
+                                            region={{latitude: 43.0218740049977,
+                                                longitude: -87.9119389619647,
+                                                latitudeDelta: 0.005,
+                                                longitudeDelta: 0.005}}
+                                            pitchEnabled={false}
+                                            rotateEnabled={false}
+                                            scrollEnabled={false}
+                                            zoomEnabled={false}
+                                            onPress={() => Linking.openURL('maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647')
+                                                .catch(() => {
+                                                    Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
+                                                })}
+                                        >
+                                        <MapView.Marker
+                                            coordinate={{latitude: 43.0218740049977,
+                                            longitude: -87.9119389619647}}
+                                        />
+                                        </MapView>
+                                    </View>
+                                </View>
+                                <Text></Text>
+                                    
                             </View>
                         </View>
                     </Card>
@@ -246,7 +288,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#000000'
       },
       text: {
-        fontSize: 16,
+        fontSize: 13,
         fontWeight: 'normal',
         color: '#fff'
       }

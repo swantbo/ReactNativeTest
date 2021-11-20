@@ -35,7 +35,7 @@ const AdminSettingsScreen = ({navigation}) => {
         const updateUserData = {
             [`${userDataType}`] : newUserInfo
         }
-        firebase.firestore().collection('Test').doc(user.uid).update(updateUserData);
+        firebase.firestore().collection('users').doc(user.uid).update(updateUserData);
     }
 
     function getUserData() {

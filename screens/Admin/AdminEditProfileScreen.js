@@ -1,17 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, Button, StyleSheet, TextInput, Alert, ActivityIndicator } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import * as firebase from 'firebase';
 
+import Firebase from '../../config/firebase';
+const auth = Firebase.auth();
+import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider'
+
 const AdminEditProfileScreen = () => {
+    const { user } = useContext(AuthenticatedUserContext);
     const [isLoading, setIsLoading] = useState(true)
     const [barberProfile, setBarberProfile] = useState({'name': '', 'Tuesday': '', 'Wednesday': '', 'Thursday': '', 'Friday': '', 'Saturday': '', 'instagram': '', 'location': '', 'phone': '', 'price': '', 'website': '' })
     const [changeData, setChangeData] = useState('')
     const [barberDataType, setBarberDataType] = useState('')
     const [newBarberData, setNewBarberData] = useState('')
+    const [userInfo, setUserInfo] = useState({'name': '', 'phone': ''});
 
+
+    const handleSignOut = async () => {
+      try {
+        await auth.signOut();
+      } catch (error) {
+        console.log(error);
+      }
+    };
       const getBarberProfil = async () => {
         const data = await firebase.firestore()
         .collection('Barber')
@@ -27,22 +41,46 @@ const AdminEditProfileScreen = () => {
       }
 
       const setBarberData = () => {
-        const barberData = {
-            [barberDataType]: newBarberData
+        let barberData
+        if (barberDataType === 'userphone' || 'username') {
+            barberData = {
+              [barberDataType.replace('user', '')]: newBarberData
+            }
+        } else {
+            barberData = {
+              [barberDataType]: newBarberData
+            }
         }
-        firebase.firestore()
-        .collection('Barber')
-        .doc('Nate')
-        .set(barberData, {merge: true})
-        .then(() => {
-          Alert.alert('Success', 'Data has been changed')
-        })
-        .catch((error) => {
-          alert('Something went wrong try again')
-      }); 
+        if (barberDataType !== 'username' && barberDataType !== 'userphone' && newBarberData !== '') {
+          firebase.firestore()
+            .collection('Barber')
+            .doc('Nate')
+            .set(barberData, {merge: true})
+            .then(() => {
+              Alert.alert('Success', `Your Barber data ${barberDataType} has been changed to ${newBarberData}`)
+            })
+            .catch((error) => {
+              alert('Something went wrong try again')
+          }); 
+        } if (barberDataType === 'username' || barberDataType === 'userphone' && newBarberData !== '') {
+            firebase.firestore().collection('users').doc(user.uid).set(barberData, {merge: true})
+            .then(() => {
+              Alert.alert('Success', `Your Account ${barberDataType} has been changed to ${newBarberData}`)
+            })
+            .catch((error) => {
+              alert('Something went wrong try again' + error)
+          }); 
+        }
       }
 
+      function getUserData() {
+        firebase.firestore().collection('users').doc(user.uid).get().then((userData) => {
+            setUserInfo(userData.data())
+        });
+    }
+
       useEffect(() => {
+        getUserData()
         getBarberProfil()
       }, [])
 
@@ -122,6 +160,26 @@ const AdminEditProfileScreen = () => {
                 <ListItem bottomDivider containerStyle={styles.ListItem} onPress={() => changeBarberData(barberProfile.Saturday, 'Saturday')} >
                   <ListItem.Content>
                       <ListItem.Title style={styles.text}>Saturday: {barberProfile.Saturday} </ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+                <ListItem bottomDivider containerStyle={styles.ListItem} >
+                  <ListItem.Content>
+                      <ListItem.Title style={{fontWeight: 'bold', color: '#E8BD70'}}>Account Details</ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+                <ListItem bottomDivider containerStyle={styles.ListItem} onPress={() => changeBarberData(userInfo.name, 'userName')} >
+                  <ListItem.Content>
+                      <ListItem.Title style={styles.text}>Name: {userInfo.name} </ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+                <ListItem bottomDivider containerStyle={styles.ListItem} onPress={() => changeBarberData(userInfo.phone, 'userPhone')} >
+                  <ListItem.Content>
+                      <ListItem.Title style={styles.text}>Phone: {userInfo.phone} </ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+                <ListItem bottomDivider containerStyle={styles.ListItem} onPress={() => handleSignOut()}>
+                  <ListItem.Content>
+                      <ListItem.Title style={{fontWeight: 'bold', color: '#E8BD70', alignSelf: 'center'}}>SignOut</ListItem.Title>
                   </ListItem.Content>
                 </ListItem>
               </>

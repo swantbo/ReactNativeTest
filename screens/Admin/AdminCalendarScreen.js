@@ -56,8 +56,15 @@ const AdminCalendarScreen = ({ navigation }) => {
               data.push(tempData)
             });
             let test 
-            const calendarTimes = newIntervals.map(obj => test = data.find(o => o.time === obj.time) || obj)
-            setCalendarData( calendarTimes )
+            const calendarTimes = newIntervals.map(obj => data.find(o => o.time === obj.time) || obj)
+            let result = data.filter(o1 => !newIntervals.some(o2 => o1.time === o2.time));
+            if (result.length > 0 ) {
+                let testResults = [...calendarTimes, ...result]
+                testResults.sort((a,b) => moment(a.time, 'HH:mm a') - moment(b.time, 'HH:mm a'))
+                setCalendarData( testResults )
+            } if (result.length === 0) {
+                setCalendarData( calendarTimes )
+            }
             setIsLoading(false)
         }).catch((e) => {
           Alert.alert('Error', `Unable to get data, try again. ${e}`)

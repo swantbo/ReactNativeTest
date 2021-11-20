@@ -102,7 +102,6 @@ const AppointmentScreen = () => {
                 let newdata = {[doc.id] : 'Taken'}
                 data = { ...data, ...newdata}
             });
-            console.log('data', data)
             const tempTimes = ({ ...newIntervals, ...data})
             let newTime ={}
                 if (tempTimes) {
@@ -116,7 +115,6 @@ const AppointmentScreen = () => {
                 } else {
                     newTime = {tempTime}
                 }
-                console.log('newTime', newTime)
             setNewTimes(newTime)
             setIsLoading(false)
         })

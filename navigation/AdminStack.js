@@ -47,17 +47,24 @@ function AdminCalendarStackScreen({ navigation }) {
 
 const AdminSettingsStack = createStackNavigator();
 
-function AdminSettingsStackScreen() {
+function AdminSettingsStackScreen({ navigation }) {
     return (
         <AdminSettingsStack.Navigator
         screenOptions={{
             headerStyle:{backgroundColor: '#121212', shadowColor: '#E8BD70'}, headerTintColor: '#E8BD70',
             headerTitleAlign: 'center'}}
             >
-            <AdminSettingsStack.Screen name="Admin Settings" options={{ title: 'Admin Settings', headerTitleAlign: 'center' }} component={AdminSettingsScreen}/>
-            <AdminSettingsStack.Screen name="OverView" options={{ title: 'OverView', headerTitleAlign: 'center' }} component={AdminOverViewScreen}/>
-            <AdminSettingsStack.Screen name="EditAccountScreen" options={{ title: 'Edit Accounts', headerTitleAlign: 'center' }} component={AdminEditAccountScreen} />
+            {/* <AdminSettingsStack.Screen name="Admin Settings" options={{ title: 'Admin Settings', headerTitleAlign: 'center' }} component={AdminSettingsScreen}/> */}
+            <AdminSettingsStack.Screen name="EditAccountScreen" options={{ title: 'Edit Accounts', headerTitleAlign: 'center',
+                 headerRight: () => (
+                    <Ionicons name="bar-chart" color={'#E8BD70'} size={23} style={{padding: 10}}
+                        onPress={() => navigation.navigate('OverView')}
+                        title="Add"
+                        color="#E8BD70"
+                    />
+                 ),}} component={AdminEditAccountScreen} />
             <AdminSettingsStack.Screen name="Points" options={{ title: 'Points', headerTitleAlign: 'center' }} component={AdminAddPointsScreen} />
+            <AdminSettingsStack.Screen name="OverView" options={{ title: 'OverView', headerTitleAlign: 'center' }} component={AdminOverViewScreen}/>
         </AdminSettingsStack.Navigator>
     )
 }

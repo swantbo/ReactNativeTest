@@ -14,7 +14,7 @@ const auth = Firebase.auth();
 
 export default function RootNavigator() {
   const { user, setUser } = useContext(AuthenticatedUserContext);
-  const [admin, setAdmin] = useState(true)
+  const [admin, setAdmin] = useState(false)
   const [isLoading, setIsLoading] = useState(true);
   // let admin = AdminProvider() 
   // console.log('admin', admin)
@@ -24,6 +24,10 @@ export default function RootNavigator() {
     const unsubscribeAuth = auth.onAuthStateChanged(async authenticatedUser => {
       try {
         await (authenticatedUser ? setUser(authenticatedUser) : setUser(null));
+        await firebase.firestore().collection('users').doc(authenticatedUser.uid).get().then((doc) => {
+          doc.data()?.admin === true ? setAdmin(true) : setAdmin(false)
+          console.log('admin', admin)
+        })
         setIsLoading(false);
       } catch (error) {
         console.log(error);

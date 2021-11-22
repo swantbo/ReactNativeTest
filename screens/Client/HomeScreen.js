@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert, Linking, TouchableOpacity } from 'react-native';
 import { Card, ListItem, Button, Avatar, Image } from 'react-native-elements'
 import * as firebase from 'firebase';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -155,6 +155,13 @@ export default function HomeScreen({ navigation }) {
     await firebase.storage().ref('Users/' + user.uid).put(blob)
   }
 
+  const atTime = moment.utc('2021-11-22', 'YYYY-MM-DD')
+  const referenceDate = moment.utc('2001-01-01', 'YYYY-MM-DD')
+  const secondsSinceRefDate = atTime.unix() - referenceDate.unix();
+  console.log('secondsSinceRefDate', secondsSinceRefDate.valueOf())
+  console.log('referenceDate', atTime.unix())  
+  console.log('referenceDate.unix()', referenceDate.unix())
+
   return(
     <View style={styles.container}>
         <Card containerStyle={{flex: 1, margin: 0, backgroundColor: '#E8BD70', borderColor: '#000'}}>
@@ -212,9 +219,16 @@ export default function HomeScreen({ navigation }) {
                             <ListItem.Content>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View style={{flex: 2, alignItems: 'flex-start' }}>
+                                      {console.log('utc', moment.utc(onekey[0]))}
+                                      <TouchableOpacity 
+                                        onPress={() => Linking.openURL('calshow:' + secondsSinceRefDate)
+                                        .catch(() => {
+                                          Linking.openURL('content://com.android.calendar/time/');
+                                      })}>
                                         <ListItem.Title style={{ color: '#fff'}}>
                                           {onekey[0]}, {onekey[1].time.toString().toLowerCase()} 
                                         </ListItem.Title>
+                                      </TouchableOpacity>
                                     </View>
                                     { onekey[1].points ?
                                       <>
@@ -230,7 +244,13 @@ export default function HomeScreen({ navigation }) {
                                 </View>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View style={{flex: 1, alignItems: 'flex-start' }}>
+                                      <TouchableOpacity  
+                                        onPress={() => Linking.openURL(`sms:${barberData?.phone}`)
+                                        .catch(() => {
+                                          Linking.openURL(`sms:${barberData?.phone}`);
+                                        })}>
                                         <Text style={{ color: '#fff'}}>{barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} </Text>
+                                      </TouchableOpacity>
                                     </View>
                                     <View style={{flex: 1, alignItems: 'flex-end'}}>
                                         <Text style={{ color: '#fff'}}>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </Text>
@@ -238,7 +258,13 @@ export default function HomeScreen({ navigation }) {
                                 </View>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View style={{flex: 1, alignItems: 'flex-start' }}>
+                                      <TouchableOpacity 
+                                        onPress={() => Linking.openURL('maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647')
+                                        .catch(() => {
+                                            Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
+                                      })}>
                                         <Text style={{ color: '#fff'}}>{barberData.location != '' ? barberData.location : ''} </Text>
+                                      </TouchableOpacity>
                                     </View>
                                 </View>
                                 <View style={{flex: 1, flexDirection: 'row'}}>

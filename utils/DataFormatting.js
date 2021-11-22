@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function formatPhoneNumber(phoneNumberString) {
     var cleaned = ('' + phoneNumberString?.toString()).replace(/\D/g, '');

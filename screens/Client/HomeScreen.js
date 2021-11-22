@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import moment from 'moment';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import * as Calendar from 'expo-calendar';
 
 import { formatPhoneNumber } from '../../utils/DataFormatting';
 
@@ -130,6 +131,16 @@ export default function HomeScreen({ navigation }) {
       } catch (err){
       Alert.alert('There is an error.', err.message)
       }
+
+      (async () => {
+        const { status } = await Calendar.requestCalendarPermissionsAsync();
+        if (status === 'granted') {
+          const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
+          console.log('Here are all your calendars:');
+          console.log({ calendars });
+        }
+      })();
+
     }
     getUserInfo();
     (async () => {
@@ -161,6 +172,22 @@ export default function HomeScreen({ navigation }) {
   console.log('secondsSinceRefDate', secondsSinceRefDate.valueOf())
   console.log('referenceDate', atTime.unix())  
   console.log('referenceDate.unix()', referenceDate.unix())
+
+
+  const eventDetails = {
+    title: 'Test Event', 
+    startDate: new moment('2021-11-22 5:30 p.m.', 'YYYY-MM-DD h:mm a'),
+    endDate: new moment('2021-11-22 7:30 a.m.', 'YYYY-MM-DD h:mm a'),
+    timeZone: 'America/Chicago'
+    }
+
+  const addEventToCalendar = async eventDetails => {
+    console.log('eventDetails', eventDetails)
+    const eventIdInCalendar = await Calendar.createEventAsync("2FEAB939-389E-42DA-8C57-2A9935B9F752", eventDetails)
+    console.log('eventIdInCalendar', eventIdInCalendar)
+    Calendar.openEventInCalendar(eventIdInCalendar)// that will give the user the ability to access the event in phone calendar 
+    setEventIdInCalendar(eventIdInCalendar)
+   }
 
   return(
     <View style={styles.container}>
@@ -221,10 +248,8 @@ export default function HomeScreen({ navigation }) {
                                     <View style={{flex: 2, alignItems: 'flex-start' }}>
                                       {console.log('utc', moment.utc(onekey[0]))}
                                       <TouchableOpacity 
-                                        onPress={() => Linking.openURL('calshow:' + secondsSinceRefDate)
-                                        .catch(() => {
-                                          Linking.openURL('content://com.android.calendar/time/');
-                                      })}>
+                                        onPress={() => addEventToCalendar(eventDetails)
+                                      }>
                                         <ListItem.Title style={{ color: '#fff'}}>
                                           {onekey[0]}, {onekey[1].time.toString().toLowerCase()} 
                                         </ListItem.Title>

@@ -2915,6 +2915,14 @@ expo-asset@~8.4.3:
     path-browserify "^1.0.0"
     url-parse "^1.4.4"
 
+expo-calendar@~10.0.3:
+  version "10.0.3"
+  resolved "https://registry.yarnpkg.com/expo-calendar/-/expo-calendar-10.0.3.tgz#87a539d4d8156354193ece2c49914f902a0c2031"
+  integrity sha512-ltao/p8V3AwcsFmqSxw0KuGoQI/SADWT9L8J19TLdyL4QENJ6/5Mon62pIEFQzk/yiG4tWjDzFEqif8DF7/czw==
+  dependencies:
+    "@expo/config-plugins" "^4.0.2"
+    expo-modules-core "~0.4.4"
+
 expo-camera@~12.0.3:
   version "12.0.3"
   resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-12.0.3.tgz#9afc38c12b973f385d38c7393627f0e2eb3d49a9"

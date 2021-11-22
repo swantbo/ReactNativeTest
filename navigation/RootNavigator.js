@@ -4,7 +4,6 @@ import { View, ActivityIndicator } from 'react-native';
 
 import Firebase from '../config/firebase';
 import { AuthenticatedUserContext } from './AuthenticatedUserProvider';
-import AdminProvider from '../utils/AdminProvider';
 import AuthStack from './AuthStack';
 import HomeStack from './HomeStack';
 import AdminStack from './AdminStack';
@@ -16,9 +15,6 @@ export default function RootNavigator() {
   const { user, setUser } = useContext(AuthenticatedUserContext);
   const [admin, setAdmin] = useState(false)
   const [isLoading, setIsLoading] = useState(true);
-  // let admin = AdminProvider() 
-  // console.log('admin', admin)
-  //let admin = false
 
   useEffect(() => {  
     const unsubscribeAuth = auth.onAuthStateChanged(async authenticatedUser => {
@@ -26,22 +22,13 @@ export default function RootNavigator() {
         await (authenticatedUser ? setUser(authenticatedUser) : setUser(null));
         await firebase.firestore().collection('users').doc(authenticatedUser.uid).get().then((doc) => {
           doc.data()?.admin === true ? setAdmin(true) : setAdmin(false)
-          console.log('admin', admin)
         })
         setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
     });
-
-    // async function getAdmin() {
-    //   await firebase.firestore().collection('users').doc(user.uid).get().then((doc) => {
-    //       doc.data()?.admin === true ? setAdmin(true) : setAdmin(true)
-    //       console.log('admin', admin)
-    //   })
-    // }
-      
-    // getAdmin() 
+    
     return unsubscribeAuth;
   }, []);
 

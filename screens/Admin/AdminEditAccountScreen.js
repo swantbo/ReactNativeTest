@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Alert, Text } from 'react-native';
+import { View, StyleSheet, Alert, TouchableOpacity, Linking } from 'react-native';
 import { ListItem, Button } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import { formatPhoneNumber } from '../../utils/DataFormatting';
@@ -55,7 +55,7 @@ const AdminEditAccountScreen = ({ navigation }) => {
 
     const searchAccounts = (text) => {
         setSearch(text)
-        const tempArray = userInfo.filter((o => o.name.toLowerCase().includes(text.toLowerCase())))
+        const tempArray = userInfo.filter((o => o.name.toLowerCase().includes(text.toLowerCase()) || o.phone.toLowerCase().includes(text.toLowerCase())))
         setSearchResults(tempArray)
     }
 
@@ -77,7 +77,7 @@ const AdminEditAccountScreen = ({ navigation }) => {
                     borderWidth: 1
                     }}
                     leftIcon='account-search'
-                    placeholder='Search Accounts'
+                    placeholder='Search Name or Phone Number'
                     autoCapitalize='none'
                     autoCorrect={false}
                     value={search}
@@ -145,7 +145,13 @@ const AdminEditAccountScreen = ({ navigation }) => {
                                 </View>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View style={{flex: 1, alignItems: 'flex-start' }}>
+                                        <TouchableOpacity  
+                                            onPress={() => Linking.openURL(`sms:${onekey?.phone}`)
+                                            .catch(() => {
+                                            Linking.openURL(`sms:${onekey?.phone}`);
+                                            })}>
                                         <ListItem.Subtitle style={styles.text}>{formatPhoneNumber(onekey.phone) ? formatPhoneNumber(onekey.phone) : onekey.phone}</ListItem.Subtitle>
+                                      </TouchableOpacity>
                                     </View>
                                     <View style={{flex: 1, alignItems: 'flex-end'}}>
                                         <ListItem.Subtitle style={styles.text}>{onekey.referral ? 'Referral: ' + onekey.referral : 'No Referral'} </ListItem.Subtitle>

@@ -193,27 +193,9 @@ export default function HomeScreen({ navigation }) {
     const defaultCalendar = await Calendar.getDefaultCalendarAsync();
     return defaultCalendar.source;
   }
-
-  async function obtainCalendarPermission() {
-    let permission = await Permissions.getAsync(Permissions.CALENDAR)
-    if (permission.status !== 'granted') {
-      permission = await Permissions.askAsync(Permissions.CALENDAR)
-      return
-    }
-    if (permission.status !== 'granted') {
-      permission = await Permissions.askAsync(Permissions.REMINDERS)
-      return
-
-      if (permission.status !== 'granted') {
-        Alert.alert('Permission not granted to calendar')
-      }
-    }
-    return permission
-  }
   
   async function createCalendar() {
     const date = '2021-11-23'
-    await obtainCalendarPermission()
     var dateMs = Date.parse(date)
     var startDate = new Date(dateMs)
     var endDate = new Date(dateMs + 2 * 60 * 60 * 1000)
@@ -231,18 +213,22 @@ export default function HomeScreen({ navigation }) {
       ownerAccount: 'personal',
       accessLevel: Calendar.CalendarAccessLevel.OWNER,
     })
-    .then((id) => {
-      Calendar.createEventAsync(id, {
+    try {
+      const defaultCalendar = await Calendar.getDefaultCalendarAsync();
+   
+      await Calendar.createEventAsync(defaultCalendar.id, {
         title: 'Haircut',
-        startDate: startDate,
-        endDate: endDate,
-        timeZone: 'America/Chicago',
-      }).catch((err) => console.log(err))
-      // console.log(`calendar ID is: ${id}`)
-    })
-    console.log(`Your new calendar ID is: ${newCalendarID}`);
+        startDate: new Date('2021-11-23 7:00 a.m.'),
+        endDate: new Date('2021-11-23 7:30 a.m.'),
+      });
+   
+      console.log('Event was created.');
+    } catch (e) {
+      console.log(e.message);
+    }
+   }
+    //console.log(`Your new calendar ID is: ${textEvent}`);
 
-  }
 
   return(
     <View style={styles.container}>

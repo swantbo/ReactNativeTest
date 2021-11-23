@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Linking, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Linking, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Card, SocialIcon, Avatar, Image } from 'react-native-elements'
 import * as firebase from 'firebase';
 import { formatPhoneNumber } from '../../utils/DataFormatting';
@@ -111,19 +111,13 @@ const AdminBarberScreen = () => {
                                 <View style={{flex: 1, alignItems: 'flex-start', paddingBottom: 15}}>
                                     <Card.Title style={{ fontSize: 15, textAlign:'left', color: '#E8BD70'}}> INFO </Card.Title>
                                         <Text style={styles.text}> Fast fades in no time. </Text>
-                                        <Text style={styles.text}> 
-                                            {barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} 
-                                            <MaterialCommunityIcons
-                                                style={{margin: 50}}
-                                                name={'cellphone-message'}
-                                                size={20}
-                                                color={'#fff'}
-                                                onPress={() => Linking.openURL(`sms:${barberData?.phone}`)
-                                                    .catch(() => {
-                                                        Linking.openURL(`sms:${barberData?.phone}`);
-                                                })}
-                                            />
-                                        </Text>
+                                        <TouchableOpacity  
+                                            onPress={() => Linking.openURL(`sms:${barberData?.phone}`)
+                                            .catch(() => {
+                                            Linking.openURL(`sms:${barberData?.phone}`);
+                                            })}>
+                                            <Text style={{ color: '#fff'}}>{barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} </Text>
+                                         </TouchableOpacity>
                                 </View>
                                         <SocialIcon
                                             onPress={() => Linking.openURL(`instagram://user?username=${barberData.instagram}`)

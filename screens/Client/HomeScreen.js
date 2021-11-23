@@ -7,6 +7,7 @@ import moment from 'moment';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import * as Calendar from 'expo-calendar';
+import * as Permissions from 'expo-calendar';
 
 import { formatPhoneNumber } from '../../utils/DataFormatting';
 
@@ -174,20 +175,74 @@ export default function HomeScreen({ navigation }) {
   console.log('referenceDate.unix()', referenceDate.unix())
 
 
-  const eventDetails = {
-    title: 'Test Event', 
-    startDate: new moment('2021-11-22 5:30 p.m.', 'YYYY-MM-DD h:mm a'),
-    endDate: new moment('2021-11-22 7:30 a.m.', 'YYYY-MM-DD h:mm a'),
-    timeZone: 'America/Chicago'
-    }
+  // const eventDetails = [
+     
+  //   startDate = new moment('2021-11-23 07:00'),
+  //   endDate = new moment('2021-11-23 07:30')
+  // ]
 
-  const addEventToCalendar = async eventDetails => {
+  async function addEventToCalendar(newCalendarID) {
     console.log('eventDetails', eventDetails)
-    const eventIdInCalendar = await Calendar.createEventAsync("2FEAB939-389E-42DA-8C57-2A9935B9F752", eventDetails)
+    const eventIdInCalendar = await Calendar.createEventAsync(newCalendarID, eventDetails)
     console.log('eventIdInCalendar', eventIdInCalendar)
     Calendar.openEventInCalendar(eventIdInCalendar)// that will give the user the ability to access the event in phone calendar 
     setEventIdInCalendar(eventIdInCalendar)
    }
+
+   async function getDefaultCalendarSource() {
+    const defaultCalendar = await Calendar.getDefaultCalendarAsync();
+    return defaultCalendar.source;
+  }
+
+  async function obtainCalendarPermission() {
+    let permission = await Permissions.getAsync(Permissions.CALENDAR)
+    if (permission.status !== 'granted') {
+      permission = await Permissions.askAsync(Permissions.CALENDAR)
+      return
+    }
+    if (permission.status !== 'granted') {
+      permission = await Permissions.askAsync(Permissions.REMINDERS)
+      return
+
+      if (permission.status !== 'granted') {
+        Alert.alert('Permission not granted to calendar')
+      }
+    }
+    return permission
+  }
+  
+  async function createCalendar() {
+    const date = '2021-11-23'
+    await obtainCalendarPermission()
+    var dateMs = Date.parse(date)
+    var startDate = new Date(dateMs)
+    var endDate = new Date(dateMs + 2 * 60 * 60 * 1000)
+    const defaultCalendarSource =
+      Platform.OS === 'ios'
+        ? await getDefaultCalendarSource()
+        : { isLocalAccount: true, name: 'Expo Calendar' };
+    const newCalendarID = await Calendar.createCalendarAsync({
+      title: 'Expo Calendar',
+      color: 'blue',
+      entityType: Calendar.EntityTypes.EVENT,
+      sourceId: defaultCalendarSource.id,
+      source: defaultCalendarSource,
+      name: 'internalCalendarName',
+      ownerAccount: 'personal',
+      accessLevel: Calendar.CalendarAccessLevel.OWNER,
+    })
+    .then((id) => {
+      Calendar.createEventAsync(id, {
+        title: 'Haircut',
+        startDate: startDate,
+        endDate: endDate,
+        timeZone: 'America/Chicago',
+      }).catch((err) => console.log(err))
+      // console.log(`calendar ID is: ${id}`)
+    })
+    console.log(`Your new calendar ID is: ${newCalendarID}`);
+
+  }
 
   return(
     <View style={styles.container}>
@@ -248,7 +303,7 @@ export default function HomeScreen({ navigation }) {
                                     <View style={{flex: 2, alignItems: 'flex-start' }}>
                                       {console.log('utc', moment.utc(onekey[0]))}
                                       <TouchableOpacity 
-                                        onPress={() => addEventToCalendar(eventDetails)
+                                        onPress={() => createCalendar()
                                       }>
                                         <ListItem.Title style={{ color: '#fff'}}>
                                           {onekey[0]}, {onekey[1].time.toString().toLowerCase()} 

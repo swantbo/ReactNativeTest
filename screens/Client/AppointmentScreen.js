@@ -2,7 +2,8 @@ import moment from 'moment';
 import React, { useEffect, useState, useContext } from 'react';
 import { View, StyleSheet, Text, ScrollView, Button, ActivityIndicator, Alert } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
-import { Card, ListItem } from 'react-native-elements';
+import { Card, ListItem, CheckBox } from 'react-native-elements';
+import { getUserData, getUserDate, getUserId } from '../../utils/Firebase'
 
 import { InputField } from '../../components';
 import * as firebase from 'firebase';
@@ -27,6 +28,7 @@ const AppointmentScreen = () => {
     const [newTimes, setNewTimes] = useState({})
     const [isLoading, setIsLoading] = useState(false)
     const [friend, setFriend] = useState('')
+    const [haircutType, setHaircutType] = useState('mens')
 
     const clearState = () => {
         setSelectedDate(moment())
@@ -139,6 +141,7 @@ const AppointmentScreen = () => {
     const scheduleAppoint = async (selectedDate, selectedTime) => {
         const userAppointmentInfo = {
             name: userName,
+            haircutType: haircutType,
             friend: friend,
             comment: text,
             time : selectedTime,
@@ -169,7 +172,8 @@ const AppointmentScreen = () => {
     const addAppointmentDataBase = async (selectedDate, selectedTime) => {
         const appointmentData = {
             time: selectedTime,
-            points: discount !=false ? userPoints : ''
+            points: discount !=false ? userPoints : '',
+            haircutType: haircutType
         };
     await firebase.firestore().collection('users').doc(user.uid).collection('Haircuts').doc(selectedDate).set( appointmentData, {merge: true})
     discount != false ? await firebase.firestore().collection('users').doc(user.uid).set({points: '0'} , {merge: true}) : null
@@ -180,9 +184,13 @@ const AppointmentScreen = () => {
      }
 
      function subtractDiscount(goatPoints) {
-        const discount = Number(barberInfo.price.replace(/[$.]+/g, '')) - Number(userPoints)
+        const discount = haircutType === 'mens' ? Number(barberInfo.price.replace(/[$.]+/g, '')) - Number(userPoints) : 3500 - Number(userPoints)
         return (discount / 100).toFixed(2)
      }
+    
+    const selectedHaircutType = (selectedHaircut) => {
+		setHaircutType(selectedHaircut) 
+	}
 
     useEffect(() => {
         removeMonSun()
@@ -212,6 +220,20 @@ const AppointmentScreen = () => {
                     datesBlacklist={calendarDatesRemoved} />
             </View>
             <View style={{ flex: 7 }}>
+                <CheckBox
+                    containerStyle={{backgroundColor: '#121212'}}
+                    textStyle={{color: '#fff'}}
+                    title="Men's Haircut"
+                    checked={haircutType === 'mens' ? true : false}
+                    onPress={() => selectedHaircutType('mens')}
+                />
+                <CheckBox
+                    containerStyle={{backgroundColor: '#121212'}}
+                    textStyle={{color: '#fff'}}
+                    title="Kid's Haircut"
+                    checked={haircutType === 'kids' ? true : false}
+                    onPress={() => selectedHaircutType('kids')}
+                />
                 <ListItem bottomDivider containerStyle={{backgroundColor: '#000'}}>
                     <ListItem.Content style={{ alignItems: 'center' }}>
                         <ListItem.Title style={styles.text}> {formattedDate ? formattedDate : 'Choose a date'} </ListItem.Title>
@@ -243,7 +265,7 @@ const AppointmentScreen = () => {
                         <Card.Title style={{ color: '#E8BD70' }}>{selectedDate} @{selectedTime}</Card.Title>
                         <Card.Divider />
                         <Button style={styles.text} color={'#E8BD70'} title={`Use Goat Points: ${userPoints}`} onPress={() => setDiscount(true)}/>
-                        <Text style={styles.text}>Price: {barberInfo.price}</Text>
+                        <Text style={styles.text}>Price: {haircutType === 'mens' ? barberInfo.price : '$35.00'}</Text>
                         {discount !=false &&
                             <>
                                 <Text style={styles.text}>Goat Points: -${insertDecimal(userPoints)}</Text>
@@ -264,7 +286,7 @@ const AppointmentScreen = () => {
                             }}
                             leftIcon='account-plus'
                             placeholder='Friends Name'
-                            autoCapitalize='first'
+                            autoCapitalize='words'
                             value={friend}
                             onChangeText={text => setFriend(text)}
                         />
@@ -280,7 +302,7 @@ const AppointmentScreen = () => {
                             }}
                             leftIcon='comment'
                             placeholder='Comment (optional)'
-                            autoCapitalize='first'
+                            autoCapitalize='sentences'
                             value={text}
                             onChangeText={text => onChangeText(text)}
                         />

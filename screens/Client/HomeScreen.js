@@ -15,8 +15,6 @@ import { formatPhoneNumber } from '../../utils/DataFormatting';
 import Firebase from '../../config/firebase';
 import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider';
 
-const auth = Firebase.auth();
-
 export default function HomeScreen({ navigation }) {
   const { user } = useContext(AuthenticatedUserContext);
   const [userData, setUserData] = useState({'email': '', 'name': '', 'phone': '', 'previous': '', 'time': '', 'upcoming': '', 'points': ''});
@@ -46,7 +44,6 @@ export default function HomeScreen({ navigation }) {
 					if (onekey[0] > moment().format('YYYY-MM-DD')) {
 						upcomingData = {...upcomingData, ...{[onekey[0]]: onekey[1]}}
 					} else {
-						console.log('onekey', onekey)
 						previousData = {...previousData, ...{[onekey[0]]: onekey[1]}}
 						removeDates.push(onekey[0])
 					}
@@ -82,7 +79,7 @@ export default function HomeScreen({ navigation }) {
 				Alert.alert('Error', `Unable to delete appointment. Try again. ${e}`)
 			})
 		} else {
-		Alert.alert('Unable To Delete Appointment', 'The Appointment date has already passed, or is to close to Appoinment Time. Please contact Nate')
+			Alert.alert('Unable To Delete Appointment', 'The Appointment date has already passed, or is to close to Appoinment Time. Please contact Nate')
 		}
  	}
 
@@ -106,72 +103,70 @@ export default function HomeScreen({ navigation }) {
     	await firebase.storage().ref('Users/' + user.uid).put(blob)
   	}
 
-  	useEffect(() => {
-    	getUserInfo();
-
-		(async () => {
-			const { status } = await Calendar.requestCalendarPermissionsAsync();
-			if (status === 'granted') {
-				const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
-				console.log('Here are all your calendars:');
-				console.log({ calendars });
-			}
-		})(),
-		(async () => {
-			if (Platform.OS !== 'web') {
-				const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-				if (status !== 'granted') {
-					alert('Sorry, we need camera roll permissions to make this work!');
-				}
-			}
-		})()
-  	}, [])
-
-  	const atTime = moment.utc('2021-11-22', 'YYYY-MM-DD')
-  	const referenceDate = moment.utc('2001-01-01', 'YYYY-MM-DD')
-  	const secondsSinceRefDate = atTime.unix() - referenceDate.unix();
-
-   	async function getDefaultCalendarSource() {
-    	const defaultCalendar = await Calendar.getDefaultCalendarAsync();
-		return defaultCalendar.source;
-  	}
-  
-  	async function createCalendar() {
-    	const date = '2021-11-23'
-    	var dateMs = Date.parse(date)
-    	var startDate = new Date(dateMs)
-    	var endDate = new Date(dateMs + 2 * 60 * 60 * 1000)
-    	const defaultCalendarSource =
-      		Platform.OS === 'ios' ? await getDefaultCalendarSource() : { isLocalAccount: true, name: 'Expo Calendar' };
-    	const newCalendarID = await Calendar.createCalendarAsync({
-      		title: 'Expo Calendar',
-			color: 'blue',
-			entityType: Calendar.EntityTypes.EVENT,
-			sourceId: defaultCalendarSource.id,
-			source: defaultCalendarSource,
-			name: 'internalCalendarName',
-			ownerAccount: 'personal',
-			accessLevel: Calendar.CalendarAccessLevel.OWNER,
-    	})
+	async function createCalendar(appointmentDate, appointmentTime, address, phone) {
+    	//const defaultCalendarSource = Platform.OS === 'ios' ? await getDefaultCalendarSource() : { isLocalAccount: true, name: 'Expo Calendar' };
+		const newTime = convertTime12to24(appointmentTime)
+		let [hours, minutes] = newTime.split(':');
+    	// const newCalendarID = await Calendar.createCalendarAsync({
+      	// 	title: 'Expo Calendar',
+		// 	color: 'blue',
+		// 	entityType: Calendar.EntityTypes.EVENT,
+		// 	sourceId: defaultCalendarSource.id,
+		// 	source: defaultCalendarSource,
+		// 	name: 'internalCalendarName',
+		// 	ownerAccount: 'personal',
+		// 	accessLevel: Calendar.CalendarAccessLevel.OWNER,
+    	// })
 		try {
 			const defaultCalendar = await Calendar.getDefaultCalendarAsync()
 	
 			await Calendar.createEventAsync(defaultCalendar.id, {
 				title: 'Haircut',
-				startDate: new moment.utc('2021-11-28').hour('8').minute('30').toDate(),
-				endDate: new moment.utc('2021-11-28').hour('9').toDate(),
-				timeZone: 'America/Chicago'
+				startDate: new moment.utc(appointmentDate).hour(6 + Number(hours)).minute(Number(minutes)).toDate(),
+				endDate: new moment.utc(appointmentDate).hour(6 + Number(hours)).minute(Number(minutes) + 30).toDate(),
+				timeZone: 'America/Chicago',
+				location: address,
+				notes: `If you are unable to attend your appointment call Nate. Nate's Phone Number: ${phone}`,
+				alarms: [ {relativeOffset: -1440}, { relativeOffset: -30 } ]
 			})
-	
-			console.log('Event was created.');
+			Alert.alert('Haircut Added To Calendar', `Haircut Appointment on ${appointmentDate} at ${appointmentTime} has been added to your Calendar`)
 		} catch (e) {
-		console.log(e.message);
+			Alert.alert('Error Adding Haircut to Calendar', `Unable to add Appointment to Calendar. Try Again. ${"\n"} Error: ${e.message}`)
 		}
 	}
-    //console.log(`Your new calendar ID is: ${textEvent}`);
 
-	console.log('testDate', new Date('2021-11-28'))
-	console.log('momentDate', new moment.utc('2021-11-28').hour('8').minute('30').toDate())
+	function convertTime12to24(time12h) {
+		const [time, modifier] = time12h.split(" ")
+		let [hours, minutes] = time.split(":")
+
+		if (hours === "12") {
+		  hours = "00";
+		}
+		if (modifier === "PM") {
+		  hours = parseInt(hours, 10) + 12;
+		}
+		return `${hours}:${minutes}`
+	}
+
+  	useEffect(() => {
+    	getUserInfo();
+
+		(async () => {
+			const { status } = await Calendar.requestCalendarPermissionsAsync()
+			if (status === 'granted') {
+				const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT)
+			}
+		})(),
+		(async () => {
+			if (Platform.OS !== 'web') {
+				const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+				if (status !== 'granted') {
+					alert('Sorry, we need camera roll permissions to make this work!')
+				}
+			}
+		})()
+  	}, [])
+
   	return(
 		<View style={styles.container}>
 			<Card containerStyle={{flex: 1, margin: 0, backgroundColor: '#E8BD70', borderColor: '#000'}}>
@@ -194,7 +189,7 @@ export default function HomeScreen({ navigation }) {
 								name={'information'}
 								size={20}
 								color={'#000'}
-								onPress={() => navigation.navigate('GoatPoint')}
+								onPress={() => navigation.navigate('GoatPoint', { userGoatPoints: userData.points })}
 							/>
 						</Card.Title>
 					</View>
@@ -229,12 +224,18 @@ export default function HomeScreen({ navigation }) {
 								<ListItem.Content>
 									<View style={{flex: 1, flexDirection: 'row'}}>
 										<View style={{flex: 2, alignItems: 'flex-start' }}>
-										{console.log('utc', moment.utc(onekey[0]))}
 										<TouchableOpacity 
-											onPress={() => createCalendar()
+											onPress={() => Alert.alert('Add Haircut To Calendar', `Would you like to add your Appointment on ${onekey[0]} at ${onekey[1].time} to your calendar?`, 
+											[
+												{
+												text: "Cancel"
+												},
+												{ text: "Add Appointment", 
+												onPress: () => (createCalendar(onekey[0], onekey[1].time.toString(), barberData.location, barberData.phone))}
+											])
 										}>
 											<ListItem.Title style={{ color: '#fff'}}>
-											{onekey[0]}, {onekey[1].time.toString().toLowerCase()} 
+												{onekey[0]}, {onekey[1].time.toString().toLowerCase()} 
 											</ListItem.Title>
 										</TouchableOpacity>
 										</View>

@@ -1,14 +1,15 @@
 import moment from 'moment';
 import React, { useEffect, useState, useContext } from 'react';
-import { View, StyleSheet, Text, ScrollView, Button, ActivityIndicator, Alert } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, Button, ActivityIndicator, Alert, TouchableOpacity, Linking } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
-import { Card, ListItem, CheckBox } from 'react-native-elements';
+import { Card, ListItem, CheckBox, Avatar } from 'react-native-elements';
 import { getUserData, getUserDate, getUserId } from '../../utils/Firebase'
 
 import { InputField } from '../../components';
 import * as firebase from 'firebase';
 
 import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider';
+import { formatPhoneNumber } from '../../utils/DataFormatting';
 
 const AppointmentScreen = () => {
     const { user } = useContext(AuthenticatedUserContext);
@@ -18,7 +19,7 @@ const AppointmentScreen = () => {
     const [times, setTimes] = useState({})
     const [timePicked, setTimePicked] = useState(false)
     const [selectedTime, setSelectedTime] = useState('')
-    const [barberInfo, setBarberInfo] = useState({'price': '', 'location': ''})
+    const [barberInfo, setBarberInfo] = useState({'price': '', 'location': '', 'name': '', 'phone': ''})
     const [availibility, setAvailibility] = useState({'Tuesday': '', 'Wednesday': '', 'Thursday': '', 'Friday': '', 'Saturday': ''})
     const [userName, setUserName] = useState('')
     const [userPhone, setUserPhone] = useState('')
@@ -29,6 +30,7 @@ const AppointmentScreen = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [friend, setFriend] = useState('')
     const [haircutType, setHaircutType] = useState('mens')
+    const [discount, setDiscount] = useState(false)
 
     const clearState = () => {
         setSelectedDate(moment())
@@ -124,17 +126,19 @@ const AppointmentScreen = () => {
 
     const scheduleAppointment = (time) => {
         setTimePicked(true)
-        getBarberInfo(time)
+        setSelectedTime(time)
     }
 
-    const getBarberInfo = async (time) => {
+    const getBarberInfo = async () => {
         await firebase.firestore().collection('Barber').doc('Nate').get().then((testData) => {
             const barberData = {
                 'price': testData.data().price,
-                'location': testData.data().location
+                'location': testData.data().location,
+                'phone': testData.data().phone,
+                'name': testData.data().name
             };
+            console.log(barberData)
             setBarberInfo({ ...barberInfo, ...barberData})
-            setSelectedTime(time)
         });
     };
 
@@ -181,12 +185,12 @@ const AppointmentScreen = () => {
 
     function insertDecimal(num) {
         return (num / 100).toFixed(2);
-     }
+    }
 
-     function subtractDiscount(goatPoints) {
+    function subtractDiscount(goatPoints) {
         const discount = haircutType === 'mens' ? Number(barberInfo.price.replace(/[$.]+/g, '')) - Number(userPoints) : 3500 - Number(userPoints)
         return (discount / 100).toFixed(2)
-     }
+    }
     
     const selectedHaircutType = (selectedHaircut) => {
 		setHaircutType(selectedHaircut) 
@@ -195,35 +199,41 @@ const AppointmentScreen = () => {
     useEffect(() => {
         removeMonSun()
         getUserId()
+        getBarberInfo()
     }, [])
 
-    const [discount, setDiscount] = useState(false)
     return(
         <View style={styles.container}>
-          <View style={{ flex: 1 }}>
-                <CalendarStrip
-                    scrollable
-                    style={{ height: 100, paddingTop: 10, paddingBottom: 10 }}
-                    calendarHeaderStyle={{ color: '#E8BD70', fontSize: 17 }}
-                    calendarColor={'#121212'}
-                    dateNumberStyle={{ color: 'white' }}
-                    dateNameStyle={{ color: 'white' }}
-                    iconContainer={{ flex: 0.1 }}
-                    highlightDateNameStyle={{ color: 'white' }}
-                    highlightDateNumberStyle={{ fontWeight: 'bold', color: 'white' }}
-                    highlightDateContainerStyle={{ backgroundColor: '#E8BD70' }}
-                    startingDate={moment()}
-                    minDate={moment()}
-                    maxDate={moment().add(30, 'days')}
-                    selectedDate={selectedDate}
-                    onDateSelected={onDateSelected}
-                    datesBlacklist={calendarDatesRemoved} />
+            <View style={{ flex: 1 }}>
+                <ListItem bottomDivider containerStyle={styles.ListItem}>
+                    <Avatar source={require('../../assets/123_1.jpeg')} rounded size='large'/>
+                    <ListItem.Content>
+                        <ListItem.Title style={{color: 'white'}}>{barberInfo.name}</ListItem.Title>
+                        <TouchableOpacity  
+                            onPress={() => 
+                                Linking.openURL(`sms:${barberInfo?.phone}`)
+                            .catch(() => {
+                                Linking.openURL(`sms:${barberInfo?.phone}`);
+                            })}>
+                            <ListItem.Subtitle style={{color: 'white'}}>{barberInfo.phone != '' ? formatPhoneNumber(barberInfo.phone) : ''}</ListItem.Subtitle>
+                        </TouchableOpacity>
+                        <TouchableOpacity 
+                            onPress={() => 
+                                Linking.openURL('maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647')
+                            .catch(() => {
+                                Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
+                            })}>
+                            <ListItem.Subtitle style={{color: 'white'}}>{barberInfo.location != '' ? barberInfo.location : ''}</ListItem.Subtitle>
+                        </TouchableOpacity>
+                    </ListItem.Content>
+                </ListItem>
             </View>
-            <View style={{ flex: 7 }}>
+            <View>
                 <CheckBox
                     containerStyle={{backgroundColor: '#121212'}}
                     textStyle={{color: '#fff'}}
                     title="Men's Haircut"
+                    subtitle="$50"
                     checked={haircutType === 'mens' ? true : false}
                     onPress={() => selectedHaircutType('mens')}
                 />
@@ -234,26 +244,31 @@ const AppointmentScreen = () => {
                     checked={haircutType === 'kids' ? true : false}
                     onPress={() => selectedHaircutType('kids')}
                 />
-                <ListItem bottomDivider containerStyle={{backgroundColor: '#000'}}>
-                    <ListItem.Content style={{ alignItems: 'center' }}>
-                        <ListItem.Title style={styles.text}> {formattedDate ? formattedDate : 'Choose a date'} </ListItem.Title>
-                    </ListItem.Content>
-                </ListItem>
-                {/* {!newTimes ? 
-                        <ScrollView>
-                            <ListItem bottomDivider containerStyle={styles.ListItem}>
-                                <ListItem.Content style={{ alignItems: 'center' }}>
-                                    <ListItem.Title style={styles.text}>No Available Appointments</ListItem.Title>
-                                </ListItem.Content>
-                            </ListItem>
-                        </ScrollView> : null
-                } */}
+            </View>
+            <View style={{ flex: 4 }}>
+                <CalendarStrip
+                        scrollable
+                        style={{ height: 100, paddingTop: 10, paddingBottom: 10 }}
+                        calendarHeaderStyle={{ color: '#E8BD70', fontSize: 17 }}
+                        calendarColor={'#121212'}
+                        dateNumberStyle={{ color: 'white' }}
+                        dateNameStyle={{ color: 'white' }}
+                        iconContainer={{ flex: 0.1 }}
+                        highlightDateNameStyle={{ color: 'white' }}
+                        highlightDateNumberStyle={{ fontWeight: 'bold', color: 'white' }}
+                        highlightDateContainerStyle={{ backgroundColor: '#E8BD70' }}
+                        startingDate={moment()}
+                        minDate={moment()}
+                        maxDate={moment().add(30, 'days')}
+                        selectedDate={selectedDate}
+                        onDateSelected={onDateSelected}
+                        datesBlacklist={calendarDatesRemoved} />
                 {!isLoading && newTimes && !timePicked ?
-                    <ScrollView>
+                    <ScrollView horizontal={true}>
                         {Object.entries(newTimes).map((onekey, i) => (
-                            <ListItem bottomDivider containerStyle={styles.ListItem} key={i} onPress={() => scheduleAppointment(onekey[0])}>
-                                <ListItem.Content>
-                                    <ListItem.Title style={styles.text}>{onekey[1] ? null : onekey[0]}</ListItem.Title>
+                            <ListItem bottomDivider containerStyle={{backgroundColor: '#000'}} key={i} onPress={() => scheduleAppointment(onekey[0])}>
+                                <ListItem.Content style={{ backgroundColor: '#E8BD70', borderRadius: 10,}}>
+                                    <ListItem.Title style={styles.listText}>{onekey[1] ? null : onekey[0]}</ListItem.Title>
                                 </ListItem.Content>
                             </ListItem>
                         ))}
@@ -264,7 +279,7 @@ const AppointmentScreen = () => {
                     <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#fff' }}>
                         <Card.Title style={{ color: '#E8BD70' }}>{selectedDate} @{selectedTime}</Card.Title>
                         <Card.Divider />
-                        <Button style={styles.text} color={'#E8BD70'} title={`Use Goat Points: ${userPoints}`} onPress={() => setDiscount(true)}/>
+                        <Button style={styles.text} color={'#E8BD70'} title={`Use Goat Points: ${userPoints}`} onPress={() => discount === false ? setDiscount(true) : setDiscount(false)}/>
                         <Text style={styles.text}>Price: {haircutType === 'mens' ? barberInfo.price : '$35.00'}</Text>
                         {discount !=false &&
                             <>
@@ -272,9 +287,7 @@ const AppointmentScreen = () => {
                                 <Text style={styles.text}>New Price: ${subtractDiscount(userPoints)}</Text>
                             </>
                         }
-                        <Text style={styles.text}>Address: {barberInfo.location}</Text>
-                        <Text style={styles.text}>Total time: ~30 minutes</Text>
-                            <InputField
+                        <InputField
                             inputStyle={{
                             fontSize: 14,
                             }}
@@ -323,6 +336,10 @@ const styles = StyleSheet.create({
     },
     text: {
         color: '#fff',
+        padding: 5
+    },
+    listText: {
+        color: '#000',
         padding: 5
     },
     ListItem: {

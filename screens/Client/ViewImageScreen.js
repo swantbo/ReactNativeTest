@@ -9,8 +9,6 @@ const ViewImageScreen = ({ route }) => {
     return (
         <View style={styles.container}>
             <Card containerStyle={{ flex: 1, backgroundColor: '#121212', borderColor: '#121212'}}>
-                <Card.Title style={styles.text}>Image Title</Card.Title>
-                <Card.Divider/>
                 <View>
                     <Image
                         style={{ width: '100%', height: '75%', marginBottom: 10 }}

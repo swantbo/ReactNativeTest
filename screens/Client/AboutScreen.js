@@ -1,28 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Linking, ActivityIndicator, SafeAreaView, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Linking, ActivityIndicator, SafeAreaView, ImageBackground, TouchableOpacity } from 'react-native'
 import { Card, SocialIcon, Avatar, Image } from 'react-native-elements'
-import * as firebase from 'firebase';
-import { formatPhoneNumber } from '../../utils/DataFormatting';
-import MapView from 'react-native-maps';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import * as firebase from 'firebase'
+import { formatPhoneNumber } from '../../utils/DataFormatting'
+import MapView from 'react-native-maps'
 
 const AboutScreen = ({ navigation }) => {
     const [barberData, setBarberData] = useState({'Tuesday': '', 'Wednesday': '', 'Thursday': '',  'Friday': '', 'Saturday': '', 'instagram': '', 'location': '', 'name': '', 'phone': '', 'price': '', 'website': '' });
     const [image, setImage] = useState(null)
-    const [haircutPictures1, setHaircutPictures1] = useState(null)
-    const [haircutPictures2, setHaircutPictures2] = useState(null)
-    const [haircutPictures3, setHaircutPictures3] = useState(null)
-    const [haircutPictures4, setHaircutPictures4] = useState(null)
-    const [haircutPictures5, setHaircutPictures5] = useState(null)
-    const [haircutPictures6, setHaircutPictures6] = useState(null)
-    const markers = [
-        {
-          latitude: 43.0218740049977,
-          longitude: -87.9119389619647,
-          title: 'Foo Place',
-          subtitle: '1234 Foo Drive'
-        }
-      ];
+    const [haircutImages, setHaircutImages] = useState([])
 
     async function getBarberData() {
         await firebase.firestore().collection('Barber').doc('Nate').get().then((barber) => {
@@ -37,24 +23,9 @@ const AboutScreen = ({ navigation }) => {
             await firebase.storage().ref('Barber/ProfilePicture').getDownloadURL().then((ProfileImage) => {
                 setImage(ProfileImage)
             })
-            await firebase.storage().ref('Barber/HaircutPictures/1').getDownloadURL().then((image) => {
-                setHaircutPictures1(image)
-            })
-            await firebase.storage().ref('Barber/HaircutPictures/2').getDownloadURL().then((image) => {
-                setHaircutPictures2(image)
-            })
-            await firebase.storage().ref('Barber/HaircutPictures/3').getDownloadURL().then((image) => {
-                setHaircutPictures3(image)
-            })
-            await firebase.storage().ref('Barber/HaircutPictures/4').getDownloadURL().then((image) => {
-                setHaircutPictures4(image)
-            })
-            await firebase.storage().ref('Barber/HaircutPictures/5').getDownloadURL().then((image) => {
-                setHaircutPictures5(image)
-            })
-            await firebase.storage().ref('Barber/HaircutPictures/6').getDownloadURL().then((image) => {
-                setHaircutPictures6(image)
-            })
+            const imageRefs = await firebase.storage().ref('Barber/HaircutPictures/').listAll();
+            const urls = await Promise.all(imageRefs.items.map((ref) => ref.getDownloadURL()))
+            setHaircutImages(urls)
           }
 
         getBarberImage()
@@ -64,17 +35,12 @@ const AboutScreen = ({ navigation }) => {
         <>
         <SafeAreaView style={{ flex:0, backgroundColor: '#E8BD70', borderColor: '#E8BD70' }} />
 
-        {/* <View style={{flex: .3, backgroundColor: '#E8BD70', borderColor: '#E8BD70'}}> */}
-            <ImageBackground source={require('../../assets/6347257.png')} style={{flex: .3, backgroundColor: '#E8BD70'}} resizeMode='cover'> 
-                {/* <Card containerStyle={{ flex: 1, margin: 0, backgroundColor: '#E8BD70', borderColor: '#E8BD70', alignItems: 'center' }}> */}
-                    
-                        <Card.Title style={{alignSelf: 'center'}}>
-                            <Avatar rounded size="xlarge" title={'N'} source={{ uri: image }} />
-                        </Card.Title>
-                    
-                {/* </Card> */}
-            </ImageBackground>
-        {/* </View> */}
+        <ImageBackground source={require('../../assets/6347257.png')} style={{flex: .3, backgroundColor: '#E8BD70'}} resizeMode='cover'> 
+            <Card.Title style={{alignSelf: 'center'}}>
+                <Avatar rounded size="xlarge" title={'N'} source={{ uri: image }} />
+            </Card.Title>
+        </ImageBackground>
+        
         <View style={styles.container}>
             <ScrollView>
             <View style={{flex: 1 }}>
@@ -84,19 +50,13 @@ const AboutScreen = ({ navigation }) => {
                                 <View style={{flex: 1, alignItems: 'flex-start', paddingBottom: 15}}>
                                     <Card.Title style={{ fontSize: 15, textAlign:'left', color: '#E8BD70'}}> INFO </Card.Title>
                                         <Text style={styles.text}> Fast fades in no time. </Text>
-                                        <Text style={styles.text}> 
-                                            {barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} 
-                                            <MaterialCommunityIcons
-                                                style={{margin: 50}}
-                                                name={'cellphone-message'}
-                                                size={20}
-                                                color={'#fff'}
-                                                onPress={() => Linking.openURL(`sms:${barberData?.phone}`)
-                                                    .catch(() => {
-                                                        Linking.openURL(`sms:${barberData?.phone}`);
-                                                })}
-                                            />
-                                        </Text>
+                                        <TouchableOpacity  
+											onPress={() => Linking.openURL(`sms:${barberData?.phone}`)
+											.catch(() => {
+											Linking.openURL(`sms:${barberData?.phone}`);
+											})}>
+											<Text style={styles.text}>{barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} </Text>
+										</TouchableOpacity>
                                 </View>
                                         <SocialIcon
                                             onPress={() => Linking.openURL(`instagram://user?username=${barberData.instagram}`)
@@ -161,104 +121,22 @@ const AboutScreen = ({ navigation }) => {
                             <Text style={{color: '#E8BD70', alignContent: 'center', fontWeight: 'bold', fontSize: 15}}> Photos </Text>
                         </View>
                     </View>
-                    <View style={{flex: 1, flexDirection: 'row'}}>
-                        <View style={{flex: 1, alignItems: 'flex-start', backgroundColor: '#121212' }}>
-                            <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#121212'}}>
+                    <View style={{flex: 1}}>
+                        {haircutImages.map((onekey, index) => (
+                            <View style={{flex: 1, alignItems: 'center', backgroundColor: '#121212' }}>
+                                <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#121212'}}>
                                 <Image
-                                    style={{ flex: 1, width: 150, height: 150,
-                                        resizeMode: 'contain' }}
-                                    resizeMode="cover"
-                                    source={{ uri: haircutPictures1 }}
+                                    style={{ flex: 1, width: 200, height: 200 }}
+                                    resizeMode="contain"
+                                    source={{ uri: onekey ? onekey : '' }}
                                     onPress={() => navigation.navigate('ViewImage', {
-                                        selectedImage: haircutPictures1
+                                        selectedImage: onekey ? onekey : ''
                                     })}
                                     PlaceholderContent={<ActivityIndicator />}
                                 />
-                                <Card.Title style={{color: '#fff'}}>Haircut 1</Card.Title>
-                            </Card>
-                        </View>
-                        <View style={{flex: 1, alignItems: 'flex-end', backgroundColor: '#121212'}}>
-                            <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#121212'}}>
-                                <Image
-                                    style={{ flex: 1, width: 150, height: 150,
-                                        resizeMode: 'contain' }}
-                                    resizeMode="cover"
-                                    source={{ uri: haircutPictures2 }}
-                                    onPress={() => navigation.navigate('ViewImage', {
-                                        selectedImage: haircutPictures2
-                                    })}
-                                    PlaceholderContent={<ActivityIndicator />}
-                                />
-                                <Card.Title style={{color: '#fff'}}>Haircut 2</Card.Title>
-                            </Card>
-                        </View>
-                        
-                    </View>
-                    <View style={{flex: 1, flexDirection: 'row'}}>
-                        <View style={{flex: 1, alignItems: 'flex-start', backgroundColor: '#121212' }}>
-                            <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#121212'}}>
-                                <Image
-                                    style={{ flex: 1, width: 150, height: 150,
-                                        resizeMode: 'contain' }}
-                                    resizeMode="cover"
-                                    source={{ uri: haircutPictures3 }}
-                                    onPress={() => navigation.navigate('ViewImage', {
-                                        selectedImage: haircutPictures3
-                                    })}
-                                    PlaceholderContent={<ActivityIndicator />}
-                                />
-                                <Card.Title style={{color: '#fff'}}>Haircut 3</Card.Title>
-                            </Card>
-                        </View>
-                        <View style={{flex: 1, alignItems: 'flex-end', backgroundColor: '#121212'}}>
-                            <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#121212'}}>
-                                <Image
-                                    style={{ flex: 1, width: 150, height: 150,
-                                        resizeMode: 'contain' }}
-                                    resizeMode="cover"
-                                    source={{ uri: haircutPictures4 }}
-                                    onPress={() => navigation.navigate('ViewImage', {
-                                        selectedImage: haircutPictures4
-                                    })}
-                                    PlaceholderContent={<ActivityIndicator />}
-                                />
-                                <Card.Title style={{color: '#fff'}}>Haircut 4</Card.Title>
-                            </Card>
-                        </View>
-                        
-                    </View>
-                    <View style={{flex: 1, flexDirection: 'row'}}>
-                        <View style={{flex: 1, alignItems: 'flex-start', backgroundColor: '#121212' }}>
-                            <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#121212'}}>
-                                <Image
-                                    style={{ flex: 1, width: 150, height: 150,
-                                        resizeMode: 'contain' }}
-                                    resizeMode="cover"
-                                    source={{ uri: haircutPictures5 }}
-                                    onPress={() => navigation.navigate('ViewImage', {
-                                        selectedImage: haircutPictures5
-                                    })}
-                                    PlaceholderContent={<ActivityIndicator />}
-                                />
-                                <Card.Title style={{color: '#fff'}}>Haircut 5</Card.Title>
-                            </Card>
-                        </View>
-                        <View style={{flex: 1, alignItems: 'flex-end', backgroundColor: '#121212'}}>
-                            <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#121212'}}>
-                                <Image
-                                    style={{ flex: 1, width: 150, height: 150,
-                                        resizeMode: 'contain' }}
-                                    resizeMode="cover"
-                                    source={{ uri: haircutPictures6 }}
-                                    onPress={() => navigation.navigate('ViewImage', {
-                                        selectedImage: haircutPictures6
-                                    })}
-                                    PlaceholderContent={<ActivityIndicator />}
-                                />
-                                <Card.Title style={{color: '#fff'}}>Haircut 6</Card.Title>
-                            </Card>
-                        </View>
-                        
+                                </Card>
+                            </View>
+                        ))}
                     </View>
                 </View>
             </ScrollView>

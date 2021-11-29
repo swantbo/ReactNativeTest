@@ -228,8 +228,28 @@ const AppointmentScreen = () => {
                     </ListItem.Content>
                 </ListItem>
             </View>
-            <View>
-                <CheckBox
+            <View style={{flex: 6}}>
+                <ListItem containerStyle={styles.ListItem}>
+                    <ListItem.Content>
+                        <ListItem.Title style={{color: '#fff', paddingBottom: 5}}>Appointment Type</ListItem.Title>
+                        <ListItem.CheckBox
+                            containerStyle={{backgroundColor: '#121212', width: '100%', padding: 5, margin: 5}}
+                            textStyle={{color: '#fff'}}
+                            title="Men's Haircut"
+                            checked={haircutType === 'mens' ? true : false}
+                            onPress={() => selectedHaircutType('mens')}
+                        />
+
+                        <ListItem.CheckBox 
+                            containerStyle={{backgroundColor: '#121212', width: '100%', padding: 5, margin: 5}}
+                            textStyle={{color: '#fff'}}
+                            title="Kid's Haircut"
+                            checked={haircutType === 'kids' ? true : false}
+                            onPress={() => selectedHaircutType('kids')}
+                        />
+                    </ListItem.Content>
+                </ListItem>
+                {/* <CheckBox
                     containerStyle={{backgroundColor: '#121212'}}
                     textStyle={{color: '#fff'}}
                     title="Men's Haircut"
@@ -243,9 +263,7 @@ const AppointmentScreen = () => {
                     title="Kid's Haircut"
                     checked={haircutType === 'kids' ? true : false}
                     onPress={() => selectedHaircutType('kids')}
-                />
-            </View>
-            <View style={{ flex: 4 }}>
+                /> */}
                 <CalendarStrip
                         scrollable
                         style={{ height: 100, paddingTop: 10, paddingBottom: 10 }}
@@ -263,37 +281,27 @@ const AppointmentScreen = () => {
                         selectedDate={selectedDate}
                         onDateSelected={onDateSelected}
                         datesBlacklist={calendarDatesRemoved} />
-                {!isLoading && newTimes && !timePicked ?
-                    <ScrollView horizontal={true}>
+                {!isLoading ?
+                    <ScrollView horizontal={true} style={{padding: 0}}>
                         {Object.entries(newTimes).map((onekey, i) => (
                             <ListItem bottomDivider containerStyle={{backgroundColor: '#000'}} key={i} onPress={() => scheduleAppointment(onekey[0])}>
-                                <ListItem.Content style={{ backgroundColor: '#E8BD70', borderRadius: 10,}}>
+                                <ListItem.Content style={{ backgroundColor: '#E8BD70', borderRadius: 10, padding: 0}}>
                                     <ListItem.Title style={styles.listText}>{onekey[1] ? null : onekey[0]}</ListItem.Title>
                                 </ListItem.Content>
                             </ListItem>
                         ))}
                     </ScrollView> 
-                    : isLoading ?
-                    <ActivityIndicator color='#000' size='large'/>
-                    : timePicked &&
-                    <Card containerStyle={{ backgroundColor: '#121212', borderColor: '#fff' }}>
-                        <Card.Title style={{ color: '#E8BD70' }}>{selectedDate} @{selectedTime}</Card.Title>
-                        <Card.Divider />
-                        <Button style={styles.text} color={'#E8BD70'} title={`Use Goat Points: ${userPoints}`} onPress={() => discount === false ? setDiscount(true) : setDiscount(false)}/>
-                        <Text style={styles.text}>Price: {haircutType === 'mens' ? barberInfo.price : '$35.00'}</Text>
-                        {discount !=false &&
-                            <>
-                                <Text style={styles.text}>Goat Points: -${insertDecimal(userPoints)}</Text>
-                                <Text style={styles.text}>New Price: ${subtractDiscount(userPoints)}</Text>
-                            </>
-                        }
+                    : <ActivityIndicator color='#000' size='large'/>
+                }
+                <ListItem bottomDivider containerStyle={{backgroundColor: '#000'}}>
+                    <ListItem.Content style={{borderRadius: 10, padding: 0}}>
+                        <ListItem.Title style={{color: '#fff'}}>For a Friend?</ListItem.Title>
                         <InputField
                             inputStyle={{
                             fontSize: 14,
                             }}
                             containerStyle={{
                             backgroundColor: '#fff',
-                            marginBottom: 20,
                             borderColor: 'black', 
                             borderWidth: 1
                             }}
@@ -303,13 +311,13 @@ const AppointmentScreen = () => {
                             value={friend}
                             onChangeText={text => setFriend(text)}
                         />
+                        <ListItem.Title style={{color: '#fff'}}>Comments/Notes</ListItem.Title>
                         <InputField
                             inputStyle={{
                             fontSize: 14,
                             }}
                             containerStyle={{
                             backgroundColor: '#fff',
-                            marginBottom: 20,
                             borderColor: 'black', 
                             borderWidth: 1
                             }}
@@ -319,9 +327,33 @@ const AppointmentScreen = () => {
                             value={text}
                             onChangeText={text => onChangeText(text)}
                         />
-                        <Button color={'#E8BD70'} onPress={() => scheduleAppoint(formattedDate, selectedTime)} title='Confirm Appointment' />
-                    </Card> 
-                }
+                    </ListItem.Content>
+                </ListItem>
+                <ListItem bottomDivider containerStyle={{ backgroundColor: '#121212' }}>
+                    <ListItem.Content>
+                        <View style={{flexDirection: 'row'}}>
+                            <View style={{flex: 2, alignItems: 'flex-start' }}>
+                                <ListItem.Title style={{ color: '#fff'}}>
+                                    {formattedDate ? formattedDate + ' ' : 'Select a Date '}
+                                    {selectedTime ? selectedTime : 'Select a Time'}
+                                </ListItem.Title>
+                                <Button style={styles.text} color={'#E8BD70'} title={`Use Goat Points: ${userPoints}`} onPress={() => discount === false ? setDiscount(true) : setDiscount(false)}/>
+                            </View>
+                            <View style={{flex: 2, alignItems: 'flex-end' }}>
+                                <ListItem.Subtitle style={{color: 'white'}}>
+                                    {haircutType === 'mens' ? "Men's Haircut" : "Kid's Haircut"} {haircutType === 'mens' ? '$40' : '$35'}
+                                </ListItem.Subtitle>
+                                {discount !=false &&
+                                    <>
+                                        <Text style={styles.text}>Goat Points: -${insertDecimal(userPoints)}</Text>
+                                        <Text style={styles.text}>New Price: ${subtractDiscount(userPoints)}</Text>
+                                    </>
+                                }
+                                <Button color={'#E8BD70'} onPress={() => scheduleAppoint(formattedDate, selectedTime)} title='Confirm Appointment' />
+                            </View>
+                        </View>
+                    </ListItem.Content>
+                </ListItem>
             </View>   
         </View>
     )
@@ -340,7 +372,8 @@ const styles = StyleSheet.create({
     },
     listText: {
         color: '#000',
-        padding: 5
+        padding: 5,
+        margin: 0
     },
     ListItem: {
         backgroundColor: '#121212'

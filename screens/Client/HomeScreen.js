@@ -205,7 +205,7 @@ export default function HomeScreen({ navigation }) {
 							</ListItem.Content>
 						</ListItem>
 						{Object.entries(upcomingAppointments).map((onekey, i) => (
-							<ListItem.Swipeable bottomDivider key={i} containerStyle={{ backgroundColor: '#121212' }}
+						<ListItem.Swipeable bottomDivider key={i} containerStyle={{ backgroundColor: '#121212' }}
 							rightContent={
 							<Button
 								title="Delete"

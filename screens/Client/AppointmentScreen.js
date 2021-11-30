@@ -228,7 +228,7 @@ const AppointmentScreen = () => {
                     </ListItem.Content>
                 </ListItem>
             </View>
-            <View style={{flex: 6}}>
+            <View style={{flex: 3}}>
                 <ListItem containerStyle={styles.ListItem}>
                     <ListItem.Content>
                         <ListItem.Title style={{color: '#fff', paddingBottom: 5}}>Appointment Type</ListItem.Title>
@@ -291,8 +291,17 @@ const AppointmentScreen = () => {
                             </ListItem>
                         ))}
                     </ScrollView> 
-                    : <ActivityIndicator color='#000' size='large'/>
+                    : 
+                    <ScrollView horizontal={true} style={{padding: 0}}>
+                        <ListItem bottomDivider containerStyle={{backgroundColor: '#000'}}>
+                            <ListItem.Content style={{ borderRadius: 10, padding: 0}}>
+                                <ActivityIndicator color='#fff' size='large'/>
+                            </ListItem.Content>
+                        </ListItem>
+                    </ScrollView>
                 }
+            </View>
+            <View style={{flex: 2}}>
                 <ListItem bottomDivider containerStyle={{backgroundColor: '#000'}}>
                     <ListItem.Content style={{borderRadius: 10, padding: 0}}>
                         <ListItem.Title style={{color: '#fff'}}>For a Friend?</ListItem.Title>
@@ -329,32 +338,49 @@ const AppointmentScreen = () => {
                         />
                     </ListItem.Content>
                 </ListItem>
+            </View>
+            <View style={{flex: 1}}>
                 <ListItem bottomDivider containerStyle={{ backgroundColor: '#121212' }}>
                     <ListItem.Content>
                         <View style={{flexDirection: 'row'}}>
                             <View style={{flex: 2, alignItems: 'flex-start' }}>
                                 <ListItem.Title style={{ color: '#fff'}}>
                                     {formattedDate ? formattedDate + ' ' : 'Select a Date '}
+                                </ListItem.Title>
+                                <ListItem.Title style={{ color: '#fff'}}>
                                     {selectedTime ? selectedTime : 'Select a Time'}
                                 </ListItem.Title>
-                                <Button style={styles.text} color={'#E8BD70'} title={`Use Goat Points: ${userPoints}`} onPress={() => discount === false ? setDiscount(true) : setDiscount(false)}/>
+                                <TouchableOpacity style={{backgroundColor: '#E8BD70', borderRadius: 10, marginTop: 10}} 
+                                    onPress={() => discount === false ? setDiscount(true) : setDiscount(false)}>
+                                    <ListItem.Title style={{ color: '#000', padding: 5}}>
+                                        GP: {userPoints}
+                                    </ListItem.Title>
+                                </TouchableOpacity>
                             </View>
-                            <View style={{flex: 2, alignItems: 'flex-end' }}>
-                                <ListItem.Subtitle style={{color: 'white'}}>
-                                    {haircutType === 'mens' ? "Men's Haircut" : "Kid's Haircut"} {haircutType === 'mens' ? '$40' : '$35'}
-                                </ListItem.Subtitle>
-                                {discount !=false &&
-                                    <>
-                                        <Text style={styles.text}>Goat Points: -${insertDecimal(userPoints)}</Text>
-                                        <Text style={styles.text}>New Price: ${subtractDiscount(userPoints)}</Text>
-                                    </>
-                                }
-                                <Button color={'#E8BD70'} onPress={() => scheduleAppoint(formattedDate, selectedTime)} title='Confirm Appointment' />
+                            <View style={{flex: 3, alignItems: 'flex-end' }}>
+                                <ListItem.Title style={{color: 'white'}}>
+                                    {haircutType === 'mens' ? "Men's Haircut " : "Kid's Haircut "} 
+                                    {haircutType === 'mens' ? '$40 ' : '$35 '}
+                                    {discount !=false &&                               
+                                        <ListItem.Title style={styles.text}> 
+                                            -${insertDecimal(userPoints)}
+                                        </ListItem.Title>                                    
+                                    }
+                                </ListItem.Title>
+                                <ListItem.Title style={{color: 'white'}}> 
+                                    {discount !=false ? 'New Total: $' + subtractDiscount(userPoints) : ' '}
+                                </ListItem.Title>
+                                <TouchableOpacity style={{backgroundColor: '#E8BD70', borderRadius: 10, marginTop: 10}} 
+                                    onPress={() => scheduleAppoint(formattedDate, selectedTime)}>
+                                    <ListItem.Title style={{ color: '#000', padding: 5}}>
+                                        Schedule Appointment
+                                    </ListItem.Title>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </ListItem.Content>
                 </ListItem>
-            </View>   
+            </View> 
         </View>
     )
 }

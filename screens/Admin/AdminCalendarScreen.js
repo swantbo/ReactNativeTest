@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Alert, Linking, TouchableOpacity } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 import moment from 'moment';
 import { ListItem, Button } from 'react-native-elements';
@@ -197,8 +197,21 @@ const AdminCalendarScreen = ({ navigation }) => {
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     { key.name ?
                                       <>
-                                        <View style={{flex: 2}}><ListItem.Subtitle style={styles.text}>{key.name} {key.friend != '' && undefined ? 'Friend: ' + key.friend : ''}</ListItem.Subtitle></View>
-                                        <View style={{flex: 2, alignItems: 'flex-end'}}><ListItem.Subtitle style={styles.text}>{formatPhoneNumber(key?.phone) ? formatPhoneNumber(key?.phone) : key.phone }</ListItem.Subtitle></View>
+                                        <View style={{flex: 2}}>
+                                          <ListItem.Subtitle style={styles.text}>
+                                            {key.name} {key.friend != '' && undefined ? 'Friend: ' + key.friend : ''}
+                                          </ListItem.Subtitle></View>
+                                        <View style={{flex: 2, alignItems: 'flex-end'}}>
+											<TouchableOpacity  
+												onPress={() => Linking.openURL(`sms:${key?.phone}`)
+												.catch(() => {
+												Linking.openURL(`sms:${key?.phone}`);
+												})}>
+												<ListItem.Subtitle style={{ color: '#fff'}}>
+													{formatPhoneNumber(key?.phone) ? formatPhoneNumber(key?.phone) : key.phone }
+												</ListItem.Subtitle>
+											</TouchableOpacity>
+                                        </View>
                                       </>
                                     : null
                                     }

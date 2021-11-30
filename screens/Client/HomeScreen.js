@@ -184,10 +184,10 @@ export default function HomeScreen({ navigation }) {
 					<View style={{flex: 3, alignItems: 'center'}}>
 						<Card.Title style={{ fontSize: 20, color: '#fff' }}> {userData.name} </Card.Title>
 						<Card.Title style={{ fontSize: 15, color: '#fff' }}>
-							GP: {userData.points}
+							GP: {userData.points + ' '} 
 							<MaterialCommunityIcons
 								name={'information'}
-								size={20}
+								size={15}
 								color={'#000'}
 								onPress={() => navigation.navigate('GoatPoint', { userGoatPoints: userData.points })}
 							/>

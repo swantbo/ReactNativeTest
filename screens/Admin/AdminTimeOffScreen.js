@@ -3,7 +3,6 @@ import { View, Text, Button, StyleSheet, TextInput, Alert } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 import moment from 'moment';
 import { Card, ListItem, CheckBox } from 'react-native-elements';
-import { InputField } from '../../components';
 import DateTimePicker from '@react-native-community/datetimepicker'
 import * as firebase from 'firebase';
 

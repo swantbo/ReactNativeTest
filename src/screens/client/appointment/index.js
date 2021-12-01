@@ -11,13 +11,17 @@ import {
 } from 'react-native'
 import CalendarStrip from 'react-native-calendar-strip'
 import { ListItem, Avatar } from 'react-native-elements'
-import { insertDecimal } from '../../../utils/Firebase'
+import {
+    insertDecimal,
+    subtractDiscount,
+    formatPhoneNumber,
+    subtractPrice,
+} from '../../../utils/DataFormatting'
 
 import { InputField } from '../../../components'
 import * as firebase from 'firebase'
 
 import { AuthenticatedUserContext } from '../../../navigation/AuthenticatedUserProvider'
-import { formatPhoneNumber } from '../../../utils/DataFormatting'
 
 const AppointmentScreen = () => {
     const { user } = useContext(AuthenticatedUserContext)
@@ -244,15 +248,6 @@ const AppointmentScreen = () => {
             : null
     }
 
-    function subtractDiscount(goatPoints) {
-        const discount =
-            haircutType === 'mens'
-                ? Number(barberInfo.price.replace(/[$.]+/g, '')) -
-                  Number(userPoints)
-                : 3500 - Number(userPoints)
-        return (discount / 100).toFixed(2)
-    }
-
     const selectedHaircutType = (selectedHaircut) => {
         setHaircutType(selectedHaircut)
     }
@@ -346,21 +341,6 @@ const AppointmentScreen = () => {
                         />
                     </ListItem.Content>
                 </ListItem>
-                {/* <CheckBox
-                    containerStyle={{backgroundColor: '#121212'}}
-                    textStyle={{color: '#fff'}}
-                    title="Men's Haircut"
-                    subtitle="$50"
-                    checked={haircutType === 'mens' ? true : false}
-                    onPress={() => selectedHaircutType('mens')}
-                />
-                <CheckBox
-                    containerStyle={{backgroundColor: '#121212'}}
-                    textStyle={{color: '#fff'}}
-                    title="Kid's Haircut"
-                    checked={haircutType === 'kids' ? true : false}
-                    onPress={() => selectedHaircutType('kids')}
-                /> */}
                 <CalendarStrip
                     scrollable
                     style={{ height: 100, paddingTop: 10, paddingBottom: 10 }}
@@ -382,7 +362,8 @@ const AppointmentScreen = () => {
                     onDateSelected={onDateSelected}
                     datesBlacklist={calendarDatesRemoved}
                 />
-                {!isLoading ? (
+                {console.log('newTimes', newTimes)}
+                {!isLoading && Object.keys(newTimes).length !== 0 ? (
                     <ScrollView horizontal={true} style={{ padding: 0 }}>
                         {Object.entries(newTimes).map((onekey, i) => (
                             <ListItem
@@ -405,8 +386,11 @@ const AppointmentScreen = () => {
                             </ListItem>
                         ))}
                     </ScrollView>
-                ) : (
-                    <ScrollView horizontal={true} style={{ padding: 0 }}>
+                ) : isLoading ? (
+                    <ScrollView
+                        horizontal={true}
+                        style={{ padding: 0, alignSelf: 'center' }}
+                    >
                         <ListItem
                             bottomDivider
                             containerStyle={{ backgroundColor: '#000' }}
@@ -418,6 +402,32 @@ const AppointmentScreen = () => {
                             </ListItem.Content>
                         </ListItem>
                     </ScrollView>
+                ) : (
+                    Object.keys(newTimes).length == 0 && (
+                        <ScrollView
+                            horizontal={true}
+                            style={{ padding: 0, alignSelf: 'center' }}
+                        >
+                            <ListItem
+                                bottomDivider
+                                containerStyle={{
+                                    backgroundColor: '#000',
+                                }}
+                            >
+                                <ListItem.Content
+                                    style={{
+                                        backgroundColor: '#E8BD70',
+                                        borderRadius: 10,
+                                        padding: 0,
+                                    }}
+                                >
+                                    <ListItem.Title style={styles.listText}>
+                                        Selected a Date
+                                    </ListItem.Title>
+                                </ListItem.Content>
+                            </ListItem>
+                        </ScrollView>
+                    )
                 )}
             </View>
             <View style={{ flex: 2 }}>
@@ -490,7 +500,7 @@ const AppointmentScreen = () => {
                                         marginTop: 10,
                                     }}
                                     onPress={() =>
-                                        discount === false
+                                        discount === false && userPoints != 0
                                             ? setDiscount(true)
                                             : setDiscount(false)
                                     }
@@ -507,7 +517,12 @@ const AppointmentScreen = () => {
                                     {haircutType === 'mens'
                                         ? "Men's Haircut "
                                         : "Kid's Haircut "}
-                                    {haircutType === 'mens' ? '$40 ' : '$35 '}
+                                    {haircutType === 'mens'
+                                        ? '$' + insertDecimal(barberInfo.price)
+                                        : subtractPrice(
+                                              haircutType,
+                                              barberInfo.price
+                                          )}
                                     {discount != false && (
                                         <ListItem.Title style={styles.text}>
                                             -${insertDecimal(userPoints)}
@@ -517,7 +532,11 @@ const AppointmentScreen = () => {
                                 <ListItem.Title style={{ color: 'white' }}>
                                     {discount != false
                                         ? 'New Total: $' +
-                                          subtractDiscount(userPoints)
+                                          subtractDiscount(
+                                              haircutType,
+                                              barberInfo.price,
+                                              userPoints
+                                          )
                                         : ' '}
                                 </ListItem.Title>
                                 <TouchableOpacity

@@ -15,6 +15,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 import * as Calendar from 'expo-calendar'
 import { getUserData } from '../../../utils/Firebase'
+import { subtractDiscount } from '../../../utils/DataFormatting'
 
 import { formatPhoneNumber } from '../../../utils/DataFormatting'
 
@@ -48,7 +49,7 @@ export default function HomeScreen({ navigation }) {
                 .doc(user.uid)
                 .get()
                 .then((doc) => {
-                    //setUserData({ ...userData, ...doc.data() })
+                    setUserData({ ...userData, ...doc.data() })
                 })
             await firebase
                 .firestore()
@@ -106,12 +107,6 @@ export default function HomeScreen({ navigation }) {
         } catch (err) {
             Alert.alert('There is an error.', err.message)
         }
-    }
-
-    function subtractDiscount(goatPoints) {
-        const discount =
-            Number(barberData.price.replace(/[$.]+/g, '')) - Number(goatPoints)
-        return (discount / 100).toFixed(2)
     }
 
     async function deleteAppointment(date, time) {
@@ -230,8 +225,7 @@ export default function HomeScreen({ navigation }) {
     }
 
     useEffect(() => {
-        console.log('test', getUserData(user.uid)),
-            getUserInfo(),
+        getUserInfo(),
             (async () => {
                 const { status } =
                     await Calendar.requestCalendarPermissionsAsync()
@@ -254,7 +248,6 @@ export default function HomeScreen({ navigation }) {
             })()
     }, [])
 
-    console.log('userData', userData)
     return (
         <View style={styles.container}>
             <Card
@@ -437,6 +430,7 @@ export default function HomeScreen({ navigation }) {
                                                                 ''
                                                                     ? '$' +
                                                                       subtractDiscount(
+                                                                          onekey[1]?.haircutType, barberData.price,
                                                                           onekey[1]
                                                                               .points
                                                                       )
@@ -655,6 +649,8 @@ export default function HomeScreen({ navigation }) {
                                                                 ''
                                                                     ? '$' +
                                                                       subtractDiscount(
+                                                                          onekey[1]?.haircutType,
+                                                                          barberData.price,
                                                                           onekey[1]
                                                                               .points
                                                                       )

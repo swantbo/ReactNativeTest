@@ -10,12 +10,12 @@ import {
 } from 'react-native'
 import { Card, SocialIcon, Avatar, Image } from 'react-native-elements'
 import * as firebase from 'firebase'
-import { formatPhoneNumber } from '../../utils/DataFormatting'
+import { formatPhoneNumber } from '../../../utils/DataFormatting'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 import MapView from 'react-native-maps'
 
-const AdminBarberScreen = () => {
+const HomeScreen = () => {
     const [barberData, setBarberData] = useState({
         Tuesday: '',
         Wednesday: '',
@@ -401,4 +401,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default AdminBarberScreen
+export default HomeScreen

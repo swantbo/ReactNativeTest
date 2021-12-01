@@ -2,15 +2,15 @@ import React, { useEffect, useState, useContext } from 'react'
 import { View, StyleSheet, TextInput, Alert } from 'react-native'
 import { ListItem, Button } from 'react-native-elements'
 import * as firebase from 'firebase'
-import { formatPhoneNumber } from '../../utils/DataFormatting'
+import { formatPhoneNumber } from '../../../utils/DataFormatting'
 
-import Firebase from '../../config/firebase'
+import Firebase from '../../../config/firebase'
 
-import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider'
+import { AuthenticatedUserContext } from '../../../navigation/AuthenticatedUserProvider'
 
 const auth = Firebase.auth()
 
-const SettingsScreen = () => {
+const SettingScreen = () => {
     const { user } = useContext(AuthenticatedUserContext)
     const [userInfo, setUserInfo] = useState({})
     const [changeUserInfo, setChangeUserInfo] = useState()
@@ -164,4 +164,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default SettingsScreen
+export default SettingScreen

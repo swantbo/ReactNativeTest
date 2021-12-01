@@ -5,9 +5,9 @@ import { Card, ListItem } from 'react-native-elements'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import * as firebase from 'firebase'
 
-import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider'
+import { AuthenticatedUserContext } from '../../../navigation/AuthenticatedUserProvider'
 
-const AdminTimeOffScreen = ({ route }) => {
+const TimeOffScreen = ({ route }) => {
     const [startTime, setStartTime] = useState(
         new Date('2020-08-22T17:00:00.000Z')
     )
@@ -351,4 +351,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default AdminTimeOffScreen
+export default TimeOffScreen

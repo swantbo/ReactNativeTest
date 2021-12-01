@@ -14,10 +14,11 @@ import moment from 'moment'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 import * as Calendar from 'expo-calendar'
+import { getUserData } from '../../../utils/Firebase'
 
-import { formatPhoneNumber } from '../../utils/DataFormatting'
+import { formatPhoneNumber } from '../../../utils/DataFormatting'
 
-import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider'
+import { AuthenticatedUserContext } from '../../../navigation/AuthenticatedUserProvider'
 
 export default function HomeScreen({ navigation }) {
     const { user } = useContext(AuthenticatedUserContext)
@@ -47,7 +48,7 @@ export default function HomeScreen({ navigation }) {
                 .doc(user.uid)
                 .get()
                 .then((doc) => {
-                    setUserData({ ...userData, ...doc.data() })
+                    //setUserData({ ...userData, ...doc.data() })
                 })
             await firebase
                 .firestore()
@@ -229,7 +230,8 @@ export default function HomeScreen({ navigation }) {
     }
 
     useEffect(() => {
-        getUserInfo(),
+        console.log('test', getUserData(user.uid)),
+            getUserInfo(),
             (async () => {
                 const { status } =
                     await Calendar.requestCalendarPermissionsAsync()
@@ -252,6 +254,7 @@ export default function HomeScreen({ navigation }) {
             })()
     }, [])
 
+    console.log('userData', userData)
     return (
         <View style={styles.container}>
             <Card

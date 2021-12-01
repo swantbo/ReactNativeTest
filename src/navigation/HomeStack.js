@@ -3,12 +3,12 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Ionicons } from '@expo/vector-icons'
 
-import HomeScreen from '../screens/client/HomeScreen'
-import AppointmentScreen from '../screens/client/AppointmentScreen'
-import AboutScreen from '../screens/client/AboutScreen'
-import SettingsScreen from '../screens/client/SettingsScreen'
-import ViewImageScreen from '../screens/client/ViewImageScreen'
-import ModalGoatPointScreen from '../screens/client/ModalGoatPointScreen'
+import HomeScreen from '../screens/client/home'
+import AppointmentScreen from '../screens/client/appointment'
+import BarberScreen from '../screens/client/barber'
+import SettingScreen from '../screens/client/setting'
+import ImageScreen from '../screens/client/image'
+import ModalScreen from '../screens/client/modal'
 
 const homeSettingStack = createStackNavigator()
 
@@ -42,14 +42,14 @@ function homeSettingStackScreen({ navigation }) {
             <homeSettingStack.Screen
                 name='Settings'
                 options={{ title: 'Settings', headerTitleAlign: 'center' }}
-                component={SettingsScreen}
+                component={SettingScreen}
             />
             {/* <homeSettingStack.Screen screenOptions={{ presentation: 'modal' }}> */}
             <homeSettingStack.Screen
                 name='GoatPoint'
                 mode='modal'
                 screenOptions={{ mode: 'modal' }}
-                component={ModalGoatPointScreen}
+                component={ModalScreen}
             />
             {/* </homeSettingStack.Screen> */}
         </homeSettingStack.Navigator>
@@ -72,13 +72,13 @@ function AboutStackScreen({ navigation }) {
         >
             <AboutStack.Screen
                 name='Nate'
-                component={AboutScreen}
+                component={BarberScreen}
                 options={{ headerShown: false }}
             />
             <AboutStack.Screen
                 name='ViewImage'
                 options={{ title: 'View Image', headerTitleAlign: 'center' }}
-                component={ViewImageScreen}
+                component={ImageScreen}
             />
         </AboutStack.Navigator>
     )

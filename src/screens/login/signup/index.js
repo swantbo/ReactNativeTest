@@ -9,13 +9,13 @@ import {
     Button as RNButton,
 } from 'react-native'
 
-import { Button, InputField, ErrorMessage } from '../../components'
-import Firebase from '../../config/firebase'
+import { Button, InputField, ErrorMessage } from '../../../components'
+import Firebase from '../../../config/firebase'
 import * as firebase from 'firebase'
 
 const auth = Firebase.auth()
 
-export default function SignupScreen({ navigation }) {
+export default function SignUpScreen({ navigation }) {
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
     const [email, setEmail] = useState('')
@@ -175,7 +175,7 @@ export default function SignupScreen({ navigation }) {
                 color='#000000'
             />
             <ImageBackground
-                source={require('../../assets/123_1.jpeg')}
+                source={require('../../../assets/123_1.jpeg')}
                 style={styles.image}
                 resizeMode='cover'
             ></ImageBackground>

@@ -12,10 +12,10 @@ import {
 } from 'react-native'
 import { Card, SocialIcon, Avatar, Image } from 'react-native-elements'
 import * as firebase from 'firebase'
-import { formatPhoneNumber } from '../../utils/DataFormatting'
+import { formatPhoneNumber } from '../../../utils/DataFormatting'
 import MapView from 'react-native-maps'
 
-const AboutScreen = ({ navigation }) => {
+const BarberScreen = ({ navigation }) => {
     const [barberData, setBarberData] = useState({
         Tuesday: '',
         Wednesday: '',
@@ -78,7 +78,7 @@ const AboutScreen = ({ navigation }) => {
             />
 
             <ImageBackground
-                source={require('../../assets/6347257.png')}
+                source={require('../../../assets/6347257.png')}
                 style={{ flex: 0.3, backgroundColor: '#E8BD70' }}
                 resizeMode='cover'
             >
@@ -371,4 +371,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default AboutScreen
+export default BarberScreen

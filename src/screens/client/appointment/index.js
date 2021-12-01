@@ -11,13 +11,13 @@ import {
 } from 'react-native'
 import CalendarStrip from 'react-native-calendar-strip'
 import { ListItem, Avatar } from 'react-native-elements'
-import { insertDecimal } from '../../utils/Firebase'
+import { insertDecimal } from '../../../utils/Firebase'
 
-import { InputField } from '../../components'
+import { InputField } from '../../../components'
 import * as firebase from 'firebase'
 
-import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider'
-import { formatPhoneNumber } from '../../utils/DataFormatting'
+import { AuthenticatedUserContext } from '../../../navigation/AuthenticatedUserProvider'
+import { formatPhoneNumber } from '../../../utils/DataFormatting'
 
 const AppointmentScreen = () => {
     const { user } = useContext(AuthenticatedUserContext)
@@ -268,7 +268,7 @@ const AppointmentScreen = () => {
             <View style={{ flex: 1 }}>
                 <ListItem bottomDivider containerStyle={styles.ListItem}>
                     <Avatar
-                        source={require('../../assets/123_1.jpeg')}
+                        source={require('../../../assets/123_1.jpeg')}
                         rounded
                         size='large'
                     />

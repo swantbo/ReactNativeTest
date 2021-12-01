@@ -2,7 +2,7 @@ import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Card, Image } from 'react-native-elements'
 
-const ViewImageScreen = ({ route }) => {
+const ImageScreen = ({ route }) => {
     const { selectedImage } = route.params
 
     return (
@@ -42,4 +42,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default ViewImageScreen
+export default ImageScreen

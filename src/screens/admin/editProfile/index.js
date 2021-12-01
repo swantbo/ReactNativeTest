@@ -13,11 +13,11 @@ import { ScrollView } from 'react-native-gesture-handler'
 
 import * as firebase from 'firebase'
 
-import Firebase from '../../config/firebase'
+import Firebase from '../../../config/firebase'
 const auth = Firebase.auth()
-import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider'
+import { AuthenticatedUserContext } from '../../../navigation/AuthenticatedUserProvider'
 
-const AdminEditProfileScreen = () => {
+const EditProfileScreen = () => {
     const { user } = useContext(AuthenticatedUserContext)
     const [isLoading, setIsLoading] = useState(true)
     const [barberProfile, setBarberProfile] = useState({
@@ -421,4 +421,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default AdminEditProfileScreen
+export default EditProfileScreen

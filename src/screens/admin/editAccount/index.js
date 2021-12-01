@@ -8,13 +8,13 @@ import {
 } from 'react-native'
 import { ListItem, Button } from 'react-native-elements'
 import { ScrollView } from 'react-native-gesture-handler'
-import { formatPhoneNumber } from '../../utils/DataFormatting'
-import { InputField } from '../../components'
+import { formatPhoneNumber } from '../../../utils/DataFormatting'
+import { InputField } from '../../../components'
 
 import * as firebase from 'firebase'
 import moment from 'moment'
 
-const AdminEditAccountScreen = ({ navigation }) => {
+const EditAccountScreen = ({ navigation }) => {
     const [userInfo, setUserInfo] = useState([])
     const [search, setSearch] = useState('')
     const [searchResults, setSearchResults] = useState([])
@@ -384,4 +384,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default AdminEditAccountScreen
+export default EditAccountScreen

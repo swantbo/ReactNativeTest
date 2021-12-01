@@ -3,9 +3,9 @@ import { View, Text, Button, StyleSheet, TextInput, Alert } from 'react-native'
 import { Card } from 'react-native-elements'
 import * as firebase from 'firebase'
 
-import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider'
+import { AuthenticatedUserContext } from '../../../navigation/AuthenticatedUserProvider'
 
-const AdminAddPointsScreen = ({ route }) => {
+const PointsScreen = ({ route }) => {
     const { user } = useContext(AuthenticatedUserContext)
     const { name, userId, goatPoints } = route.params
     const [points, onChangePoints] = useState('')
@@ -80,4 +80,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default AdminAddPointsScreen
+export default PointsScreen

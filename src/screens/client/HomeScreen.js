@@ -181,19 +181,8 @@ export default function HomeScreen({ navigation }) {
         address,
         phone
     ) {
-        //const defaultCalendarSource = Platform.OS === 'ios' ? await getDefaultCalendarSource() : { isLocalAccount: true, name: 'Expo Calendar' };
         const newTime = convertTime12to24(appointmentTime)
         let [hours, minutes] = newTime.split(':')
-        // const newCalendarID = await Calendar.createCalendarAsync({
-        // 	title: 'Expo Calendar',
-        // 	color: 'blue',
-        // 	entityType: Calendar.EntityTypes.EVENT,
-        // 	sourceId: defaultCalendarSource.id,
-        // 	source: defaultCalendarSource,
-        // 	name: 'internalCalendarName',
-        // 	ownerAccount: 'personal',
-        // 	accessLevel: Calendar.CalendarAccessLevel.OWNER,
-        // })
         try {
             const defaultCalendar = await Calendar.getDefaultCalendarAsync()
 
@@ -240,16 +229,16 @@ export default function HomeScreen({ navigation }) {
     }
 
     useEffect(() => {
-        getUserInfo()
-
-        ;(async () => {
-            const { status } = await Calendar.requestCalendarPermissionsAsync()
-            if (status === 'granted') {
-                const calendars = await Calendar.getCalendarsAsync(
-                    Calendar.EntityTypes.EVENT
-                )
-            }
-        })(),
+        getUserInfo(),
+            (async () => {
+                const { status } =
+                    await Calendar.requestCalendarPermissionsAsync()
+                if (status === 'granted') {
+                    const calendars = await Calendar.getCalendarsAsync(
+                        Calendar.EntityTypes.EVENT
+                    )
+                }
+            })(),
             (async () => {
                 if (Platform.OS !== 'web') {
                     const { status } =

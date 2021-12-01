@@ -3,12 +3,12 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Ionicons } from '@expo/vector-icons'
 
-import HomeScreen from '../screens/Client/HomeScreen'
-import AppointmentScreen from '../screens/Client/AppointmentScreen'
-import AboutScreen from '../screens/Client/AboutScreen'
-import SettingsScreen from '../screens/Client/SettingsScreen'
-import ViewImageScreen from '../screens/Client/ViewImageScreen'
-import ModalGoatPointScreen from '../screens/Client/ModalGoatPointScreen'
+import HomeScreen from '../screens/client/HomeScreen'
+import AppointmentScreen from '../screens/client/AppointmentScreen'
+import AboutScreen from '../screens/client/AboutScreen'
+import SettingsScreen from '../screens/client/SettingsScreen'
+import ViewImageScreen from '../screens/client/ViewImageScreen'
+import ModalGoatPointScreen from '../screens/client/ModalGoatPointScreen'
 
 const homeSettingStack = createStackNavigator()
 

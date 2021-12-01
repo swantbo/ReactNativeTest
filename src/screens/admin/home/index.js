@@ -30,12 +30,7 @@ const AdminBarberScreen = () => {
         website: '',
     })
     const [image, setImage] = useState(null)
-    const [haircutPictures1, setHaircutPictures1] = useState(null)
-    const [haircutPictures2, setHaircutPictures2] = useState(null)
-    const [haircutPictures3, setHaircutPictures3] = useState(null)
-    const [haircutPictures4, setHaircutPictures4] = useState(null)
-    const [haircutPictures5, setHaircutPictures5] = useState(null)
-    const [haircutPictures6, setHaircutPictures6] = useState(null)
+    const [haircutImages, setHaircutImages] = useState([])
 
     async function getBarberData() {
         await firebase
@@ -99,56 +94,16 @@ const AdminBarberScreen = () => {
                 .then((ProfileImage) => {
                     setImage(ProfileImage)
                 })
-            await firebase
+            const imageRefs = await firebase
                 .storage()
-                .ref('Barber/ProfilePicture')
-                .getDownloadURL()
-                .then((ProfileImage) => {
-                    setImage(ProfileImage)
-                })
-            await firebase
-                .storage()
-                .ref('Barber/HaircutPictures/1')
-                .getDownloadURL()
-                .then((image) => {
-                    setHaircutPictures1(image)
-                })
-            await firebase
-                .storage()
-                .ref('Barber/HaircutPictures/2')
-                .getDownloadURL()
-                .then((image) => {
-                    setHaircutPictures2(image)
-                })
-            await firebase
-                .storage()
-                .ref('Barber/HaircutPictures/3')
-                .getDownloadURL()
-                .then((image) => {
-                    setHaircutPictures3(image)
-                })
-            await firebase
-                .storage()
-                .ref('Barber/HaircutPictures/4')
-                .getDownloadURL()
-                .then((image) => {
-                    setHaircutPictures4(image)
-                })
-            await firebase
-                .storage()
-                .ref('Barber/HaircutPictures/5')
-                .getDownloadURL()
-                .then((image) => {
-                    setHaircutPictures5(image)
-                })
-            await firebase
-                .storage()
-                .ref('Barber/HaircutPictures/6')
-                .getDownloadURL()
-                .then((image) => {
-                    setHaircutPictures6(image)
-                })
+                .ref('Barber/HaircutPictures/')
+                .listAll()
+            const urls = await Promise.all(
+                imageRefs.items.map((ref) => ref.getDownloadURL())
+            )
+            setHaircutImages(urls)
         }
+
         getBarberImage()
     }, [])
 
@@ -357,7 +312,6 @@ const AdminBarberScreen = () => {
                                             </MapView>
                                         </View>
                                     </View>
-                                    <Text></Text>
                                 </View>
                             </View>
                         </Card>
@@ -392,215 +346,41 @@ const AdminBarberScreen = () => {
                                 </Text>
                             </View>
                         </View>
-                        <View style={{ flex: 1, flexDirection: 'row' }}>
-                            <View
-                                style={{
-                                    flex: 1,
-                                    alignItems: 'flex-start',
-                                    backgroundColor: '#121212',
-                                }}
-                            >
-                                <Card
-                                    containerStyle={{
+                        <View style={{ flex: 1 }}>
+                            {haircutImages.map((onekey, index) => (
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        alignItems: 'center',
                                         backgroundColor: '#121212',
-                                        borderColor: '#121212',
                                     }}
                                 >
-                                    <Image
-                                        style={{
-                                            flex: 1,
-                                            width: 150,
-                                            height: 150,
-                                            resizeMode: 'contain',
+                                    <Card
+                                        containerStyle={{
+                                            backgroundColor: '#121212',
+                                            borderColor: '#121212',
                                         }}
-                                        resizeMode='cover'
-                                        source={{ uri: haircutPictures1 }}
-                                        onPress={() =>
-                                            pickImage('Haircut', '1')
-                                        }
-                                        PlaceholderContent={
-                                            <ActivityIndicator />
-                                        }
-                                    />
-                                    <Card.Title style={{ color: '#fff' }}>
-                                        Haircut 1
-                                    </Card.Title>
-                                </Card>
-                            </View>
-                            <View
-                                style={{
-                                    flex: 1,
-                                    alignItems: 'flex-end',
-                                    backgroundColor: '#121212',
-                                }}
-                            >
-                                <Card
-                                    containerStyle={{
-                                        backgroundColor: '#121212',
-                                        borderColor: '#121212',
-                                    }}
-                                >
-                                    <Image
-                                        style={{
-                                            flex: 1,
-                                            width: 150,
-                                            height: 150,
-                                            resizeMode: 'contain',
-                                        }}
-                                        resizeMode='cover'
-                                        source={{ uri: haircutPictures2 }}
-                                        onPress={() =>
-                                            pickImage('Haircut', '2')
-                                        }
-                                        PlaceholderContent={
-                                            <ActivityIndicator />
-                                        }
-                                    />
-                                    <Card.Title style={{ color: '#fff' }}>
-                                        Haircut 2
-                                    </Card.Title>
-                                </Card>
-                            </View>
-                        </View>
-                        <View style={{ flex: 1, flexDirection: 'row' }}>
-                            <View
-                                style={{
-                                    flex: 1,
-                                    alignItems: 'flex-start',
-                                    backgroundColor: '#121212',
-                                }}
-                            >
-                                <Card
-                                    containerStyle={{
-                                        backgroundColor: '#121212',
-                                        borderColor: '#121212',
-                                    }}
-                                >
-                                    <Image
-                                        style={{
-                                            flex: 1,
-                                            width: 150,
-                                            height: 150,
-                                            resizeMode: 'contain',
-                                        }}
-                                        resizeMode='cover'
-                                        source={{ uri: haircutPictures3 }}
-                                        onPress={() =>
-                                            pickImage('Haircut', '3')
-                                        }
-                                        PlaceholderContent={
-                                            <ActivityIndicator />
-                                        }
-                                    />
-                                    <Card.Title style={{ color: '#fff' }}>
-                                        Haircut 3
-                                    </Card.Title>
-                                </Card>
-                            </View>
-                            <View
-                                style={{
-                                    flex: 1,
-                                    alignItems: 'flex-end',
-                                    backgroundColor: '#121212',
-                                }}
-                            >
-                                <Card
-                                    containerStyle={{
-                                        backgroundColor: '#121212',
-                                        borderColor: '#121212',
-                                    }}
-                                >
-                                    <Image
-                                        style={{
-                                            flex: 1,
-                                            width: 150,
-                                            height: 150,
-                                            resizeMode: 'contain',
-                                        }}
-                                        resizeMode='cover'
-                                        source={{ uri: haircutPictures4 }}
-                                        onPress={() =>
-                                            pickImage('Haircut', '4')
-                                        }
-                                        PlaceholderContent={
-                                            <ActivityIndicator />
-                                        }
-                                    />
-                                    <Card.Title style={{ color: '#fff' }}>
-                                        Haircut 4
-                                    </Card.Title>
-                                </Card>
-                            </View>
-                        </View>
-                        <View style={{ flex: 1, flexDirection: 'row' }}>
-                            <View
-                                style={{
-                                    flex: 1,
-                                    alignItems: 'flex-start',
-                                    backgroundColor: '#121212',
-                                }}
-                            >
-                                <Card
-                                    containerStyle={{
-                                        backgroundColor: '#121212',
-                                        borderColor: '#121212',
-                                    }}
-                                >
-                                    <Image
-                                        style={{
-                                            flex: 1,
-                                            width: 150,
-                                            height: 150,
-                                            resizeMode: 'contain',
-                                        }}
-                                        resizeMode='cover'
-                                        source={{ uri: haircutPictures5 }}
-                                        onPress={() =>
-                                            pickImage('Haircut', '5')
-                                        }
-                                        PlaceholderContent={
-                                            <ActivityIndicator />
-                                        }
-                                    />
-                                    <Card.Title style={{ color: '#fff' }}>
-                                        Haircut 5
-                                    </Card.Title>
-                                </Card>
-                            </View>
-                            <View
-                                style={{
-                                    flex: 1,
-                                    alignItems: 'flex-end',
-                                    backgroundColor: '#121212',
-                                }}
-                            >
-                                <Card
-                                    containerStyle={{
-                                        backgroundColor: '#121212',
-                                        borderColor: '#121212',
-                                    }}
-                                >
-                                    <Image
-                                        style={{
-                                            flex: 1,
-                                            width: 150,
-                                            height: 150,
-                                            resizeMode: 'contain',
-                                        }}
-                                        resizeMode='cover'
-                                        source={{ uri: haircutPictures6 }}
-                                        onPress={() =>
-                                            pickImage('Haircut', '6')
-                                        }
-                                        PlaceholderContent={
-                                            <ActivityIndicator />
-                                        }
-                                    />
-                                    <Card.Title style={{ color: '#fff' }}>
-                                        Haircut 6
-                                    </Card.Title>
-                                </Card>
-                            </View>
+                                    >
+                                        <Image
+                                            style={{
+                                                flex: 1,
+                                                width: 200,
+                                                height: 200,
+                                            }}
+                                            resizeMode='contain'
+                                            source={{
+                                                uri: onekey ? onekey : '',
+                                            }}
+                                            onPress={() =>
+                                                pickImage('Haircut', index + 1)
+                                            }
+                                            PlaceholderContent={
+                                                <ActivityIndicator />
+                                            }
+                                        />
+                                    </Card>
+                                </View>
+                            ))}
                         </View>
                     </View>
                 </ScrollView>

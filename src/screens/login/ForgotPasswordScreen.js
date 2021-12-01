@@ -9,8 +9,8 @@ import {
     Button as RNButton,
 } from 'react-native'
 
-import { Button, InputField } from '../components'
-import Firebase from '../config/firebase'
+import { Button, InputField } from '../../components'
+import Firebase from '../../config/firebase'
 
 const auth = Firebase.auth()
 
@@ -66,7 +66,7 @@ export default function ForgotPasswordScreen({ navigation }) {
                 color='#000000'
             />
             <ImageBackground
-                source={require('../assets/123_1.jpeg')}
+                source={require('../../assets/123_1.jpeg')}
                 style={styles.image}
                 resizeMode='cover'
             ></ImageBackground>

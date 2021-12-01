@@ -1,7 +1,7 @@
-import React from 'react';
+import React from 'react'
 
-import Routes from './navigation/index';
+import Routes from './navigation/index'
 
 export default function App() {
-  return <Routes />;
+    return <Routes />
 }

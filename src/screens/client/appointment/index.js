@@ -499,14 +499,14 @@ const AppointmentScreen = () => {
                 >
                     <ListItem.Content>
                         <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flex: 3, alignItems: 'flex-start' }}>
+                            <View style={{ flex: 5, alignItems: 'flex-start' }}>
                                 <ListItem.Title style={{ color: '#fff' }}>
                                     {formattedDate
                                         ? formattedDate + ' '
-                                        : 'Select a Date '}
+                                        : 'Choose Date '}
                                     {selectedTime
                                         ? selectedTime
-                                        : 'Select a Time'}
+                                        : 'Choose Time'}
                                 </ListItem.Title>
                                 <ListItem.Title style={{ color: '#fff' }}>
                                     {haircutType === 'mens'
@@ -546,11 +546,11 @@ const AppointmentScreen = () => {
                                           )}
                                 </ListItem.Title>
                                 <ListItem.Title style={{ color: 'white' }}>
-                                    {discount != false && (
-                                        <ListItem.Title style={styles.text}>
-                                            -${insertDecimal(userPoints)}
-                                        </ListItem.Title>
-                                    )}
+                                    <ListItem.Title style={styles.text}>
+                                        {discount != false
+                                            ? '-$' + insertDecimal(userPoints)
+                                            : ' '}
+                                    </ListItem.Title>
                                 </ListItem.Title>
                                 <TouchableOpacity
                                     style={{

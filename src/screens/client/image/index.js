@@ -1,44 +1,30 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, SafeAreaView } from 'react-native'
 import { Card, Image } from 'react-native-elements'
+import ImageViewer from 'react-native-image-zoom-viewer'
 
 const ImageScreen = ({ route }) => {
     const { selectedImage } = route.params
+    console.log('selectedImage', selectedImage)
 
+    const images = [
+        {
+            url: selectedImage,
+        },
+    ]
     return (
-        <View style={styles.container}>
-            <Card
-                containerStyle={{
-                    flex: 1,
-                    backgroundColor: '#121212',
-                    borderColor: '#121212',
-                }}
-            >
-                <View>
-                    <Image
-                        style={{
-                            width: '100%',
-                            height: '75%',
-                            marginBottom: 10,
-                        }}
-                        source={{ uri: selectedImage }}
-                        resizeMode={'contain'}
-                    />
-                </View>
-            </Card>
-        </View>
+        <SafeAreaView style={{ flex: 1 }}>
+            <View style={styles.container}>
+                <ImageViewer imageUrls={images} renderIndicator={() => null} />
+            </View>
+        </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000000',
-    },
-    text: {
-        fontSize: 16,
-        fontWeight: 'normal',
-        color: '#fff',
+        backgroundColor: '#000',
     },
 })
 

@@ -14,6 +14,7 @@ import { Card, SocialIcon, Avatar, Image } from 'react-native-elements'
 import * as firebase from 'firebase'
 import { formatPhoneNumber } from '../../../utils/DataFormatting'
 import MapView from 'react-native-maps'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 const BarberScreen = ({ navigation }) => {
     const [barberData, setBarberData] = useState({
@@ -77,10 +78,13 @@ const BarberScreen = ({ navigation }) => {
                 }}
             />
 
-            <ImageBackground
-                source={require('../../../assets/6347257.png')}
-                style={{ flex: 0.3, backgroundColor: '#E8BD70' }}
-                resizeMode='cover'
+            <Card
+                containerStyle={{
+                    backgroundColor: '#E8BD70',
+                    padding: 0,
+                    margin: 0,
+                    borderColor: '#E8BD70',
+                }}
             >
                 <Card.Title style={{ alignSelf: 'center' }}>
                     <Avatar
@@ -90,61 +94,80 @@ const BarberScreen = ({ navigation }) => {
                         source={{ uri: image }}
                     />
                 </Card.Title>
-            </ImageBackground>
+            </Card>
 
             <View style={styles.container}>
-                <ScrollView>
-                    <View style={{ flex: 1 }}>
+                <ScrollView
+                    style={{
+                        backgroundColor: '#000',
+                        borderTopLeftRadius: 15,
+                        borderTopRightRadius: 15,
+                    }}
+                >
+                    <View style={{}}>
                         <Card
                             containerStyle={{
                                 borderRadius: 5,
-                                backgroundColor: '#121212',
-                                borderColor: '#121212',
+                                backgroundColor: '#000',
+                                borderColor: '#000',
                             }}
                         >
+                            <Card.Title
+                                style={{
+                                    fontSize: 25,
+                                    color: '#E8BD70',
+                                }}
+                            >
+                                {barberData.name}
+                            </Card.Title>
                             <View style={{ flex: 1 }}>
                                 <View style={{ flex: 1, flexDirection: 'row' }}>
                                     <View
                                         style={{
                                             flex: 1,
-                                            alignItems: 'flex-start',
+                                            alignItems: 'center',
                                             paddingBottom: 15,
                                         }}
                                     >
-                                        <Card.Title
-                                            style={{
-                                                fontSize: 15,
-                                                textAlign: 'left',
-                                                color: '#E8BD70',
-                                            }}
-                                        >
-                                            {' '}
-                                            INFO{' '}
-                                        </Card.Title>
                                         <Text style={styles.text}>
-                                            {' '}
-                                            Fast fades in no time.{' '}
+                                            Fast fades in no time.
                                         </Text>
-                                        <TouchableOpacity
-                                            onPress={() =>
+                                    </View>
+                                </View>
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between',
+                                        backgroundColor: '#121212',
+                                    }}
+                                >
+                                    <SocialIcon
+                                        onPress={() => {
+                                            navigation.navigate('Appointment')
+                                        }}
+                                        style={{
+                                            backgroundColor: '#E8BD70',
+                                        }}
+                                        iconType='MaterialCommunityIcons'
+                                        type='calendar-today'
+                                    />
+                                    <SocialIcon
+                                        onPress={() =>
+                                            Linking.openURL(
+                                                `sms:${barberData?.phone}`
+                                            ).catch(() => {
                                                 Linking.openURL(
                                                     `sms:${barberData?.phone}`
-                                                ).catch(() => {
-                                                    Linking.openURL(
-                                                        `sms:${barberData?.phone}`
-                                                    )
-                                                })
-                                            }
-                                        >
-                                            <Text style={styles.text}>
-                                                {barberData.phone != ''
-                                                    ? formatPhoneNumber(
-                                                          barberData.phone
-                                                      )
-                                                    : ''}{' '}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
+                                                )
+                                            })
+                                        }
+                                        style={{
+                                            backgroundColor: '#E8BD70',
+                                        }}
+                                        iconType='MaterialCommunityIcons'
+                                        type='sms'
+                                    />
                                     <SocialIcon
                                         onPress={() =>
                                             Linking.openURL(
@@ -155,6 +178,9 @@ const BarberScreen = ({ navigation }) => {
                                                 )
                                             })
                                         }
+                                        style={{
+                                            backgroundColor: '#E8BD70',
+                                        }}
                                         type='instagram'
                                     />
                                     <SocialIcon
@@ -167,9 +193,23 @@ const BarberScreen = ({ navigation }) => {
                                                 )
                                             })
                                         }
+                                        style={{
+                                            backgroundColor: '#E8BD70',
+                                        }}
                                         type='google'
+                                        title='test'
                                     />
                                 </View>
+                            </View>
+                        </Card>
+                        <Card
+                            containerStyle={{
+                                borderRadius: 5,
+                                backgroundColor: '#121212',
+                                borderColor: '#121212',
+                            }}
+                        >
+                            <View style={{ flex: 1 }}>
                                 <View style={{ flex: 1 }}>
                                     <Card.Title
                                         style={{
@@ -177,8 +217,7 @@ const BarberScreen = ({ navigation }) => {
                                             color: '#E8BD70',
                                         }}
                                     >
-                                        {' '}
-                                        ADDRESS & HOURS{' '}
+                                        ADDRESS & HOURS
                                     </Card.Title>
                                     <View
                                         style={{
@@ -193,43 +232,83 @@ const BarberScreen = ({ navigation }) => {
                                             }}
                                         >
                                             <Text style={styles.text}>
-                                                {' '}
-                                                {barberData.location}{' '}
+                                                {barberData.location}
                                             </Text>
+                                            <TouchableOpacity
+                                                onPress={() =>
+                                                    Linking.openURL(
+                                                        `sms:${barberData?.phone}`
+                                                    ).catch(() => {
+                                                        Linking.openURL(
+                                                            `sms:${barberData?.phone}`
+                                                        )
+                                                    })
+                                                }
+                                            >
+                                                <Text style={styles.text}>
+                                                    {barberData.phone != ''
+                                                        ? formatPhoneNumber(
+                                                              barberData.phone
+                                                          )
+                                                        : ''}
+                                                </Text>
+                                            </TouchableOpacity>
                                             <Text></Text>
-                                            <Text style={styles.text}>
-                                                {' '}
-                                                Tuesday: {
-                                                    barberData.Tuesday
-                                                }{' '}
-                                            </Text>
-                                            <Text style={styles.text}>
-                                                {' '}
-                                                Wednesday:{' '}
-                                                {barberData.Wednesday}{' '}
-                                            </Text>
-                                            <Text style={styles.text}>
-                                                {' '}
-                                                Thursday: {
-                                                    barberData.Thursday
-                                                }{' '}
-                                            </Text>
-                                            <Text style={styles.text}>
-                                                {' '}
-                                                Friday: {barberData.Friday}{' '}
-                                            </Text>
-                                            <Text style={styles.text}>
-                                                {' '}
-                                                Saturday: {
-                                                    barberData.Saturday
-                                                }{' '}
-                                            </Text>
+                                            <View
+                                                style={{ flexDirection: 'row' }}
+                                            >
+                                                <Text style={styles.textTitle}>
+                                                    Tuesday
+                                                </Text>
+                                                <Text style={styles.text}>
+                                                    {' ' + barberData.Tuesday}
+                                                </Text>
+                                            </View>
+                                            <View
+                                                style={{ flexDirection: 'row' }}
+                                            >
+                                                <Text style={styles.textTitle}>
+                                                    Wednesday
+                                                </Text>
+                                                <Text style={styles.text}>
+                                                    {' ' + barberData.Wednesday}
+                                                </Text>
+                                            </View>
+                                            <View
+                                                style={{ flexDirection: 'row' }}
+                                            >
+                                                <Text style={styles.textTitle}>
+                                                    Thursday
+                                                </Text>
+                                                <Text style={styles.text}>
+                                                    {' ' + barberData.Thursday}
+                                                </Text>
+                                            </View>
+                                            <View
+                                                style={{ flexDirection: 'row' }}
+                                            >
+                                                <Text style={styles.textTitle}>
+                                                    Friday
+                                                </Text>
+                                                <Text style={styles.text}>
+                                                    {' ' + barberData.Friday}
+                                                </Text>
+                                            </View>
+                                            <View
+                                                style={{ flexDirection: 'row' }}
+                                            >
+                                                <Text style={styles.textTitle}>
+                                                    Saturday
+                                                </Text>
+                                                <Text style={styles.text}>
+                                                    {' ' + barberData.Saturday}
+                                                </Text>
+                                            </View>
                                         </View>
                                         <View
                                             style={{
                                                 flex: 1,
                                                 alignItems: 'flex-end',
-                                                backgroundColor: 'pink',
                                             }}
                                         >
                                             <MapView
@@ -273,6 +352,7 @@ const BarberScreen = ({ navigation }) => {
                             </View>
                         </Card>
                     </View>
+
                     <View
                         style={{
                             flex: 1,
@@ -282,69 +362,161 @@ const BarberScreen = ({ navigation }) => {
                             borderColor: '#121212',
                         }}
                     >
-                        <View style={{ flex: 1, flexDirection: 'row' }}>
-                            <View
-                                style={{
-                                    flex: 1,
-                                    alignItems: 'center',
-                                    padding: 5,
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        color: '#E8BD70',
-                                        alignContent: 'center',
-                                        fontWeight: 'bold',
-                                        fontSize: 15,
+                        <View style={{ flex: 1 }}>
+                            <View style={{ flex: 1 }}>
+                                <Card
+                                    containerStyle={{
+                                        borderRadius: 5,
+                                        backgroundColor: '#121212',
+                                        borderColor: '#121212',
+                                        margin: 0,
                                     }}
                                 >
-                                    {' '}
-                                    Photos{' '}
-                                </Text>
+                                    <Card.Title
+                                        style={{
+                                            color: '#E8BD70',
+                                            fontSize: 18,
+                                            alignSelf: 'flex-start',
+                                        }}
+                                    >
+                                        Photos
+                                    </Card.Title>
+                                </Card>
                             </View>
                         </View>
                         <View style={{ flex: 1 }}>
-                            {haircutImages.map((onekey, index) => (
-                                <View
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    margin: 20,
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                <Image
                                     style={{
                                         flex: 1,
-                                        alignItems: 'center',
-                                        backgroundColor: '#121212',
+                                        width: 150,
+                                        height: 150,
                                     }}
-                                >
-                                    <Card
-                                        containerStyle={{
-                                            backgroundColor: '#121212',
-                                            borderColor: '#121212',
-                                        }}
-                                    >
-                                        <Image
-                                            style={{
-                                                flex: 1,
-                                                width: 200,
-                                                height: 200,
-                                            }}
-                                            resizeMode='contain'
-                                            source={{
-                                                uri: onekey ? onekey : '',
-                                            }}
-                                            onPress={() =>
-                                                navigation.navigate(
-                                                    'ViewImage',
-                                                    {
-                                                        selectedImage: onekey
-                                                            ? onekey
-                                                            : '',
-                                                    }
-                                                )
-                                            }
-                                            PlaceholderContent={
-                                                <ActivityIndicator />
-                                            }
-                                        />
-                                    </Card>
-                                </View>
-                            ))}
+                                    source={{
+                                        uri: haircutImages[0],
+                                    }}
+                                    onPress={() =>
+                                        navigation.navigate('ViewImage', {
+                                            selectedImage: haircutImages[0]
+                                                ? haircutImages[0]
+                                                : '',
+                                        })
+                                    }
+                                    PlaceholderContent={<ActivityIndicator />}
+                                />
+                                <Image
+                                    style={{
+                                        flex: 1,
+                                        width: 150,
+                                        height: 150,
+                                    }}
+                                    source={{
+                                        uri: haircutImages[1],
+                                    }}
+                                    onPress={() =>
+                                        navigation.navigate('ViewImage', {
+                                            selectedImage: haircutImages[1]
+                                                ? haircutImages[1]
+                                                : '',
+                                        })
+                                    }
+                                    PlaceholderContent={<ActivityIndicator />}
+                                />
+                            </View>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    margin: 20,
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                <Image
+                                    style={{
+                                        flex: 1,
+                                        width: 150,
+                                        height: 150,
+                                    }}
+                                    source={{
+                                        uri: haircutImages[2],
+                                    }}
+                                    onPress={() =>
+                                        navigation.navigate('ViewImage', {
+                                            selectedImage: haircutImages[2]
+                                                ? haircutImages[2]
+                                                : '',
+                                        })
+                                    }
+                                    PlaceholderContent={<ActivityIndicator />}
+                                />
+                                <Image
+                                    style={{
+                                        flex: 1,
+                                        width: 150,
+                                        height: 150,
+                                    }}
+                                    source={{
+                                        uri: haircutImages[3],
+                                    }}
+                                    onPress={() =>
+                                        navigation.navigate('ViewImage', {
+                                            selectedImage: haircutImages[3]
+                                                ? haircutImages[3]
+                                                : '',
+                                        })
+                                    }
+                                    PlaceholderContent={<ActivityIndicator />}
+                                />
+                            </View>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    margin: 20,
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                <Image
+                                    style={{
+                                        flex: 1,
+                                        width: 150,
+                                        height: 150,
+                                    }}
+                                    source={{
+                                        uri: haircutImages[4],
+                                    }}
+                                    onPress={() =>
+                                        navigation.navigate('ViewImage', {
+                                            selectedImage: haircutImages[4]
+                                                ? haircutImages[4]
+                                                : '',
+                                        })
+                                    }
+                                    PlaceholderContent={<ActivityIndicator />}
+                                />
+                                <Image
+                                    style={{
+                                        flex: 1,
+                                        width: 150,
+                                        height: 150,
+                                    }}
+                                    source={{
+                                        uri: haircutImages[5],
+                                    }}
+                                    onPress={() =>
+                                        navigation.navigate('ViewImage', {
+                                            selectedImage: haircutImages[5]
+                                                ? haircutImages[5]
+                                                : '',
+                                        })
+                                    }
+                                    PlaceholderContent={<ActivityIndicator />}
+                                />
+                            </View>
                         </View>
                     </View>
                 </ScrollView>
@@ -356,11 +528,16 @@ const BarberScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000000',
+        backgroundColor: '#E8BD70',
     },
     text: {
         fontSize: 13,
         fontWeight: 'normal',
+        color: '#fff',
+    },
+    textTitle: {
+        fontSize: 13,
+        fontWeight: 'bold',
         color: '#fff',
     },
     image: {

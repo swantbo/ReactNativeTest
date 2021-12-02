@@ -35,7 +35,7 @@ function homeSettingStackScreen({ navigation }) {
                             color={'#E8BD70'}
                             size={23}
                             style={{ padding: 10 }}
-                            onPress={() => navigation.navigate('Settings')}
+                            onPress={() => navigation.navigate('SettingScreen')}
                         />
                     ),
                 }}

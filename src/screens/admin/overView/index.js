@@ -34,7 +34,7 @@ const OverviewScreen = ({ navigation }) => {
 
     function subtractDiscount(revenue, goatPoints) {
         const discount =
-            Number(revenue.replace(/[$.]+/g, '')) - Number(goatPoints)
+            Number(revenue?.replace(/[$.]+/g, '')) - Number(goatPoints)
         return (discount / 100).toFixed(2)
     }
 

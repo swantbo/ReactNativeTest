@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { Card } from 'react-native-elements'
 import { InputField } from '../../../components'
-import { insertDecimal } from '../../../utils/Firebase'
+import { insertDecimal } from '../../../utils/DataFormatting'
 
 const ModalScreen = ({ route }) => {
     const { userGoatPoints } = route.params

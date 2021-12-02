@@ -8,6 +8,7 @@ import {
     Alert,
     TouchableOpacity,
     Linking,
+    KeyboardAvoidingView,
 } from 'react-native'
 import CalendarStrip from 'react-native-calendar-strip'
 import { ListItem, Avatar } from 'react-native-elements'
@@ -259,7 +260,10 @@ const AppointmentScreen = () => {
     }, [])
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.container}
+        >
             <View style={{ flex: 1 }}>
                 <ListItem bottomDivider containerStyle={styles.ListItem}>
                     <Avatar
@@ -306,6 +310,7 @@ const AppointmentScreen = () => {
                     </ListItem.Content>
                 </ListItem>
             </View>
+
             <View style={{ flex: 3 }}>
                 <ListItem containerStyle={styles.ListItem}>
                     <ListItem.Content>
@@ -343,7 +348,11 @@ const AppointmentScreen = () => {
                 </ListItem>
                 <CalendarStrip
                     scrollable
-                    style={{ height: 100, paddingTop: 10, paddingBottom: 10 }}
+                    style={{
+                        height: 100,
+                        paddingTop: 10,
+                        paddingBottom: 10,
+                    }}
                     calendarHeaderStyle={{ color: '#E8BD70', fontSize: 17 }}
                     calendarColor={'#121212'}
                     dateNumberStyle={{ color: 'white' }}
@@ -354,7 +363,9 @@ const AppointmentScreen = () => {
                         fontWeight: 'bold',
                         color: 'white',
                     }}
-                    highlightDateContainerStyle={{ backgroundColor: '#E8BD70' }}
+                    highlightDateContainerStyle={{
+                        backgroundColor: '#E8BD70',
+                    }}
                     startingDate={moment()}
                     minDate={moment()}
                     maxDate={moment().add(30, 'days')}
@@ -362,7 +373,7 @@ const AppointmentScreen = () => {
                     onDateSelected={onDateSelected}
                     datesBlacklist={calendarDatesRemoved}
                 />
-                {console.log('newTimes', newTimes)}
+
                 {!isLoading && Object.keys(newTimes).length !== 0 ? (
                     <ScrollView horizontal={true} style={{ padding: 0 }}>
                         {Object.entries(newTimes).map((onekey, i) => (
@@ -422,7 +433,7 @@ const AppointmentScreen = () => {
                                     }}
                                 >
                                     <ListItem.Title style={styles.listText}>
-                                        Selected a Date
+                                        No Available Times
                                     </ListItem.Title>
                                 </ListItem.Content>
                             </ListItem>
@@ -436,42 +447,48 @@ const AppointmentScreen = () => {
                     containerStyle={{ backgroundColor: '#000' }}
                 >
                     <ListItem.Content style={{ borderRadius: 10, padding: 0 }}>
-                        <ListItem.Title style={{ color: '#fff' }}>
-                            For a Friend?
-                        </ListItem.Title>
-                        <InputField
-                            inputStyle={{
-                                fontSize: 14,
-                            }}
-                            containerStyle={{
-                                backgroundColor: '#fff',
-                                borderColor: 'black',
-                                borderWidth: 1,
-                            }}
-                            leftIcon='account-plus'
-                            placeholder='Friends Name'
-                            autoCapitalize='words'
-                            value={friend}
-                            onChangeText={(text) => setFriend(text)}
-                        />
-                        <ListItem.Title style={{ color: '#fff' }}>
-                            Comments/Notes
-                        </ListItem.Title>
-                        <InputField
-                            inputStyle={{
-                                fontSize: 14,
-                            }}
-                            containerStyle={{
-                                backgroundColor: '#fff',
-                                borderColor: 'black',
-                                borderWidth: 1,
-                            }}
-                            leftIcon='comment'
-                            placeholder='Comment (optional)'
-                            autoCapitalize='sentences'
-                            value={text}
-                            onChangeText={(text) => onChangeText(text)}
-                        />
+                        {selectedTime !== '' && (
+                            <>
+                                <ListItem.Title style={{ color: '#fff' }}>
+                                    For a Friend?
+                                </ListItem.Title>
+                                <InputField
+                                    inputStyle={{
+                                        fontSize: 14,
+                                    }}
+                                    containerStyle={{
+                                        backgroundColor: '#fff',
+                                        borderColor: 'black',
+                                        borderWidth: 1,
+                                        marginBottom: 10,
+                                    }}
+                                    leftIcon='account-plus'
+                                    placeholder='Friends Name'
+                                    autoCapitalize='words'
+                                    value={friend}
+                                    onChangeText={(text) => setFriend(text)}
+                                />
+                                <ListItem.Title style={{ color: '#fff' }}>
+                                    Comments/Notes
+                                </ListItem.Title>
+                                <InputField
+                                    inputStyle={{
+                                        fontSize: 14,
+                                    }}
+                                    containerStyle={{
+                                        backgroundColor: '#fff',
+                                        borderColor: 'black',
+                                        borderWidth: 1,
+                                        marginBottom: 10,
+                                    }}
+                                    leftIcon='comment'
+                                    placeholder='Comment (optional)'
+                                    autoCapitalize='sentences'
+                                    value={text}
+                                    onChangeText={(text) => onChangeText(text)}
+                                />
+                            </>
+                        )}
                     </ListItem.Content>
                 </ListItem>
             </View>
@@ -482,16 +499,19 @@ const AppointmentScreen = () => {
                 >
                     <ListItem.Content>
                         <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flex: 2, alignItems: 'flex-start' }}>
+                            <View style={{ flex: 3, alignItems: 'flex-start' }}>
                                 <ListItem.Title style={{ color: '#fff' }}>
                                     {formattedDate
                                         ? formattedDate + ' '
                                         : 'Select a Date '}
-                                </ListItem.Title>
-                                <ListItem.Title style={{ color: '#fff' }}>
                                     {selectedTime
                                         ? selectedTime
                                         : 'Select a Time'}
+                                </ListItem.Title>
+                                <ListItem.Title style={{ color: '#fff' }}>
+                                    {haircutType === 'mens'
+                                        ? "Men's Haircut "
+                                        : "Kid's Haircut "}
                                 </ListItem.Title>
                                 <TouchableOpacity
                                     style={{
@@ -506,38 +526,31 @@ const AppointmentScreen = () => {
                                     }
                                 >
                                     <ListItem.Title
-                                        style={{ color: '#000', padding: 5 }}
+                                        style={{
+                                            color: '#000',
+                                            padding: 5,
+                                            fontWeight: 'bold',
+                                        }}
                                     >
-                                        GP: {userPoints}
+                                        Goat Points: {userPoints}
                                     </ListItem.Title>
                                 </TouchableOpacity>
                             </View>
                             <View style={{ flex: 3, alignItems: 'flex-end' }}>
                                 <ListItem.Title style={{ color: 'white' }}>
                                     {haircutType === 'mens'
-                                        ? "Men's Haircut "
-                                        : "Kid's Haircut "}
-                                    {haircutType === 'mens'
                                         ? '$' + insertDecimal(barberInfo.price)
                                         : subtractPrice(
                                               haircutType,
                                               barberInfo.price
                                           )}
+                                </ListItem.Title>
+                                <ListItem.Title style={{ color: 'white' }}>
                                     {discount != false && (
                                         <ListItem.Title style={styles.text}>
                                             -${insertDecimal(userPoints)}
                                         </ListItem.Title>
                                     )}
-                                </ListItem.Title>
-                                <ListItem.Title style={{ color: 'white' }}>
-                                    {discount != false
-                                        ? 'New Total: $' +
-                                          subtractDiscount(
-                                              haircutType,
-                                              barberInfo.price,
-                                              userPoints
-                                          )
-                                        : ' '}
                                 </ListItem.Title>
                                 <TouchableOpacity
                                     style={{
@@ -553,9 +566,27 @@ const AppointmentScreen = () => {
                                     }
                                 >
                                     <ListItem.Title
-                                        style={{ color: '#000', padding: 5 }}
+                                        style={{
+                                            color: '#000',
+                                            padding: 5,
+                                            fontWeight: 'bold',
+                                        }}
                                     >
-                                        Schedule Appointment
+                                        Book{' '}
+                                        {discount != false
+                                            ? '$' +
+                                              subtractDiscount(
+                                                  haircutType,
+                                                  barberInfo.price,
+                                                  userPoints
+                                              )
+                                            : haircutType === 'mens'
+                                            ? '$' +
+                                              insertDecimal(barberInfo.price)
+                                            : subtractPrice(
+                                                  haircutType,
+                                                  barberInfo.price
+                                              )}
                                     </ListItem.Title>
                                 </TouchableOpacity>
                             </View>
@@ -563,7 +594,7 @@ const AppointmentScreen = () => {
                     </ListItem.Content>
                 </ListItem>
             </View>
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 

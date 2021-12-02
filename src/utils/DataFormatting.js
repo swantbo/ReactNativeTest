@@ -25,11 +25,9 @@ export function subtractDiscount(type, price, goatPoints) {
 }
 
 export function subtractPrice(type, price) {
-    console.log('price', price)
     const tempPrice =
         type === 'kids'
             ? Number(price.replace(/[$.]+/g, '')) - Number(500)
             : price
-    console.log('tempPrice', tempPrice)
     return (tempPrice / 100).toFixed(2)
 }

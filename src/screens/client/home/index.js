@@ -6,8 +6,15 @@ import {
     Alert,
     Linking,
     TouchableOpacity,
+    SafeAreaView,
 } from 'react-native'
-import { Card, ListItem, Button, Avatar } from 'react-native-elements'
+import {
+    Card,
+    ListItem,
+    Button,
+    Avatar,
+    PricingCard,
+} from 'react-native-elements'
 import * as firebase from 'firebase'
 import { ScrollView } from 'react-native-gesture-handler'
 import moment from 'moment'
@@ -249,170 +256,239 @@ export default function HomeScreen({ navigation }) {
     }, [])
 
     return (
-        <View style={styles.container}>
-            <Card
-                containerStyle={{
-                    flex: 1,
-                    margin: 0,
+        <>
+            <SafeAreaView
+                style={{
+                    flex: 0,
                     backgroundColor: '#E8BD70',
-                    borderColor: '#000',
+                    borderColor: '#E8BD70',
+                    padding: 0,
+                    margin: 0,
+                    borderWidth: 0,
                 }}
             >
-                <View style={{ flexDirection: 'row', marginTop: 25 }}>
-                    <View style={{ flex: 1 }}>
-                        <Card.Title style={{ alignSelf: 'flex-start' }}>
-                            <Avatar
-                                rounded
-                                size='large'
-                                title={userData.name[0]}
-                                source={{ uri: image }}
-                            />
-                            <MaterialCommunityIcons
-                                name={'camera-plus'}
-                                size={20}
-                                color={'#000'}
-                                onPress={() => pickImage()}
-                            />
-                        </Card.Title>
+                <Card
+                    containerStyle={{
+                        backgroundColor: '#E8BD70',
+                        padding: 0,
+                        margin: 0,
+                        borderColor: '#E8BD70',
+                    }}
+                >
+                    <Card.Title style={{ alignSelf: 'center' }}>
+                        <Avatar
+                            rounded
+                            size='xlarge'
+                            title={userData.name[0]}
+                            source={{ uri: image }}
+                            onPress={() => pickImage()}
+                        />
+                    </Card.Title>
+                </Card>
+            </SafeAreaView>
+            <View style={styles.container}>
+                <ScrollView
+                    style={{
+                        backgroundColor: '#000',
+                        borderTopLeftRadius: 15,
+                        borderTopRightRadius: 15,
+                    }}
+                >
+                    <View style={{}}>
+                        <PricingCard
+                            containerStyle={{
+                                backgroundColor: '#000',
+                                margin: 0,
+                                borderColor: '#000',
+                                color: '#E8BD70',
+                            }}
+                            pricingStyle={{ color: '#fff' }}
+                            color='#E8BD70'
+                            title={
+                                <Card.Title
+                                    style={{
+                                        fontSize: 25,
+                                        color: '#E8BD70',
+                                    }}
+                                    onPress={() =>
+                                        navigation.navigate('SettingScreen')
+                                    }
+                                >
+                                    {userData.name}
+                                </Card.Title>
+                            }
+                            price={
+                                <Card.Title
+                                    style={{
+                                        fontSize: 25,
+                                        color: '#fff',
+                                    }}
+                                    onPress={() =>
+                                        navigation.navigate('GoatPoint', {
+                                            userGoatPoints: userData.points,
+                                        })
+                                    }
+                                >
+                                    {userData.points}
+                                </Card.Title>
+                            }
+                            info={[
+                                'Goat Points',
+                                'Use Goat Points for discounts on haircuts',
+                            ]}
+                            button={{ title: 'Schedule Appointment' }}
+                            onButtonPress={() => {
+                                navigation.navigate('Appointment')
+                            }}
+                        />
                     </View>
-                    <View style={{ flex: 3, alignItems: 'center' }}>
-                        <Card.Title style={{ fontSize: 20, color: '#fff' }}>
-                            {' '}
-                            {userData.name}{' '}
-                        </Card.Title>
-                        <Card.Title style={{ fontSize: 15, color: '#fff' }}>
-                            GP: {userData.points + ' '}
-                            <MaterialCommunityIcons
-                                name={'information'}
-                                size={15}
-                                color={'#000'}
-                                onPress={() =>
-                                    navigation.navigate('GoatPoint', {
-                                        userGoatPoints: userData.points,
-                                    })
-                                }
-                            />
-                        </Card.Title>
-                    </View>
-                </View>
-            </Card>
-            <View style={{ flex: 4 }}>
-                {upcomingAppointments || previousAppointments ? (
-                    <>
-                        <ScrollView>
-                            <ListItem
-                                bottomDivider
-                                containerStyle={{ backgroundColor: '#000' }}
-                            >
-                                <ListItem.Content>
-                                    <ListItem.Title
-                                        style={{
-                                            fontWeight: 'bold',
-                                            color: '#E8BD70',
-                                        }}
-                                    >
-                                        <Text>Upcoming Appointments</Text>
-                                    </ListItem.Title>
-                                </ListItem.Content>
-                            </ListItem>
-                            {Object.entries(upcomingAppointments)
-                                .map((onekey, i) => (
-                                    <ListItem.Swipeable
-                                        bottomDivider
-                                        key={i}
-                                        containerStyle={{
-                                            backgroundColor: '#121212',
-                                        }}
-                                        rightContent={
-                                            <Button
-                                                title='Delete'
-                                                icon={{
-                                                    name: 'delete',
-                                                    color: 'white',
-                                                }}
-                                                buttonStyle={{
-                                                    minHeight: '100%',
-                                                    backgroundColor: 'red',
-                                                }}
-                                                onPress={() =>
-                                                    Alert.alert(
-                                                        'Delete Appointment',
-                                                        `Are you sure you want to delete this ${'\n'}Appointment on ${
-                                                            onekey[0]
-                                                        } ${'\n'} at ${
-                                                            onekey[1].time
-                                                        }`,
-                                                        [
-                                                            {
-                                                                text: 'Cancel',
-                                                            },
-                                                            {
-                                                                text: 'Delete Appointment',
-                                                                onPress: () =>
-                                                                    deleteAppointment(
-                                                                        onekey[0],
-                                                                        onekey[1]
-                                                                            .time
-                                                                    ),
-                                                            },
-                                                        ]
-                                                    )
-                                                }
-                                            />
-                                        }
-                                    >
-                                        <ListItem.Content>
-                                            <View
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                }}
-                                            >
+                    <View style={{ flex: 4 }}>
+                        {upcomingAppointments || previousAppointments ? (
+                            <>
+                                <ListItem
+                                    bottomDivider
+                                    containerStyle={{
+                                        backgroundColor: '#000',
+                                    }}
+                                >
+                                    <ListItem.Content>
+                                        <ListItem.Title
+                                            style={{
+                                                fontWeight: 'bold',
+                                                color: '#E8BD70',
+                                            }}
+                                        >
+                                            <Text>Upcoming Appointments</Text>
+                                        </ListItem.Title>
+                                    </ListItem.Content>
+                                </ListItem>
+                                {Object.entries(upcomingAppointments)
+                                    .map((onekey, i) => (
+                                        <ListItem.Swipeable
+                                            bottomDivider
+                                            key={i}
+                                            containerStyle={{
+                                                backgroundColor: '#121212',
+                                            }}
+                                            rightContent={
+                                                <Button
+                                                    title='Delete'
+                                                    icon={{
+                                                        name: 'delete',
+                                                        color: 'white',
+                                                    }}
+                                                    buttonStyle={{
+                                                        minHeight: '100%',
+                                                        backgroundColor: 'red',
+                                                    }}
+                                                    onPress={() =>
+                                                        Alert.alert(
+                                                            'Delete Appointment',
+                                                            `Are you sure you want to delete this ${'\n'}Appointment on ${
+                                                                onekey[0]
+                                                            } ${'\n'} at ${
+                                                                onekey[1].time
+                                                            }`,
+                                                            [
+                                                                {
+                                                                    text: 'Cancel',
+                                                                },
+                                                                {
+                                                                    text: 'Delete Appointment',
+                                                                    onPress:
+                                                                        () =>
+                                                                            deleteAppointment(
+                                                                                onekey[0],
+                                                                                onekey[1]
+                                                                                    .time
+                                                                            ),
+                                                                },
+                                                            ]
+                                                        )
+                                                    }
+                                                />
+                                            }
+                                        >
+                                            <ListItem.Content>
                                                 <View
                                                     style={{
-                                                        flex: 2,
-                                                        alignItems:
-                                                            'flex-start',
+                                                        flex: 1,
+                                                        flexDirection: 'row',
                                                     }}
                                                 >
-                                                    <TouchableOpacity
-                                                        onPress={() =>
-                                                            Alert.alert(
-                                                                'Add Haircut To Calendar',
-                                                                `Would you like to add your Appointment on ${onekey[0]} at ${onekey[1].time} to your calendar?`,
-                                                                [
-                                                                    {
-                                                                        text: 'Cancel',
-                                                                    },
-                                                                    {
-                                                                        text: 'Add Appointment',
-                                                                        onPress:
-                                                                            () =>
-                                                                                createCalendar(
-                                                                                    onekey[0],
-                                                                                    onekey[1].time.toString(),
-                                                                                    barberData.location,
-                                                                                    barberData.phone
-                                                                                ),
-                                                                    },
-                                                                ]
-                                                            )
-                                                        }
+                                                    <View
+                                                        style={{
+                                                            flex: 2,
+                                                            alignItems:
+                                                                'flex-start',
+                                                        }}
                                                     >
-                                                        <ListItem.Title
-                                                            style={{
-                                                                color: '#fff',
-                                                            }}
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                Alert.alert(
+                                                                    'Add Haircut To Calendar',
+                                                                    `Would you like to add your Appointment on ${onekey[0]} at ${onekey[1].time} to your calendar?`,
+                                                                    [
+                                                                        {
+                                                                            text: 'Cancel',
+                                                                        },
+                                                                        {
+                                                                            text: 'Add Appointment',
+                                                                            onPress:
+                                                                                () =>
+                                                                                    createCalendar(
+                                                                                        onekey[0],
+                                                                                        onekey[1].time.toString(),
+                                                                                        barberData.location,
+                                                                                        barberData.phone
+                                                                                    ),
+                                                                        },
+                                                                    ]
+                                                                )
+                                                            }
                                                         >
-                                                            {onekey[0]},{' '}
-                                                            {onekey[1].time
-                                                                .toString()
-                                                                .toLowerCase()}
-                                                        </ListItem.Title>
-                                                    </TouchableOpacity>
-                                                </View>
-                                                {onekey[1].points ? (
-                                                    <>
+                                                            <ListItem.Title
+                                                                style={{
+                                                                    color: '#fff',
+                                                                }}
+                                                            >
+                                                                {onekey[0]},{' '}
+                                                                {onekey[1].time
+                                                                    .toString()
+                                                                    .toLowerCase()}
+                                                            </ListItem.Title>
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                    {onekey[1].points ? (
+                                                        <>
+                                                            <View
+                                                                style={{
+                                                                    flex: 1,
+                                                                    alignItems:
+                                                                        'flex-end',
+                                                                }}
+                                                            >
+                                                                <ListItem.Title
+                                                                    style={{
+                                                                        color: '#fff',
+                                                                    }}
+                                                                >
+                                                                    {onekey[1]
+                                                                        .points !=
+                                                                    ''
+                                                                        ? '$' +
+                                                                          subtractDiscount(
+                                                                              onekey[1]
+                                                                                  ?.haircutType,
+                                                                              barberData.price,
+                                                                              onekey[1]
+                                                                                  .points
+                                                                          )
+                                                                        : ''}
+                                                                </ListItem.Title>
+                                                            </View>
+                                                        </>
+                                                    ) : (
                                                         <View
                                                             style={{
                                                                 flex: 1,
@@ -425,20 +501,52 @@ export default function HomeScreen({ navigation }) {
                                                                     color: '#fff',
                                                                 }}
                                                             >
-                                                                {onekey[1]
-                                                                    .points !=
+                                                                {barberData.price !=
                                                                 ''
-                                                                    ? '$' +
-                                                                      subtractDiscount(
-                                                                          onekey[1]?.haircutType, barberData.price,
-                                                                          onekey[1]
-                                                                              .points
-                                                                      )
+                                                                    ? barberData.price
                                                                     : ''}
                                                             </ListItem.Title>
                                                         </View>
-                                                    </>
-                                                ) : (
+                                                    )}
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        flex: 1,
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View
+                                                        style={{
+                                                            flex: 1,
+                                                            alignItems:
+                                                                'flex-start',
+                                                        }}
+                                                    >
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                Linking.openURL(
+                                                                    `sms:${barberData?.phone}`
+                                                                ).catch(() => {
+                                                                    Linking.openURL(
+                                                                        `sms:${barberData?.phone}`
+                                                                    )
+                                                                })
+                                                            }
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    color: '#fff',
+                                                                }}
+                                                            >
+                                                                {barberData.phone !=
+                                                                ''
+                                                                    ? formatPhoneNumber(
+                                                                          barberData.phone
+                                                                      )
+                                                                    : ''}{' '}
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    </View>
                                                     <View
                                                         style={{
                                                             flex: 1,
@@ -446,42 +554,201 @@ export default function HomeScreen({ navigation }) {
                                                                 'flex-end',
                                                         }}
                                                     >
+                                                        <Text
+                                                            style={{
+                                                                color: '#fff',
+                                                            }}
+                                                        >
+                                                            {onekey[1].points
+                                                                ? 'Goat Points: ' +
+                                                                  onekey[1]
+                                                                      .points
+                                                                : 'Goat Points: 0'}{' '}
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        flex: 1,
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View
+                                                        style={{
+                                                            flex: 1,
+                                                            alignItems:
+                                                                'flex-start',
+                                                        }}
+                                                    >
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                Linking.openURL(
+                                                                    'maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647'
+                                                                ).catch(() => {
+                                                                    Linking.openURL(
+                                                                        'google.navigation:q=43.0218740049977+-87.9119389619647'
+                                                                    )
+                                                                })
+                                                            }
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    color: '#fff',
+                                                                }}
+                                                            >
+                                                                {barberData.location !=
+                                                                ''
+                                                                    ? barberData.location
+                                                                    : ''}{' '}
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        flex: 1,
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    {onekey[1]?.friend && (
+                                                        <View
+                                                            style={{
+                                                                flex: 1,
+                                                                alignItems:
+                                                                    'flex-start',
+                                                            }}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    color: '#fff',
+                                                                }}
+                                                            >
+                                                                Friend:{' '}
+                                                                {
+                                                                    onekey[1]
+                                                                        ?.friend
+                                                                }
+                                                            </Text>
+                                                        </View>
+                                                    )}
+                                                </View>
+                                            </ListItem.Content>
+                                        </ListItem.Swipeable>
+                                    ))
+                                    .reverse()}
+                                <ListItem
+                                    bottomDivider
+                                    containerStyle={{
+                                        backgroundColor: '#000',
+                                    }}
+                                >
+                                    <ListItem.Content>
+                                        <ListItem.Title
+                                            style={{
+                                                fontWeight: 'bold',
+                                                color: '#E8BD70',
+                                            }}
+                                        >
+                                            <Text>Previous Appointments</Text>
+                                        </ListItem.Title>
+                                    </ListItem.Content>
+                                </ListItem>
+                                {Object.entries(previousAppointments)
+                                    .map((onekey, i) => (
+                                        <ListItem
+                                            bottomDivider
+                                            key={i}
+                                            containerStyle={{
+                                                backgroundColor: '#121212',
+                                            }}
+                                        >
+                                            <ListItem.Content>
+                                                <View
+                                                    style={{
+                                                        flex: 1,
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View
+                                                        style={{
+                                                            flex: 2,
+                                                            alignItems:
+                                                                'flex-start',
+                                                        }}
+                                                    >
                                                         <ListItem.Title
                                                             style={{
                                                                 color: '#fff',
                                                             }}
                                                         >
-                                                            {barberData.price !=
-                                                            ''
-                                                                ? barberData.price
-                                                                : ''}
+                                                            {onekey[0]},{' '}
+                                                            {onekey[1].time
+                                                                .toString()
+                                                                .toLowerCase()}
                                                         </ListItem.Title>
                                                     </View>
-                                                )}
-                                            </View>
-                                            <View
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                }}
-                                            >
+                                                    {onekey[1].points ? (
+                                                        <>
+                                                            <View
+                                                                style={{
+                                                                    flex: 1,
+                                                                    alignItems:
+                                                                        'flex-end',
+                                                                }}
+                                                            >
+                                                                <ListItem.Title
+                                                                    style={{
+                                                                        color: '#fff',
+                                                                    }}
+                                                                >
+                                                                    {onekey[1]
+                                                                        .points !=
+                                                                    ''
+                                                                        ? '$' +
+                                                                          subtractDiscount(
+                                                                              onekey[1]
+                                                                                  ?.haircutType,
+                                                                              barberData.price,
+                                                                              onekey[1]
+                                                                                  .points
+                                                                          )
+                                                                        : ''}
+                                                                </ListItem.Title>
+                                                            </View>
+                                                        </>
+                                                    ) : (
+                                                        <View
+                                                            style={{
+                                                                flex: 1,
+                                                                alignItems:
+                                                                    'flex-end',
+                                                            }}
+                                                        >
+                                                            <ListItem.Title
+                                                                style={{
+                                                                    color: '#fff',
+                                                                }}
+                                                            >
+                                                                {barberData.price !=
+                                                                ''
+                                                                    ? barberData.price
+                                                                    : ''}
+                                                            </ListItem.Title>
+                                                        </View>
+                                                    )}
+                                                </View>
                                                 <View
                                                     style={{
                                                         flex: 1,
-                                                        alignItems:
-                                                            'flex-start',
+                                                        flexDirection: 'row',
                                                     }}
                                                 >
-                                                    <TouchableOpacity
-                                                        onPress={() =>
-                                                            Linking.openURL(
-                                                                `sms:${barberData?.phone}`
-                                                            ).catch(() => {
-                                                                Linking.openURL(
-                                                                    `sms:${barberData?.phone}`
-                                                                )
-                                                            })
-                                                        }
+                                                    <View
+                                                        style={{
+                                                            flex: 1,
+                                                            alignItems:
+                                                                'flex-start',
+                                                        }}
                                                     >
                                                         <Text
                                                             style={{
@@ -495,49 +762,39 @@ export default function HomeScreen({ navigation }) {
                                                                   )
                                                                 : ''}{' '}
                                                         </Text>
-                                                    </TouchableOpacity>
-                                                </View>
-                                                <View
-                                                    style={{
-                                                        flex: 1,
-                                                        alignItems: 'flex-end',
-                                                    }}
-                                                >
-                                                    <Text
+                                                    </View>
+                                                    <View
                                                         style={{
-                                                            color: '#fff',
+                                                            flex: 1,
+                                                            alignItems:
+                                                                'flex-end',
                                                         }}
                                                     >
-                                                        {onekey[1].points
-                                                            ? 'Goat Points: ' +
-                                                              onekey[1].points
-                                                            : 'Goat Points: 0'}{' '}
-                                                    </Text>
+                                                        <Text
+                                                            style={{
+                                                                color: '#fff',
+                                                            }}
+                                                        >
+                                                            {onekey[1].points
+                                                                ? 'Goat Points: ' +
+                                                                  onekey[1]
+                                                                      .points
+                                                                : 'Goat Points: 0'}{' '}
+                                                        </Text>
+                                                    </View>
                                                 </View>
-                                            </View>
-                                            <View
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                }}
-                                            >
                                                 <View
                                                     style={{
                                                         flex: 1,
-                                                        alignItems:
-                                                            'flex-start',
+                                                        flexDirection: 'row',
                                                     }}
                                                 >
-                                                    <TouchableOpacity
-                                                        onPress={() =>
-                                                            Linking.openURL(
-                                                                'maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647'
-                                                            ).catch(() => {
-                                                                Linking.openURL(
-                                                                    'google.navigation:q=43.0218740049977+-87.9119389619647'
-                                                                )
-                                                            })
-                                                        }
+                                                    <View
+                                                        style={{
+                                                            flex: 1,
+                                                            alignItems:
+                                                                'flex-start',
+                                                        }}
                                                     >
                                                         <Text
                                                             style={{
@@ -549,253 +806,63 @@ export default function HomeScreen({ navigation }) {
                                                                 ? barberData.location
                                                                 : ''}{' '}
                                                         </Text>
-                                                    </TouchableOpacity>
+                                                    </View>
                                                 </View>
-                                            </View>
-                                            <View
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                }}
-                                            >
                                                 <View
                                                     style={{
                                                         flex: 1,
-                                                        alignItems:
-                                                            'flex-start',
+                                                        flexDirection: 'row',
                                                     }}
                                                 >
-                                                    <Text
-                                                        style={{
-                                                            color: '#fff',
-                                                        }}
-                                                    >
-                                                        {onekey[1]?.friend
-                                                            ? 'Friend: ' +
-                                                              onekey[1].friend
-                                                            : ''}{' '}
-                                                    </Text>
-                                                </View>
-                                            </View>
-                                        </ListItem.Content>
-                                    </ListItem.Swipeable>
-                                ))
-                                .reverse()}
-                            <ListItem
-                                bottomDivider
-                                containerStyle={{ backgroundColor: '#000' }}
-                            >
-                                <ListItem.Content>
-                                    <ListItem.Title
-                                        style={{
-                                            fontWeight: 'bold',
-                                            color: '#E8BD70',
-                                        }}
-                                    >
-                                        <Text>Previous Appointments</Text>
-                                    </ListItem.Title>
-                                </ListItem.Content>
-                            </ListItem>
-                            {Object.entries(previousAppointments)
-                                .map((onekey, i) => (
-                                    <ListItem
-                                        bottomDivider
-                                        key={i}
-                                        containerStyle={{
-                                            backgroundColor: '#121212',
-                                        }}
-                                    >
-                                        <ListItem.Content>
-                                            <View
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                }}
-                                            >
-                                                <View
-                                                    style={{
-                                                        flex: 2,
-                                                        alignItems:
-                                                            'flex-start',
-                                                    }}
-                                                >
-                                                    <ListItem.Title
-                                                        style={{
-                                                            color: '#fff',
-                                                        }}
-                                                    >
-                                                        {onekey[0]},{' '}
-                                                        {onekey[1].time
-                                                            .toString()
-                                                            .toLowerCase()}
-                                                    </ListItem.Title>
-                                                </View>
-                                                {onekey[1].points ? (
-                                                    <>
+                                                    {onekey[1]?.friend && (
                                                         <View
                                                             style={{
                                                                 flex: 1,
                                                                 alignItems:
-                                                                    'flex-end',
+                                                                    'flex-start',
                                                             }}
                                                         >
-                                                            <ListItem.Title
+                                                            <Text
                                                                 style={{
                                                                     color: '#fff',
                                                                 }}
                                                             >
-                                                                {onekey[1]
-                                                                    .points !=
-                                                                ''
-                                                                    ? '$' +
-                                                                      subtractDiscount(
-                                                                          onekey[1]?.haircutType,
-                                                                          barberData.price,
-                                                                          onekey[1]
-                                                                              .points
-                                                                      )
-                                                                    : ''}
-                                                            </ListItem.Title>
+                                                                Friend:{' '}
+                                                                {
+                                                                    onekey[1]
+                                                                        ?.friend
+                                                                }
+                                                            </Text>
                                                         </View>
-                                                    </>
-                                                ) : (
-                                                    <View
-                                                        style={{
-                                                            flex: 1,
-                                                            alignItems:
-                                                                'flex-end',
-                                                        }}
-                                                    >
-                                                        <ListItem.Title
-                                                            style={{
-                                                                color: '#fff',
-                                                            }}
-                                                        >
-                                                            {barberData.price !=
-                                                            ''
-                                                                ? barberData.price
-                                                                : ''}
-                                                        </ListItem.Title>
-                                                    </View>
-                                                )}
-                                            </View>
-                                            <View
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                }}
-                                            >
-                                                <View
-                                                    style={{
-                                                        flex: 1,
-                                                        alignItems:
-                                                            'flex-start',
-                                                    }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            color: '#fff',
-                                                        }}
-                                                    >
-                                                        {barberData.phone != ''
-                                                            ? formatPhoneNumber(
-                                                                  barberData.phone
-                                                              )
-                                                            : ''}{' '}
-                                                    </Text>
+                                                    )}
                                                 </View>
-                                                <View
-                                                    style={{
-                                                        flex: 1,
-                                                        alignItems: 'flex-end',
-                                                    }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            color: '#fff',
-                                                        }}
-                                                    >
-                                                        {onekey[1].points
-                                                            ? 'Goat Points: ' +
-                                                              onekey[1].points
-                                                            : 'Goat Points: 0'}{' '}
-                                                    </Text>
-                                                </View>
-                                            </View>
-                                            <View
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                }}
-                                            >
-                                                <View
-                                                    style={{
-                                                        flex: 1,
-                                                        alignItems:
-                                                            'flex-start',
-                                                    }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            color: '#fff',
-                                                        }}
-                                                    >
-                                                        {barberData.location !=
-                                                        ''
-                                                            ? barberData.location
-                                                            : ''}{' '}
-                                                    </Text>
-                                                </View>
-                                            </View>
-                                            <View
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                }}
-                                            >
-                                                <View
-                                                    style={{
-                                                        flex: 1,
-                                                        alignItems:
-                                                            'flex-start',
-                                                    }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            color: '#fff',
-                                                        }}
-                                                    >
-                                                        {onekey[1]?.friend
-                                                            ? 'Friend: ' +
-                                                              onekey[1].friend
-                                                            : ''}{' '}
-                                                    </Text>
-                                                </View>
-                                            </View>
-                                        </ListItem.Content>
-                                    </ListItem>
-                                ))
-                                .reverse()}
-                        </ScrollView>
-                    </>
-                ) : (
-                    <ListItem bottomDivider>
-                        <ListItem.Content>
-                            <ListItem.Title style={{ fontWeight: 'bold' }}>
-                                <Text>No Appointments</Text>
-                            </ListItem.Title>
-                        </ListItem.Content>
-                    </ListItem>
-                )}
+                                            </ListItem.Content>
+                                        </ListItem>
+                                    ))
+                                    .reverse()}
+                            </>
+                        ) : (
+                            <ListItem bottomDivider>
+                                <ListItem.Content>
+                                    <ListItem.Title
+                                        style={{ fontWeight: 'bold' }}
+                                    >
+                                        <Text>No Appointments</Text>
+                                    </ListItem.Title>
+                                </ListItem.Content>
+                            </ListItem>
+                        )}
+                    </View>
+                </ScrollView>
             </View>
-        </View>
+        </>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000000',
+        backgroundColor: '#E8BD70',
     },
     row: {
         flexDirection: 'row',

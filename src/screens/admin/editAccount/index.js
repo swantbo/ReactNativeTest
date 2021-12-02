@@ -169,11 +169,15 @@ const EditAccountScreen = ({ navigation }) => {
                                                 backgroundColor: 'green',
                                             }}
                                             onPress={() =>
-                                                navigation.navigate('Points', {
-                                                    name: onekey.name,
-                                                    userId: onekey.id,
-                                                    goatPoints: onekey.points,
-                                                })
+                                                navigation.navigate(
+                                                    'PointsScreen',
+                                                    {
+                                                        name: onekey.name,
+                                                        userId: onekey.id,
+                                                        goatPoints:
+                                                            onekey.points,
+                                                    }
+                                                )
                                             }
                                         />
                                     }

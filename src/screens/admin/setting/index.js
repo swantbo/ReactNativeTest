@@ -82,18 +82,34 @@ const SettingScreen = ({ navigation }) => {
                 </ListItem>
                 {changeUserInfo && (
                     <View>
-                        <>
-                            <TextInput
-                                placeholder={changeUserInfo}
-                                onChangeText={setNewUserInfo}
-                                value={newUserInfo}
-                                style={styles.textInput}
-                            />
-                            <Button
-                                title='Change Information'
-                                onPress={() => setUserData(newUserInfo)}
-                            />
-                        </>
+                        <TextInput
+                            placeholder={changeUserInfo}
+                            placeholderTextColor='#fff'
+                            onChangeText={setNewUserInfo}
+                            value={newUserInfo}
+                            style={styles.textInput}
+                        />
+                        <TouchableOpacity
+                            style={{
+                                backgroundColor: '#E8BD70',
+                                borderRadius: 5,
+                                padding: 10,
+                                margin: 5,
+                            }}
+                            onPress={() => setUserData(newUserInfo)}
+                        >
+                            <ListItem.Title
+                                style={{
+                                    color: '#000',
+                                    alignSelf: 'center',
+                                }}
+                            >
+                                {`Change ${
+                                    userDataType.charAt(0).toUpperCase() +
+                                    userDataType.slice(1)
+                                }`}
+                            </ListItem.Title>
+                        </TouchableOpacity>
                     </View>
                 )}
                 {isLoading ? (
@@ -174,6 +190,14 @@ const styles = StyleSheet.create({
     },
     ListItem: {
         backgroundColor: '#121212',
+    },
+    textInput: {
+        borderWidth: 1,
+        borderColor: 'grey',
+        padding: 10,
+        marginBottom: 10,
+        borderRadius: 5,
+        color: '#fff',
     },
 })
 

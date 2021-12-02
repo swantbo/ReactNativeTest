@@ -28,6 +28,7 @@ function homeSettingStackScreen({ navigation }) {
                 name='Home'
                 component={HomeScreen}
                 options={{
+                    headerShown: false,
                     headerRight: () => (
                         <Ionicons
                             name='settings'
@@ -40,7 +41,7 @@ function homeSettingStackScreen({ navigation }) {
                 }}
             />
             <homeSettingStack.Screen
-                name='Settings'
+                name='SettingScreen'
                 options={{ title: 'Settings', headerTitleAlign: 'center' }}
                 component={SettingScreen}
             />

@@ -1,5 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { View, StyleSheet, TextInput, Alert } from 'react-native'
+import {
+    View,
+    StyleSheet,
+    TextInput,
+    Alert,
+    TouchableOpacity,
+} from 'react-native'
 import { ListItem, Button } from 'react-native-elements'
 import * as firebase from 'firebase'
 import { formatPhoneNumber } from '../../../utils/DataFormatting'
@@ -90,22 +96,31 @@ const SettingScreen = () => {
             </ListItem>
             {changeUserInfo && (
                 <View>
-                    <>
-                        <TextInput
-                            placeholder={changeUserInfo}
-                            placeholderTextColor='#fff'
-                            onChangeText={setNewUserInfo}
-                            value={newUserInfo}
-                            style={styles.textInput}
-                        />
-                        <Button
-                            title={`Change ${
+                    <TextInput
+                        placeholder={changeUserInfo}
+                        placeholderTextColor='#fff'
+                        onChangeText={setNewUserInfo}
+                        value={newUserInfo}
+                        style={styles.textInput}
+                    />
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: '#E8BD70',
+                            borderRadius: 5,
+                            padding: 10,
+                            margin: 5,
+                        }}
+                        onPress={() => setUserData(newUserInfo)}
+                    >
+                        <ListItem.Title
+                            style={{ color: '#000', alignSelf: 'center' }}
+                        >
+                            {`Change ${
                                 userDataType.charAt(0).toUpperCase() +
                                 userDataType.slice(1)
                             }`}
-                            onPress={() => setUserData(newUserInfo)}
-                        />
-                    </>
+                        </ListItem.Title>
+                    </TouchableOpacity>
                 </View>
             )}
             {Object.entries(userInfo).map((onekey, index) => (
@@ -158,7 +173,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'grey',
         padding: 10,
-        marginBottom: 20,
+        marginBottom: 10,
         borderRadius: 5,
         color: '#fff',
     },

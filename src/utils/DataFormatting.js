@@ -12,10 +12,10 @@ export function insertDecimal(num) {
     return (tempNum / 100).toFixed(2)
 }
 
-export function subtractDiscount(type, price, goatPoints) {
+export function subtractDiscount(type, price, kidsPrice, goatPoints) {
     if (type === 'kids') {
-        const newPrice = Number(price.replace(/[$.]+/g, '')) - Number(500)
-        const tempDiscount = Number(newPrice) - Number(goatPoints)
+        const tempDiscount =
+            Number(kidsPrice.replace(/[$.]+/g, '')) - Number(goatPoints)
         return (tempDiscount / 100).toFixed(2)
     } else {
         const discount =

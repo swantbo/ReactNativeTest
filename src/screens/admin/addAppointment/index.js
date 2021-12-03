@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Button, StyleSheet } from 'react-native'
+import { View, Button, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import CalendarStrip from 'react-native-calendar-strip'
 import moment from 'moment'
 import { ListItem } from 'react-native-elements'
@@ -80,22 +80,25 @@ const AddAppointmentScreen = ({ route }) => {
                         style={{ alignItems: 'center', marginTop: -5 }}
                     >
                         <ListItem.Title style={styles.text}>
-                            {' '}
-                            {formattedDate
-                                ? formattedDate
-                                : 'Choose a date'}{' '}
+                            {formattedDate ? formattedDate : 'Choose a date'}
                         </ListItem.Title>
                     </ListItem.Content>
                 </ListItem>
                 {formattedDate && (
-                    <View style={{ padding: 5 }}>
+                    <View
+                        style={{
+                            padding: 5,
+                            margin: 15,
+                            backgroundColor: '#121212',
+                        }}
+                    >
                         <InputField
                             inputStyle={{
                                 fontSize: 14,
                             }}
                             containerStyle={{
                                 backgroundColor: '#fff',
-                                marginBottom: 20,
+                                margin: 15,
                                 borderColor: 'black',
                                 borderWidth: 1,
                             }}
@@ -112,7 +115,7 @@ const AddAppointmentScreen = ({ route }) => {
                             }}
                             containerStyle={{
                                 backgroundColor: '#fff',
-                                marginBottom: 20,
+                                margin: 15,
                                 borderColor: 'black',
                                 borderWidth: 1,
                             }}
@@ -130,7 +133,7 @@ const AddAppointmentScreen = ({ route }) => {
                             }}
                             containerStyle={{
                                 backgroundColor: '#fff',
-                                marginBottom: 20,
+                                margin: 15,
                                 borderColor: 'black',
                                 borderWidth: 1,
                             }}
@@ -149,7 +152,7 @@ const AddAppointmentScreen = ({ route }) => {
                             }}
                             containerStyle={{
                                 backgroundColor: '#fff',
-                                marginBottom: 20,
+                                margin: 15,
                                 borderColor: 'black',
                                 borderWidth: 1,
                             }}
@@ -161,11 +164,27 @@ const AddAppointmentScreen = ({ route }) => {
                             onChangeText={(text) => onChangeComment(text)}
                         />
 
-                        <Button
-                            title={'Add Appointment'}
-                            color={'#E8BD70'}
+                        <TouchableOpacity
+                            style={{
+                                backgroundColor: '#E8BD70',
+                                borderRadius: 10,
+                                margin: 15,
+                                width: '50%',
+                                alignSelf: 'center',
+                            }}
                             onPress={() => scheduleAppoint()}
-                        />
+                        >
+                            <Text
+                                style={{
+                                    color: '#000',
+                                    padding: 5,
+                                    alignSelf: 'center',
+                                    fontSize: 20,
+                                }}
+                            >
+                                Add Appointment
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 )}
             </View>

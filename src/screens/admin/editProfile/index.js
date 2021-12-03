@@ -7,6 +7,7 @@ import {
     TextInput,
     Alert,
     ActivityIndicator,
+    TouchableOpacity,
 } from 'react-native'
 import { ListItem } from 'react-native-elements'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -32,6 +33,7 @@ const EditProfileScreen = () => {
         phone: '',
         price: '',
         website: '',
+        bio: '',
     })
     const [changeData, setChangeData] = useState('')
     const [barberDataType, setBarberDataType] = useState('')
@@ -140,11 +142,24 @@ const EditProfileScreen = () => {
                                 value={newBarberData}
                                 style={styles.textInput}
                             />
-                            <Button
-                                color={'#E8BD70'}
-                                title={`Change ${barberDataType}: ${changeData}`}
+                            <TouchableOpacity
+                                style={{
+                                    backgroundColor: '#E8BD70',
+                                    borderRadius: 5,
+                                    padding: 10,
+                                    margin: 5,
+                                }}
                                 onPress={() => setBarberData()}
-                            />
+                            >
+                                <ListItem.Title
+                                    style={{
+                                        color: '#000',
+                                        alignSelf: 'center',
+                                    }}
+                                >
+                                    {`Change ${barberDataType}: ${changeData}`}
+                                </ListItem.Title>
+                            </TouchableOpacity>
                         </>
                     </View>
                 ) : (
@@ -164,6 +179,19 @@ const EditProfileScreen = () => {
                                     }}
                                 >
                                     Info
+                                </ListItem.Title>
+                            </ListItem.Content>
+                        </ListItem>
+                        <ListItem
+                            bottomDivider
+                            containerStyle={styles.ListItem}
+                            onPress={() =>
+                                changeBarberData(barberProfile.bio, 'bio')
+                            }
+                        >
+                            <ListItem.Content>
+                                <ListItem.Title style={styles.text}>
+                                    Bio: {barberProfile.bio}
                                 </ListItem.Title>
                             </ListItem.Content>
                         </ListItem>

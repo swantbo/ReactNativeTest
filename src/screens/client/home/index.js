@@ -7,6 +7,7 @@ import {
     Linking,
     TouchableOpacity,
     SafeAreaView,
+    Image,
 } from 'react-native'
 import {
     Card,
@@ -329,6 +330,13 @@ export default function HomeScreen({ navigation }) {
                                         })
                                     }
                                 >
+                                    {/* <Image
+                                        source={require('../../../assets/6347257.png')}
+                                        style={{
+                                            width: 10,
+                                            height: 10,
+                                        }}
+                                    /> */}
                                     {userData.points}
                                 </Card.Title>
                             }

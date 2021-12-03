@@ -27,6 +27,7 @@ const EditAccountScreen = ({ navigation }) => {
             let id = doc.id
             data.push({ id, ...tempData })
         })
+        console.log('data', data)
         setUserInfo(data)
     }
 
@@ -81,7 +82,8 @@ const EditAccountScreen = ({ navigation }) => {
         const tempArray = userInfo.filter(
             (o) =>
                 o.name.toLowerCase().includes(text.toLowerCase()) ||
-                o.phone.toLowerCase().includes(text.toLowerCase())
+                o.phone.toLowerCase().includes(text.toLowerCase()) ||
+                o.email.toLowerCase().includes(text.toLowerCase())
         )
         setSearchResults(tempArray)
     }
@@ -104,7 +106,7 @@ const EditAccountScreen = ({ navigation }) => {
                         borderWidth: 1,
                     }}
                     leftIcon='account-search'
-                    placeholder='Search Name or Phone Number'
+                    placeholder='Search Name, Number, or Email'
                     autoCapitalize='none'
                     autoCorrect={false}
                     value={search}
@@ -318,17 +320,22 @@ const EditAccountScreen = ({ navigation }) => {
                                             </View>
                                             <View
                                                 style={{
-                                                    flex: 1,
+                                                    flex: 2,
                                                     alignItems: 'flex-end',
                                                 }}
                                             >
                                                 <ListItem.Subtitle
                                                     style={styles.text}
+                                                    onPress={() =>
+                                                        searchAccounts(
+                                                            onekey.referral
+                                                        )
+                                                    }
                                                 >
                                                     {onekey.referral
                                                         ? 'Referral: ' +
                                                           onekey.referral
-                                                        : 'No Referral'}{' '}
+                                                        : 'No Referral'}
                                                 </ListItem.Subtitle>
                                             </View>
                                         </View>
@@ -347,8 +354,8 @@ const EditAccountScreen = ({ navigation }) => {
                                                 <ListItem.Subtitle
                                                     style={styles.text}
                                                 >
-                                                    {onekey.id
-                                                        ? onekey.id
+                                                    {onekey.email
+                                                        ? onekey.email
                                                         : 'N/A'}
                                                 </ListItem.Subtitle>
                                             </View>
@@ -365,6 +372,9 @@ const EditAccountScreen = ({ navigation }) => {
                                                 </ListItem.Subtitle>
                                             </View>
                                         </View>
+                                        <ListItem.Subtitle style={styles.text}>
+                                            {onekey.id ? onekey.id : 'N/A'}
+                                        </ListItem.Subtitle>
                                     </ListItem.Content>
                                 </ListItem.Swipeable>
                             </>

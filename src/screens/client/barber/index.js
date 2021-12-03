@@ -36,6 +36,7 @@ const BarberScreen = ({ navigation }) => {
         price: '',
         website: '',
         kidsHaircut: '',
+        bio: '',
     })
     const [image, setImage] = useState(null)
     const [haircutImages, setHaircutImages] = useState([])
@@ -118,7 +119,7 @@ const BarberScreen = ({ navigation }) => {
                                     borderRadius: 5,
                                     backgroundColor: '#000',
                                     borderColor: '#000',
-                                    margin: 0,
+                                    margin: 5,
                                     padding: 5,
                                 }}
                             >
@@ -129,6 +130,9 @@ const BarberScreen = ({ navigation }) => {
                                     }}
                                 >
                                     {barberData.name}
+                                </Card.Title>
+                                <Card.Title style={{ color: '#fff' }}>
+                                    {barberData.bio}
                                 </Card.Title>
                             </Card>
                             <View

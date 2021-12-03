@@ -132,8 +132,7 @@ const SettingScreen = () => {
                 >
                     <ListItem.Content>
                         <ListItem.Title style={styles.text}>
-                            {' '}
-                            {onekey[0]}: {onekey[1]}{' '}
+                            {onekey[0]}: {onekey[1]}
                         </ListItem.Title>
                     </ListItem.Content>
                 </ListItem>

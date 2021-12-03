@@ -112,8 +112,9 @@ export default function SignUpScreen({ navigation }) {
                     borderWidth: 1,
                 }}
                 leftIcon='account-supervisor'
-                placeholder='Enter name of Referral'
+                placeholder='Enter Phone Number of Referral(optional)'
                 autoCapitalize='none'
+                keyboardType='phone-pad'
                 autoCorrect={false}
                 value={referral}
                 onChangeText={(text) => setReferral(text)}

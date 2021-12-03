@@ -35,6 +35,7 @@ const AppointmentScreen = () => {
         location: '',
         name: '',
         phone: '',
+        kidsHaircut: '',
     })
     const [availibility, setAvailibility] = useState({
         Tuesday: '',
@@ -185,6 +186,7 @@ const AppointmentScreen = () => {
                     location: testData.data().location,
                     phone: testData.data().phone,
                     name: testData.data().name,
+                    kidsHaircut: testData.data().kidsHaircut,
                 }
                 setBarberInfo({ ...barberInfo, ...barberData })
             })
@@ -539,11 +541,8 @@ const AppointmentScreen = () => {
                             <View style={{ flex: 3, alignItems: 'flex-end' }}>
                                 <ListItem.Title style={{ color: 'white' }}>
                                     {haircutType === 'mens'
-                                        ? '$' + insertDecimal(barberInfo.price)
-                                        : subtractPrice(
-                                              haircutType,
-                                              barberInfo.price
-                                          )}
+                                        ? barberInfo.price
+                                        : barberInfo.kidsHaircut}
                                 </ListItem.Title>
                                 <ListItem.Title style={{ color: 'white' }}>
                                     <ListItem.Title style={styles.text}>
@@ -578,15 +577,12 @@ const AppointmentScreen = () => {
                                               subtractDiscount(
                                                   haircutType,
                                                   barberInfo.price,
+                                                  barberInfo.kidsHaircut,
                                                   userPoints
                                               )
                                             : haircutType === 'mens'
-                                            ? '$' +
-                                              insertDecimal(barberInfo.price)
-                                            : subtractPrice(
-                                                  haircutType,
-                                                  barberInfo.price
-                                              )}
+                                            ? barberInfo.price
+                                            : barberInfo.kidsHaircut}
                                     </ListItem.Title>
                                 </TouchableOpacity>
                             </View>

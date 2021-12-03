@@ -10,7 +10,13 @@ import {
     ImageBackground,
     TouchableOpacity,
 } from 'react-native'
-import { Card, SocialIcon, Avatar, Image } from 'react-native-elements'
+import {
+    Card,
+    SocialIcon,
+    Avatar,
+    Image,
+    PricingCard,
+} from 'react-native-elements'
 import * as firebase from 'firebase'
 import { formatPhoneNumber } from '../../../utils/DataFormatting'
 import MapView from 'react-native-maps'
@@ -29,6 +35,7 @@ const BarberScreen = ({ navigation }) => {
         phone: '',
         price: '',
         website: '',
+        kidsHaircut: '',
     })
     const [image, setImage] = useState(null)
     const [haircutImages, setHaircutImages] = useState([])
@@ -105,103 +112,171 @@ const BarberScreen = ({ navigation }) => {
                     }}
                 >
                     <View style={{}}>
-                        <Card
-                            containerStyle={{
-                                borderRadius: 5,
-                                backgroundColor: '#000',
-                                borderColor: '#000',
-                            }}
-                        >
-                            <Card.Title
-                                style={{
-                                    fontSize: 25,
-                                    color: '#E8BD70',
+                        <View style={{ flex: 1 }}>
+                            <Card
+                                containerStyle={{
+                                    borderRadius: 5,
+                                    backgroundColor: '#000',
+                                    borderColor: '#000',
+                                    margin: 0,
+                                    padding: 5,
                                 }}
                             >
-                                {barberData.name}
-                            </Card.Title>
-                            <View style={{ flex: 1 }}>
-                                <View style={{ flex: 1, flexDirection: 'row' }}>
-                                    <View
-                                        style={{
-                                            flex: 1,
-                                            alignItems: 'center',
-                                            paddingBottom: 15,
-                                        }}
-                                    >
-                                        <Text style={styles.text}>
-                                            Fast fades in no time.
-                                        </Text>
-                                    </View>
-                                </View>
-                                <View
+                                <Card.Title
                                     style={{
-                                        flex: 1,
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        backgroundColor: '#121212',
+                                        fontSize: 30,
+                                        color: '#E8BD70',
                                     }}
                                 >
-                                    <SocialIcon
-                                        onPress={() => {
+                                    {barberData.name}
+                                </Card.Title>
+                            </Card>
+                            <View
+                                style={{
+                                    flex: 1,
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    margin: 0,
+                                }}
+                            >
+                                <View style={{ flex: 1 }}>
+                                    <PricingCard
+                                        containerStyle={{
+                                            backgroundColor: '#121212',
+                                            margin: 0,
+                                            borderColor: '#000',
+                                            color: '#E8BD70',
+                                        }}
+                                        pricingStyle={{ color: '#fff' }}
+                                        titleStyle={{ fontSize: 20 }}
+                                        color='#E8BD70'
+                                        title={"Men's Haircut"}
+                                        price={
+                                            <Card.Title
+                                                style={{
+                                                    fontSize: 20,
+                                                    color: '#fff',
+                                                }}
+                                            >
+                                                {barberData.price}
+                                            </Card.Title>
+                                        }
+                                        info={[
+                                            'Includes Haircut, Eyebrows and Beard trim',
+                                        ]}
+                                        button={{
+                                            title: 'Schedule Now',
+                                        }}
+                                        onButtonPress={() => {
                                             navigation.navigate('Appointment')
                                         }}
-                                        style={{
-                                            backgroundColor: '#E8BD70',
-                                        }}
-                                        iconType='MaterialCommunityIcons'
-                                        type='calendar-today'
                                     />
-                                    <SocialIcon
-                                        onPress={() =>
-                                            Linking.openURL(
-                                                `sms:${barberData?.phone}`
-                                            ).catch(() => {
-                                                Linking.openURL(
-                                                    `sms:${barberData?.phone}`
-                                                )
-                                            })
-                                        }
-                                        style={{
-                                            backgroundColor: '#E8BD70',
+                                </View>
+                                <View style={{ flex: 1 }}>
+                                    <PricingCard
+                                        containerStyle={{
+                                            backgroundColor: '#121212',
+                                            margin: 0,
+                                            borderColor: '#000',
+                                            color: '#E8BD70',
                                         }}
-                                        iconType='MaterialCommunityIcons'
-                                        type='sms'
-                                    />
-                                    <SocialIcon
-                                        onPress={() =>
-                                            Linking.openURL(
-                                                `instagram://user?username=${barberData.instagram}`
-                                            ).catch(() => {
-                                                Linking.openURL(
-                                                    `https://www.instagram.com/${barberData.instagram}`
-                                                )
-                                            })
+                                        pricingStyle={{ color: '#fff' }}
+                                        titleStyle={{ fontSize: 20 }}
+                                        color='#E8BD70'
+                                        title={"Kids's Haircut"}
+                                        price={
+                                            <Card.Title
+                                                style={{
+                                                    fontSize: 20,
+                                                    color: '#fff',
+                                                }}
+                                            >
+                                                {barberData.kidsHaircut}
+                                            </Card.Title>
                                         }
-                                        style={{
-                                            backgroundColor: '#E8BD70',
+                                        info={[
+                                            "Includes Full Haircut, for Kid's",
+                                        ]}
+                                        button={{
+                                            title: 'Schedule Now',
                                         }}
-                                        type='instagram'
-                                    />
-                                    <SocialIcon
-                                        onPress={() =>
-                                            Linking.openURL(
-                                                `${barberData.website}`
-                                            ).catch(() => {
-                                                Linking.openURL(
-                                                    `https://${barberData.website}`
-                                                )
-                                            })
-                                        }
-                                        style={{
-                                            backgroundColor: '#E8BD70',
+                                        onButtonPress={() => {
+                                            navigation.navigate('Appointment')
                                         }}
-                                        type='google'
-                                        title='test'
                                     />
                                 </View>
                             </View>
-                        </Card>
+                            <View
+                                style={{
+                                    flex: 1,
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    backgroundColor: '#121212',
+                                    margin: 0,
+                                    marginLeft: 15,
+                                    marginRight: 15,
+                                    padding: 5,
+                                }}
+                            >
+                                <SocialIcon
+                                    onPress={() => {
+                                        navigation.navigate('Appointment')
+                                    }}
+                                    style={{
+                                        backgroundColor: '#E8BD70',
+                                    }}
+                                    iconType='MaterialCommunityIcons'
+                                    type='calendar-today'
+                                />
+                                <SocialIcon
+                                    onPress={() =>
+                                        Linking.openURL(
+                                            `sms:${barberData?.phone}`
+                                        ).catch(() => {
+                                            Linking.openURL(
+                                                `sms:${barberData?.phone}`
+                                            )
+                                        })
+                                    }
+                                    style={{
+                                        backgroundColor: '#E8BD70',
+                                    }}
+                                    iconType='MaterialCommunityIcons'
+                                    type='sms'
+                                />
+                                <SocialIcon
+                                    onPress={() =>
+                                        Linking.openURL(
+                                            `instagram://user?username=${barberData.instagram}`
+                                        ).catch(() => {
+                                            Linking.openURL(
+                                                `https://www.instagram.com/${barberData.instagram}`
+                                            )
+                                        })
+                                    }
+                                    style={{
+                                        backgroundColor: '#E8BD70',
+                                    }}
+                                    type='instagram'
+                                />
+                                <SocialIcon
+                                    onPress={() =>
+                                        Linking.openURL(
+                                            `${barberData.website}`
+                                        ).catch(() => {
+                                            Linking.openURL(
+                                                `https://${barberData.website}`
+                                            )
+                                        })
+                                    }
+                                    style={{
+                                        backgroundColor: '#E8BD70',
+                                    }}
+                                    type='google'
+                                    title='test'
+                                />
+                            </View>
+                        </View>
                         <Card
                             containerStyle={{
                                 borderRadius: 5,
@@ -388,15 +463,15 @@ const BarberScreen = ({ navigation }) => {
                             <View
                                 style={{
                                     flexDirection: 'row',
-                                    margin: 20,
+                                    margin: 10,
                                     justifyContent: 'space-between',
                                 }}
                             >
                                 <Image
                                     style={{
                                         flex: 1,
-                                        width: 150,
-                                        height: 150,
+                                        width: 175,
+                                        height: 175,
                                     }}
                                     source={{
                                         uri: haircutImages[0],
@@ -413,8 +488,8 @@ const BarberScreen = ({ navigation }) => {
                                 <Image
                                     style={{
                                         flex: 1,
-                                        width: 150,
-                                        height: 150,
+                                        width: 175,
+                                        height: 175,
                                     }}
                                     source={{
                                         uri: haircutImages[1],
@@ -432,15 +507,15 @@ const BarberScreen = ({ navigation }) => {
                             <View
                                 style={{
                                     flexDirection: 'row',
-                                    margin: 20,
+                                    margin: 10,
                                     justifyContent: 'space-between',
                                 }}
                             >
                                 <Image
                                     style={{
                                         flex: 1,
-                                        width: 150,
-                                        height: 150,
+                                        width: 175,
+                                        height: 175,
                                     }}
                                     source={{
                                         uri: haircutImages[2],
@@ -457,8 +532,8 @@ const BarberScreen = ({ navigation }) => {
                                 <Image
                                     style={{
                                         flex: 1,
-                                        width: 150,
-                                        height: 150,
+                                        width: 175,
+                                        height: 175,
                                     }}
                                     source={{
                                         uri: haircutImages[3],
@@ -476,15 +551,15 @@ const BarberScreen = ({ navigation }) => {
                             <View
                                 style={{
                                     flexDirection: 'row',
-                                    margin: 20,
+                                    margin: 10,
                                     justifyContent: 'space-between',
                                 }}
                             >
                                 <Image
                                     style={{
                                         flex: 1,
-                                        width: 150,
-                                        height: 150,
+                                        width: 175,
+                                        height: 175,
                                     }}
                                     source={{
                                         uri: haircutImages[4],
@@ -501,8 +576,8 @@ const BarberScreen = ({ navigation }) => {
                                 <Image
                                     style={{
                                         flex: 1,
-                                        width: 150,
-                                        height: 150,
+                                        width: 175,
+                                        height: 175,
                                     }}
                                     source={{
                                         uri: haircutImages[5],

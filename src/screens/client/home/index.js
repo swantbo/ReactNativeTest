@@ -336,7 +336,7 @@ export default function HomeScreen({ navigation }) {
                                 'Goat Points',
                                 'Use Goat Points for discounts on haircuts',
                             ]}
-                            button={{ title: 'Schedule Appointment' }}
+                            button={{ title: 'Schedule Haircut' }}
                             onButtonPress={() => {
                                 navigation.navigate('Appointment')
                             }}

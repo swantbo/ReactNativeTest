@@ -149,18 +149,7 @@ function AdminAboutStackScreen({ navigation }) {
             <AdminAboutStack.Screen
                 name='HomeScreen'
                 options={{
-                    title: 'Nate',
-                    headerRight: () => (
-                        <Ionicons
-                            name='build'
-                            color={'#E8BD70'}
-                            size={23}
-                            style={{ padding: 10 }}
-                            onPress={() => navigation.navigate('EditProfile')}
-                            title='Add'
-                            color='#E8BD70'
-                        />
-                    ),
+                    headerShown: false,
                 }}
                 component={HomeScreen}
             />

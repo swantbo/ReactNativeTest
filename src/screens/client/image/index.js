@@ -5,7 +5,6 @@ import ImageViewer from 'react-native-image-zoom-viewer'
 
 const ImageScreen = ({ route }) => {
     const { selectedImage } = route.params
-    console.log('selectedImage', selectedImage)
 
     const images = [
         {

@@ -27,7 +27,6 @@ const EditAccountScreen = ({ navigation }) => {
             let id = doc.id
             data.push({ id, ...tempData })
         })
-        console.log('data', data)
         setUserInfo(data)
     }
 

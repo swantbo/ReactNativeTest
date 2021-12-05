@@ -88,12 +88,6 @@ const TimeOffScreen = ({ route }) => {
     }
 
     async function createAvailableTimes(sTime, eTime) {
-        console.log(
-            'test dates',
-            startDate.toLocaleDateString() === endDate.toLocaleDateString(),
-            startDate.toLocaleDateString()
-        )
-        console.log('times', sTime, eTime)
         if (startDate.toLocaleDateString() === endDate.toLocaleDateString()) {
             let startTime, endTime, tempTime
             if (timeOffType === 'half') {
@@ -106,7 +100,6 @@ const TimeOffScreen = ({ route }) => {
                 startTime = moment('8:00 am', 'HH:mm a')
                 endTime = moment('9:00 pm', 'HH:mm a')
             }
-            console.log('endTime', startTime, endTime)
             let newIntervals = {}
             while (tempTime <= endTime) {
                 let newobj = {
@@ -121,7 +114,6 @@ const TimeOffScreen = ({ route }) => {
                 newIntervals = { ...newIntervals, ...newobj }
                 tempTime.add(30, 'minutes')
             }
-            console.log('newIntervals', newIntervals)
             try {
                 Object.entries(newIntervals).map((key, i) => {
                     let tempData = {
@@ -129,7 +121,6 @@ const TimeOffScreen = ({ route }) => {
                         time: key[0],
                         ...key[2],
                     }
-                    console.log('tempData', tempData)
                     firebase
                         .firestore()
                         .collection('Calendar')

@@ -51,6 +51,24 @@ const AddAppointmentScreen = ({ route }) => {
             .catch((error) => {
                 alert('Something went wrong try again')
             })
+
+        const userRef = firebase
+            .firestore()
+            .collection('Calendar')
+            .doc(moment(selectedDate).format('MMM YY'))
+            .collection('OverView')
+            .doc('data')
+        const increment = firebase.firestore.FieldValue.increment(1)
+
+        userRef.update({
+            goatPoints:
+                discount != false
+                    ? firebase.firestore.FieldValue.increment(
+                          Number(userPoints)
+                      )
+                    : firebase.firestore.FieldValue.increment(0),
+            haircuts: increment,
+        })
     }
 
     return (

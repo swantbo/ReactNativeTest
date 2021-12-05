@@ -19,10 +19,8 @@ import {
 import * as firebase from 'firebase'
 import { ScrollView } from 'react-native-gesture-handler'
 import moment from 'moment'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 import * as Calendar from 'expo-calendar'
-import { getUserData } from '../../../utils/Firebase'
 import { subtractDiscount } from '../../../utils/DataFormatting'
 
 import { formatPhoneNumber } from '../../../utils/DataFormatting'
@@ -135,6 +133,18 @@ export default function HomeScreen({ navigation }) {
                         `Unable to delete appointment. Try again. ${e}`
                     )
                 })
+
+            const userRef = firebase
+                .firestore()
+                .collection('Calendar')
+                .doc(moment(date).format('MMM YY'))
+                .collection('OverView')
+                .doc('data')
+            const increment = firebase.firestore.FieldValue.increment(-1)
+
+            userRef.update({
+                haircuts: increment,
+            })
             await firebase
                 .firestore()
                 .collection('Calendar')
@@ -492,7 +502,8 @@ export default function HomeScreen({ navigation }) {
                                                                               onekey[1]
                                                                                   .points
                                                                           )
-                                                                        : ''}
+                                                                        : '$' +
+                                                                          barberData.price}
                                                                 </ListItem.Title>
                                                             </View>
                                                         </>

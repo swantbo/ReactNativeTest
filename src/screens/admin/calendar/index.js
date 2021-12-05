@@ -128,6 +128,18 @@ const CalendarScreen = ({ navigation }) => {
     }
 
     const deleteAppointment = (deleteTime) => {
+        const userRef = firebase
+            .firestore()
+            .collection('Calendar')
+            .doc(moment(date).format('MMM YY'))
+            .collection('OverView')
+            .doc('data')
+        const increment = firebase.firestore.FieldValue.increment(-1)
+
+        userRef.update({
+            haircuts: increment,
+        })
+
         firebase
             .firestore()
             .collection('Calendar')
@@ -393,7 +405,6 @@ const CalendarScreen = ({ navigation }) => {
                                                             color: '#E8BD70',
                                                         }}
                                                     >
-                                                        
                                                         {key.name}
                                                     </ListItem.Title>
                                                 </View>
@@ -409,7 +420,6 @@ const CalendarScreen = ({ navigation }) => {
                                                             color: '#121212',
                                                         }}
                                                     >
-                                                        
                                                         {key.userId}
                                                     </ListItem.Subtitle>
                                                 </View>

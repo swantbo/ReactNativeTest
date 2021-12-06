@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { View, StyleSheet, Text, Dimensions } from 'react-native'
-import { Card } from 'react-native-elements'
+import {
+    View,
+    StyleSheet,
+    Text,
+    Dimensions,
+    ScrollView,
+    ActivityIndicator,
+    Alert,
+} from 'react-native'
+import { Card, PricingCard } from 'react-native-elements'
 import { LineChart, BarChart } from 'react-native-chart-kit'
 import moment from 'moment'
 
@@ -9,128 +17,202 @@ import { AuthenticatedUserContext } from '../../../navigation/AuthenticatedUserP
 
 const OverviewScreen = ({ navigation }) => {
     const [currentMonthData, setCurrentMonthData] = useState({
-        revenue: '',
         haircuts: '',
         goatPoints: '',
     })
+    const [revenue, setRevenue] = useState('')
+    const [isLoading, setIsLoading] = useState(true)
 
     const barData = {
-        labels: ['Revenue', 'GoatPoints'],
+        labels: ['Haircuts', 'GoatPoints'],
         datasets: [
             {
-                data: [currentMonthData.revenue, currentMonthData.goatPoints],
+                data: [currentMonthData.haircuts, currentMonthData.goatPoints],
             },
         ],
     }
-    // const linedata = {
-    //     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    //     datasets: [
-    //       {
-    //         data: [20, 45, 28, 80, 99, 43],
-    //         strokeWidth: 3, // optional
-    //       },
-    //     ],
-    //   };
 
     function subtractDiscount(revenue, goatPoints) {
-        const discount =
-            Number(revenue?.replace(/[$.]+/g, '')) - Number(goatPoints)
-        return (discount / 100).toFixed(2)
+        const discount = Number(revenue) - Number((goatPoints / 100).toFixed(2))
+        return discount
     }
 
     useEffect(() => {
         async function getOverViewData() {
-            await firebase
-                .firestore()
-                .collection('Calendar')
-                .doc(moment().format('MMM YY'))
-                .collection('OverView')
-                .doc('data')
-                .get()
-                .then((doc) => {
-                    setCurrentMonthData({ ...currentMonthData, ...doc.data() })
-                })
+            try {
+                setIsLoading(true)
+                await firebase
+                    .firestore()
+                    .collection('Calendar')
+                    .doc(moment().format('MMM YY'))
+                    .collection('OverView')
+                    .doc('data')
+                    .get()
+                    .then((doc) => {
+                        setCurrentMonthData({
+                            ...currentMonthData,
+                            ...doc.data(),
+                        })
+                        calculateRevenue(doc.data().haircuts)
+                    })
+            } catch (error) {
+                Alert.alert('Error', `Unable to get Data, Try again. ${error}`)
+            }
         }
         getOverViewData()
+        function calculateRevenue(haircuts) {
+            const tempRevenue = Number(haircuts) * 40
+            const formatRevenue = (Math.round(tempRevenue * 100) / 100).toFixed(
+                2
+            )
+            setRevenue(formatRevenue)
+            setIsLoading(false)
+        }
     }, [])
 
     return (
         <View style={styles.container}>
-            {/* <Text style={styles.text}>
-                Bezier Line Chart
-            </Text> */}
-            {/* <LineChart
-                    data={linedata}
-                    width={Dimensions.get('window').width} // from react-native
-                    height={220}
-                    yAxisLabel={'$'}
-                    chartConfig={{
-                    backgroundColor: '#e26a00',
-                    backgroundGradientFrom: '#fb8c00',
-                    backgroundGradientTo: '#ffa726',
-                    decimalPlaces: 2, // optional, defaults to 2dp
-                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                    style: {
-                        borderRadius: 16
-                    }
-                    }}
-                    bezier
-                    style={{
-                    marginVertical: 8,
-                    borderRadius: 16
-                    }}
-                /> */}
-            <BarChart
-                // style={graphStyle}
-                data={barData}
-                width={Dimensions.get('window').width}
-                height={220}
-                yAxisLabel={'$'}
-                chartConfig={{
-                    backgroundColor: '#e26a00',
-                    backgroundGradientFrom: '#fb8c00',
-                    backgroundGradientTo: '#ffa726',
-                    decimalPlaces: 2, // optional, defaults to 2dp
-                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                    style: {
-                        borderRadius: 16,
-                    },
-                }}
-            />
-            <View style={{ flex: 0.5 }}>
-                <Card
-                    containerStyle={{
-                        flex: 1,
-                        margin: 10,
-                        backgroundColor: '#121212',
-                        borderColor: '#000',
-                        alignItems: 'center',
-                        borderRadius: 20,
-                    }}
-                >
-                    <Card.Title style={{ color: '#E8BD70', fontSize: 15 }}>
-                        Total Haircuts for 'Selected Month'
-                    </Card.Title>
-                    <Card.Divider />
-                    <Text style={{ color: '#E8BD70', fontSize: 15 }}>
-                        Total Haircuts: {currentMonthData.haircuts}
-                    </Text>
-                    <Text style={{ color: '#E8BD70', fontSize: 15 }}>
-                        Projected Revenue: ${currentMonthData.revenue}
-                    </Text>
-                    <Text style={{ color: '#E8BD70', fontSize: 15 }}>
-                        Total GoatPoints: {currentMonthData.goatPoints} = $
-                        {(currentMonthData.goatPoints / 100).toFixed(2)}
-                    </Text>
-                    <Text style={{ color: '#E8BD70', fontSize: 15 }}>
-                        Total Revenue: $
-                        {subtractDiscount(
-                            currentMonthData.revenue,
-                            currentMonthData.goatPoints
-                        )}
-                    </Text>
-                </Card>
-            </View>
+            {!isLoading ? (
+                <>
+                    <BarChart
+                        data={barData}
+                        width={Dimensions.get('window').width}
+                        height={220}
+                        chartConfig={{
+                            backgroundGradientFrom: '#000',
+                            backgroundGradientTo: '#E8BD70',
+                            decimalPlaces: 0,
+                            color: (opacity = 1) =>
+                                `rgba(255, 255, 255, ${opacity})`,
+                            style: {
+                                borderRadius: 16,
+                            },
+                        }}
+                    />
+                    <ScrollView style={{ flex: 0.5 }}>
+                        <Card
+                            containerStyle={{
+                                backgroundColor: '#121212',
+                                margin: 10,
+                                borderColor: '#121212',
+                                borderRadius: 15,
+                            }}
+                        >
+                            <Card.Title
+                                style={{
+                                    fontSize: 20,
+                                    color: '#E8BD70',
+                                }}
+                            >
+                                Total Haircuts
+                            </Card.Title>
+                            <Card.Title
+                                style={{
+                                    fontSize: 20,
+                                    color: '#fff',
+                                }}
+                            >
+                                {currentMonthData.haircuts}
+                            </Card.Title>
+                            <Text
+                                style={{
+                                    color: 'lightgrey',
+                                    alignSelf: 'center',
+                                }}
+                            >
+                                Total Haicuts for {moment().format('MMM YYYY')}
+                            </Text>
+                        </Card>
+                        <Card
+                            containerStyle={{
+                                backgroundColor: '#121212',
+                                margin: 10,
+                                borderColor: '#121212',
+                                borderRadius: 15,
+                            }}
+                        >
+                            <Card.Title
+                                style={{
+                                    fontSize: 20,
+                                    color: '#E8BD70',
+                                }}
+                            >
+                                Total GoatPoints
+                            </Card.Title>
+                            <Card.Title
+                                style={{
+                                    fontSize: 20,
+                                    color: '#fff',
+                                }}
+                            >
+                                {currentMonthData.goatPoints}
+                            </Card.Title>
+
+                            <Text
+                                style={{
+                                    color: 'lightgrey',
+                                    alignSelf: 'center',
+                                }}
+                            >
+                                Used GoatPoints for{' '}
+                                {moment().format('MMM YYYY')}
+                            </Text>
+                        </Card>
+                        <Card
+                            containerStyle={{
+                                backgroundColor: '#121212',
+                                margin: 10,
+                                borderColor: '#121212',
+                                borderRadius: 15,
+                            }}
+                        >
+                            <Card.Title
+                                style={{
+                                    fontSize: 20,
+                                    color: '#E8BD70',
+                                }}
+                            >
+                                Approximate Revenue
+                            </Card.Title>
+                            <Card.Title
+                                style={{
+                                    fontSize: 20,
+                                    color: '#fff',
+                                }}
+                            >
+                                $
+                                {subtractDiscount(
+                                    revenue,
+                                    currentMonthData.goatPoints
+                                )}
+                            </Card.Title>
+                            <Text
+                                style={{
+                                    color: 'lightgrey',
+                                    alignSelf: 'center',
+                                }}
+                            >
+                                Revenue: ${revenue}
+                            </Text>
+                            <Text
+                                style={{
+                                    color: 'lightgrey',
+                                    alignSelf: 'center',
+                                }}
+                            >
+                                Used GoatPoints: $
+                                {Number(
+                                    (currentMonthData.goatPoints / 100).toFixed(
+                                        2
+                                    )
+                                )}
+                            </Text>
+                        </Card>
+                    </ScrollView>
+                </>
+            ) : (
+                <ActivityIndicator size='large' />
+            )}
         </View>
     )
 }

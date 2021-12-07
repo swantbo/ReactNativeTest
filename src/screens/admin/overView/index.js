@@ -27,7 +27,10 @@ const OverviewScreen = ({ navigation }) => {
         labels: ['Haircuts', 'GoatPoints'],
         datasets: [
             {
-                data: [currentMonthData.haircuts, currentMonthData.goatPoints],
+                data: [
+                    subtractDiscount(revenue, currentMonthData.goatPoints),
+                    Number((currentMonthData.goatPoints / 100).toFixed(2)),
+                ],
             },
         ],
     }
@@ -78,6 +81,7 @@ const OverviewScreen = ({ navigation }) => {
                         data={barData}
                         width={Dimensions.get('window').width}
                         height={220}
+                        yAxisLabel='$'
                         chartConfig={{
                             backgroundGradientFrom: '#000',
                             backgroundGradientTo: '#E8BD70',

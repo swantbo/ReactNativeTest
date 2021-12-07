@@ -41,26 +41,34 @@ const TimeOffScreen = ({ route }) => {
     const [text, onChangeText] = useState('')
 
     const onStartTimeChange = (event, selectedTime) => {
-        const currentTime = selectedTime || time
+        const currentTime = selectedTime || new date()
+        console.log('timeTest', moment(currentTime).format('hh:mm A'))
         setStartTime(currentTime)
+        setIsStartPickerShow(Platform.OS === 'ios' ? true : false)
     }
 
     const onEndTimeChange = (event, newTime) => {
-        const currentTime = newTime || time
+        const currentTime = newTime || new date()
         setEndTime(currentTime)
+        setIsEndPickerShow(Platform.OS === 'ios' ? true : false)
     }
 
     const onStartDateChange = (event, selectedDate) => {
-        const currentDate = selectedDate || date
+        console.log('selectedDate', selectedDate)
+        const currentDate = selectedDate || new date()
+        console.log('currentDate', currentDate)
         setStartDate(currentDate)
+        console.log('test', moment(startDate).format('YYYY-MM-DD'))
         if (timeOffType !== 'multiple') {
             setEndDate(currentDate)
         }
+        setIsStartDatePickerShow(Platform.OS === 'ios' ? true : false)
     }
 
     const onEndDateChange = (event, selectedDate) => {
-        const currentDate = selectedDate || date
+        const currentDate = selectedDate || new date()
         setEndDate(currentDate)
+        setIsEndDatePickerShow(Platform.OS === 'ios' ? true : false)
     }
 
     const showStartPicker = () => {
@@ -88,7 +96,10 @@ const TimeOffScreen = ({ route }) => {
     }
 
     async function createAvailableTimes(sTime, eTime) {
-        if (startDate.toLocaleDateString() === endDate.toLocaleDateString()) {
+        if (
+            moment(startDate).format('YYYY-MM-DD') ===
+            moment(endDate).format('YYYY-MM-DD')
+        ) {
             let startTime, endTime, tempTime
             if (timeOffType === 'half') {
                 tempTime = moment(sTime, 'HH:mm a')
@@ -114,6 +125,7 @@ const TimeOffScreen = ({ route }) => {
                 newIntervals = { ...newIntervals, ...newobj }
                 tempTime.add(30, 'minutes')
             }
+            console.log('newIntervals', newIntervals)
             try {
                 Object.entries(newIntervals).map((key, i) => {
                     let tempData = {
@@ -137,7 +149,9 @@ const TimeOffScreen = ({ route }) => {
                     timeOffType === 'full'
                         ? Alert.alert(
                               'Time Off Scheduled',
-                              `Your time off has been scheduled for all day on ${startDate.toLocaleDateString()} `,
+                              `Your time off has been scheduled for all day on ${moment(
+                                  startDate
+                              ).format('YYYY-MM-DD')} `,
                               [
                                   {
                                       text: 'Okay',
@@ -146,7 +160,9 @@ const TimeOffScreen = ({ route }) => {
                           )
                         : Alert.alert(
                               'Time Off Scheduled',
-                              `Your time off has been scheduled for ${startDate.toLocaleDateString()} from ${[
+                              `Your time off has been scheduled for ${moment(
+                                  startDate
+                              ).format('YYYY-MM-DD')} from ${[
                                   moment(startTime, 'HH:mm a')
                                       .format('hh:mm A')
                                       .toString()
@@ -174,9 +190,13 @@ const TimeOffScreen = ({ route }) => {
             const currDate = startDate
             let dates = {}
             while (
-                startDate.toLocaleDateString() <= endDate.toLocaleDateString()
+                moment(startDate).format('YYYY-MM-DD') <=
+                moment(endDate).format('YYYY-MM-DD')
             ) {
-                dates = { ...dates, [currDate.toLocaleDateString()]: '' }
+                dates = {
+                    ...dates,
+                    [moment(currDate).format('YYYY-MM-DD')]: '',
+                }
                 currDate.setDate(currDate.getDate() + 1)
             }
             const start = moment('8:00 am', 'HH:mm a')
@@ -214,7 +234,11 @@ const TimeOffScreen = ({ route }) => {
                 })
                 Alert.alert(
                     'Time Off Scheduled',
-                    `Your time off has been scheduled for ${startDate.toLocaleDateString()} - ${startDate.toLocaleDateString()}`,
+                    `Your time off has been scheduled for ${moment(
+                        startDate
+                    ).format('YYYY-MM-DD')} - ${moment(endDate).format(
+                        'YYYY-MM-DD'
+                    )}`,
                     [
                         {
                             text: 'Okay',
@@ -417,7 +441,9 @@ const TimeOffScreen = ({ route }) => {
                                                 ]}
                                                 onPress={showStartDatePicker}
                                             >
-                                                {startDate.toLocaleDateString()}
+                                                {moment(startDate).format(
+                                                    'YYYY-MM-DD'
+                                                )}
                                             </Text>
                                         </View>
                                         <View
@@ -437,7 +463,9 @@ const TimeOffScreen = ({ route }) => {
                                                 ]}
                                                 onPress={showEndDatePicker}
                                             >
-                                                {endDate.toLocaleDateString()}
+                                                {moment(endDate).format(
+                                                    'YYYY-MM-DD'
+                                                )}
                                             </Text>
                                         </View>
                                     </>
@@ -457,7 +485,9 @@ const TimeOffScreen = ({ route }) => {
                                             ]}
                                             onPress={showStartDatePicker}
                                         >
-                                            {startDate.toLocaleDateString()}
+                                            {moment(startDate).format(
+                                                'YYYY-MM-DD'
+                                            )}
                                         </Text>
                                     </View>
                                 )}
@@ -517,13 +547,8 @@ const TimeOffScreen = ({ route }) => {
                                                 ]}
                                                 onPress={showStartPicker}
                                             >
-                                                {startTime.toLocaleString(
-                                                    'en-US',
-                                                    {
-                                                        hour: 'numeric',
-                                                        minute: '2-digit',
-                                                        hour12: true,
-                                                    }
+                                                {moment(startTime).format(
+                                                    'hh:mm A'
                                                 )}
                                             </Text>
                                         </View>
@@ -544,13 +569,8 @@ const TimeOffScreen = ({ route }) => {
                                                 ]}
                                                 onPress={showEndPicker}
                                             >
-                                                {endTime.toLocaleString(
-                                                    'en-US',
-                                                    {
-                                                        hour: 'numeric',
-                                                        minute: '2-digit',
-                                                        hour12: true,
-                                                    }
+                                                {moment(endTime).format(
+                                                    'hh:mm A'
                                                 )}
                                             </Text>
                                         </View>

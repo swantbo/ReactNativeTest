@@ -347,7 +347,7 @@ const CalendarScreen = ({ navigation }) => {
                                                           text: 'Schedule Appointment',
                                                           onPress: () =>
                                                               navigation.navigate(
-                                                                  'AdminAddAppointmentScreen',
+                                                                  'AddAppointmentScreen',
                                                                   {
                                                                       formattedDate,
                                                                       time: [

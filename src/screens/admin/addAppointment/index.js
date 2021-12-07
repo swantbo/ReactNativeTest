@@ -86,7 +86,7 @@ const AddAppointmentScreen = ({ route }) => {
                     onDateSelected={onDateSelected}
                 />
             </View>
-            <View style={{ flex: 7 }}>
+            <View style={{ flex: 6 }}>
                 <ListItem bottomDivider containerStyle={styles.ListItem}>
                     <ListItem.Content
                         style={{ alignItems: 'center', marginTop: -5 }}

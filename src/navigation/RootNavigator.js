@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
-import { View, ActivityIndicator } from 'react-native'
+import { View, ActivityIndicator, Alert } from 'react-native'
 
 import Firebase from '../config/firebase'
 import { AuthenticatedUserContext } from './AuthenticatedUserProvider'
@@ -23,16 +23,20 @@ export default function RootNavigator() {
                     await (authenticatedUser
                         ? setUser(authenticatedUser)
                         : setUser(null))
-                    await firebase
-                        .firestore()
-                        .collection('users')
-                        .doc(authenticatedUser.uid)
-                        .get()
-                        .then((doc) => {
-                            doc.data()?.admin === true
-                                ? setAdmin(true)
-                                : setAdmin(false)
-                        })
+                    {
+                        authenticatedUser
+                            ? await firebase
+                                  .firestore()
+                                  .collection('users')
+                                  .doc(authenticatedUser.uid)
+                                  .get()
+                                  .then((doc) => {
+                                      doc.data()?.admin === true
+                                          ? setAdmin(true)
+                                          : setAdmin(false)
+                                  })
+                            : setAdmin(false)
+                    }
                     setIsLoading(false)
                 } catch (error) {
                     Alert.alert(

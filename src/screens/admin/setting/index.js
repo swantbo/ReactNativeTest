@@ -1,5 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { View, StyleSheet, TextInput, ActivityIndicator } from 'react-native'
+import {
+    View,
+    StyleSheet,
+    TextInput,
+    ActivityIndicator,
+    Alert,
+} from 'react-native'
 import { ListItem, Button } from 'react-native-elements'
 
 import * as firebase from 'firebase'

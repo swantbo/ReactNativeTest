@@ -42,7 +42,6 @@ const TimeOffScreen = ({ route }) => {
 
     const onStartTimeChange = (event, selectedTime) => {
         const currentTime = selectedTime || new date()
-        console.log('timeTest', moment(currentTime).format('hh:mm A'))
         setStartTime(currentTime)
         setIsStartPickerShow(Platform.OS === 'ios' ? true : false)
     }
@@ -54,11 +53,8 @@ const TimeOffScreen = ({ route }) => {
     }
 
     const onStartDateChange = (event, selectedDate) => {
-        console.log('selectedDate', selectedDate)
         const currentDate = selectedDate || new date()
-        console.log('currentDate', currentDate)
         setStartDate(currentDate)
-        console.log('test', moment(startDate).format('YYYY-MM-DD'))
         if (timeOffType !== 'multiple') {
             setEndDate(currentDate)
         }
@@ -125,7 +121,6 @@ const TimeOffScreen = ({ route }) => {
                 newIntervals = { ...newIntervals, ...newobj }
                 tempTime.add(30, 'minutes')
             }
-            console.log('newIntervals', newIntervals)
             try {
                 Object.entries(newIntervals).map((key, i) => {
                     let tempData = {

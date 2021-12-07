@@ -72,6 +72,9 @@ export default function HomeScreen({ navigation }) {
                 .then((image) => {
                     setImage(image)
                 })
+                .catch((error) => {
+                    console.log('error', error)
+                })
             await firebase
                 .firestore()
                 .collection('users')
@@ -110,6 +113,7 @@ export default function HomeScreen({ navigation }) {
                     setUpcomingAppointments(upcomingData)
                     setPreviousAppointments(previousData)
                 })
+                .catch((error) => {})
         } catch (err) {
             Alert.alert('There is an error.', err.message)
         }
@@ -498,7 +502,11 @@ export default function HomeScreen({ navigation }) {
                                                                           subtractDiscount(
                                                                               onekey[1]
                                                                                   ?.haircutType,
-                                                                              barberData.price,
+                                                                              onekey[1]
+                                                                                  ?.haircutType ===
+                                                                                  'kids'
+                                                                                  ? barberData?.kidsHaircut
+                                                                                  : barberData.price,
                                                                               onekey[1]
                                                                                   .points
                                                                           )

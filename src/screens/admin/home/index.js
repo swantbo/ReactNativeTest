@@ -237,7 +237,7 @@ const HomeScreen = ({ navigation }) => {
                                             title: 'Schedule Now',
                                         }}
                                         onButtonPress={() => {
-                                            navigation.navigate('Appointment')
+                                            ''
                                         }}
                                     />
                                 </View>
@@ -256,7 +256,7 @@ const HomeScreen = ({ navigation }) => {
                             >
                                 <SocialIcon
                                     onPress={() => {
-                                        navigation.navigate('Appointment')
+                                        ''
                                     }}
                                     style={{
                                         backgroundColor: '#E8BD70',

@@ -55,6 +55,12 @@ export default function SignUpScreen({ navigation }) {
                             .collection('users')
                             .doc(data.user.uid)
                             .set(user)
+                        firebase
+                            .firestore()
+                            .collection('users')
+                            .doc(data.user.uid)
+                            .collection('Haircuts')
+                            .set()
                     })
             }
         } catch (error) {

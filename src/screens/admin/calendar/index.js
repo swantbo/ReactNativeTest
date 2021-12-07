@@ -7,6 +7,7 @@ import {
     Alert,
     Linking,
     TouchableOpacity,
+    Text,
 } from 'react-native'
 import CalendarStrip from 'react-native-calendar-strip'
 import moment from 'moment'
@@ -277,8 +278,7 @@ const CalendarScreen = ({ navigation }) => {
                                         />
                                     }
                                     leftContent={
-                                        key.name &&
-                                        key.name !== 'Off' && (
+                                        key.name && key.name !== 'Off' ? (
                                             <Button
                                                 title={
                                                     key.strikes
@@ -322,6 +322,8 @@ const CalendarScreen = ({ navigation }) => {
                                                     )
                                                 }
                                             />
+                                        ) : (
+                                            <Text>''</Text>
                                         )
                                     }
                                     onPress={() =>
@@ -452,29 +454,31 @@ const CalendarScreen = ({ navigation }) => {
                                                         </ListItem.Subtitle>
                                                     </View>
                                                     {key.name !== 'Off' &&
-                                                        key.name && (
-                                                            <View
-                                                                style={{
-                                                                    flex: 2,
-                                                                    alignItems:
-                                                                        'flex-end',
-                                                                }}
+                                                    key.name ? (
+                                                        <View
+                                                            style={{
+                                                                flex: 2,
+                                                                alignItems:
+                                                                    'flex-end',
+                                                            }}
+                                                        >
+                                                            <ListItem.Subtitle
+                                                                style={
+                                                                    styles.text
+                                                                }
                                                             >
-                                                                <ListItem.Subtitle
-                                                                    style={
-                                                                        styles.text
-                                                                    }
-                                                                >
-                                                                    {key?.haircutType ===
-                                                                    'mens'
-                                                                        ? "Men's Haircut"
-                                                                        : key?.haircutType ===
-                                                                          'kids'
-                                                                        ? "Kid's Haircut"
-                                                                        : ''}
-                                                                </ListItem.Subtitle>
-                                                            </View>
-                                                        )}
+                                                                {key?.haircutType ===
+                                                                'mens'
+                                                                    ? "Men's Haircut"
+                                                                    : key?.haircutType ===
+                                                                      'kids'
+                                                                    ? "Kid's Haircut"
+                                                                    : ''}
+                                                            </ListItem.Subtitle>
+                                                        </View>
+                                                    ) : (
+                                                        <Text>''</Text>
+                                                    )}
                                                 </View>
                                                 <View
                                                     style={{
@@ -486,36 +490,41 @@ const CalendarScreen = ({ navigation }) => {
                                                         <View
                                                             style={{ flex: 2 }}
                                                         >
-                                                            <TouchableOpacity
-                                                                onPress={() =>
-                                                                    Linking.openURL(
-                                                                        `sms:${key?.phone}`
-                                                                    ).catch(
-                                                                        () => {
-                                                                            Linking.openURL(
-                                                                                `sms:${key?.phone}`
-                                                                            )
-                                                                        }
-                                                                    )
-                                                                }
-                                                            >
-                                                                <ListItem.Subtitle
-                                                                    style={{
-                                                                        color: '#fff',
-                                                                    }}
+                                                            {key?.phone !==
+                                                            '' ? (
+                                                                <TouchableOpacity
+                                                                    onPress={() =>
+                                                                        Linking.openURL(
+                                                                            `sms:${key?.phone}`
+                                                                        ).catch(
+                                                                            () => {
+                                                                                Linking.openURL(
+                                                                                    `sms:${key?.phone}`
+                                                                                )
+                                                                            }
+                                                                        )
+                                                                    }
                                                                 >
-                                                                    {formatPhoneNumber(
-                                                                        key?.phone
-                                                                    )
-                                                                        ? formatPhoneNumber(
-                                                                              key?.phone
-                                                                          )
-                                                                        : key.phone}
-                                                                </ListItem.Subtitle>
-                                                            </TouchableOpacity>
+                                                                    <ListItem.Subtitle
+                                                                        style={{
+                                                                            color: '#fff',
+                                                                        }}
+                                                                    >
+                                                                        {formatPhoneNumber(
+                                                                            key?.phone
+                                                                        )
+                                                                            ? formatPhoneNumber(
+                                                                                  key?.phone
+                                                                              )
+                                                                            : key.phone}
+                                                                    </ListItem.Subtitle>
+                                                                </TouchableOpacity>
+                                                            ) : (
+                                                                <Text>''</Text>
+                                                            )}
                                                         </View>
                                                         {key?.goatPoints !==
-                                                        '' ? (
+                                                            '' && undefined ? (
                                                             <View
                                                                 style={{
                                                                     flex: 2,
@@ -555,7 +564,10 @@ const CalendarScreen = ({ navigation }) => {
                                                 <ListItem.Subtitle
                                                     style={styles.text}
                                                 >
-                                                    {'Comment: ' + key.comment}
+                                                    Comment:{' '}
+                                                    {key?.comment !== ''
+                                                        ? key.comment
+                                                        : undefined}
                                                 </ListItem.Subtitle>
                                             </>
                                         ) : (

@@ -594,8 +594,9 @@ const AppointmentScreen = () => {
                                             ? '$' +
                                               subtractDiscount(
                                                   haircutType,
-                                                  barberInfo.price,
-                                                  barberInfo.kidsHaircut,
+                                                  haircutType === 'kids'
+                                                      ? barberInfo.kidsHaircut
+                                                      : barberInfo.price,
                                                   userPoints
                                               )
                                             : haircutType === 'mens'

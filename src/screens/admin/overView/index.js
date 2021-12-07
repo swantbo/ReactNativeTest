@@ -24,11 +24,11 @@ const OverviewScreen = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(true)
 
     const barData = {
-        labels: ['Haircuts', 'GoatPoints'],
+        labels: ['Revenue', 'GoatPoints'],
         datasets: [
             {
                 data: [
-                    subtractDiscount(revenue, currentMonthData.goatPoints),
+                    Number(currentMonthData.haircuts) * 40,
                     Number((currentMonthData.goatPoints / 100).toFixed(2)),
                 ],
             },

@@ -370,8 +370,7 @@ const AppointmentScreen = () => {
                     scrollable
                     style={{
                         height: 100,
-                        paddingTop: 10,
-                        paddingBottom: 10,
+                        paddingBottom: 5,
                     }}
                     calendarHeaderStyle={{ color: '#E8BD70', fontSize: 17 }}
                     calendarColor={'#121212'}
@@ -395,7 +394,7 @@ const AppointmentScreen = () => {
                 />
 
                 {!isLoading && Object.keys(newTimes).length !== 0 ? (
-                    <ScrollView horizontal={true} style={{ padding: 0 }}>
+                    <ScrollView horizontal={true} style={{}}>
                         {Object.entries(newTimes).map((onekey, i) => (
                             <ListItem
                                 bottomDivider
@@ -407,7 +406,7 @@ const AppointmentScreen = () => {
                                     style={{
                                         backgroundColor: '#E8BD70',
                                         borderRadius: 10,
-                                        padding: 0,
+                                        padding: 2,
                                     }}
                                 >
                                     <ListItem.Title style={styles.listText}>
@@ -466,7 +465,9 @@ const AppointmentScreen = () => {
                     bottomDivider
                     containerStyle={{ backgroundColor: '#000' }}
                 >
-                    <ListItem.Content style={{ borderRadius: 10, padding: 0 }}>
+                    <ListItem.Content
+                        style={{ borderRadius: 10, padding: 0, margin: 0 }}
+                    >
                         {selectedTime !== '' && (
                             <>
                                 <ListItem.Title style={{ color: '#fff' }}>
@@ -480,7 +481,7 @@ const AppointmentScreen = () => {
                                         backgroundColor: '#fff',
                                         borderColor: 'black',
                                         borderWidth: 1,
-                                        marginBottom: 10,
+                                        margin: 0,
                                     }}
                                     leftIcon='account-plus'
                                     placeholder='Friends Name'
@@ -499,7 +500,7 @@ const AppointmentScreen = () => {
                                         backgroundColor: '#fff',
                                         borderColor: 'black',
                                         borderWidth: 1,
-                                        marginBottom: 10,
+                                        margin: 0,
                                     }}
                                     leftIcon='comment'
                                     placeholder='Comment (optional)'
@@ -512,7 +513,7 @@ const AppointmentScreen = () => {
                     </ListItem.Content>
                 </ListItem>
             </View>
-            <View style={{ flex: 1 }}>
+            <View>
                 <ListItem
                     bottomDivider
                     containerStyle={{ backgroundColor: '#121212' }}
@@ -626,8 +627,9 @@ const styles = StyleSheet.create({
     },
     listText: {
         color: '#000',
-        padding: 5,
+        padding: 0,
         margin: 0,
+        textAlign: 'center',
     },
     ListItem: {
         backgroundColor: '#121212',

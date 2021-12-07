@@ -16,6 +16,7 @@ function homeSettingStackScreen({ navigation }) {
     return (
         <homeSettingStack.Navigator
             screenOptions={{
+                headerStatusBarHeight: 20,
                 headerStyle: {
                     backgroundColor: '#121212',
                     shadowColor: '#E8BD70',
@@ -34,7 +35,6 @@ function homeSettingStackScreen({ navigation }) {
                             name='settings'
                             color={'#E8BD70'}
                             size={23}
-                            style={{ padding: 10 }}
                             onPress={() => navigation.navigate('SettingScreen')}
                         />
                     ),
@@ -63,9 +63,9 @@ function AboutStackScreen({ navigation }) {
     return (
         <AboutStack.Navigator
             screenOptions={{
+                headerStatusBarHeight: 20,
                 headerStyle: {
                     backgroundColor: '#121212',
-                    shadowColor: '#E8BD70',
                 },
                 headerTintColor: '#E8BD70',
                 headerTitleAlign: 'left',
@@ -78,7 +78,10 @@ function AboutStackScreen({ navigation }) {
             />
             <AboutStack.Screen
                 name='ViewImage'
-                options={{ title: 'View Image', headerTitleAlign: 'center' }}
+                options={{
+                    title: 'View Image',
+                    headerTitleAlign: 'center',
+                }}
                 component={ImageScreen}
             />
         </AboutStack.Navigator>
@@ -91,6 +94,7 @@ export default function HomeStack({ navigation }) {
     return (
         <Tab.Navigator
             screenOptions={{
+                headerStatusBarHeight: 10,
                 headerStyle: {
                     backgroundColor: '#121212',
                     shadowColor: '#E8BD70',
@@ -123,6 +127,7 @@ export default function HomeStack({ navigation }) {
                 name='Appointment'
                 component={AppointmentScreen}
                 options={{
+                    headerShown: false,
                     tabBarIcon: ({ color, size }) => (
                         <Ionicons name='calendar' color={color} size={size} />
                     ),

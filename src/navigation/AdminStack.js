@@ -18,6 +18,7 @@ function AdminCalendarStackScreen({ navigation }) {
     return (
         <AdminCalendarStack.Navigator
             screenOptions={{
+                headerStatusBarHeight: 10,
                 headerStyle: {
                     backgroundColor: '#121212',
                     shadowColor: '#E8BD70',
@@ -77,6 +78,7 @@ function AdminSettingsStackScreen({ navigation }) {
     return (
         <AdminSettingsStack.Navigator
             screenOptions={{
+                headerStatusBarHeight: 10,
                 headerStyle: {
                     backgroundColor: '#121212',
                     shadowColor: '#E8BD70',
@@ -130,6 +132,7 @@ function AdminAboutStackScreen({ navigation }) {
     return (
         <AdminAboutStack.Navigator
             screenOptions={{
+                headerStatusBarHeight: 10,
                 headerStyle: {
                     backgroundColor: '#121212',
                     shadowColor: '#E8BD70',
@@ -168,6 +171,7 @@ export default function AdminStack() {
     return (
         <Tab.Navigator
             screenOptions={{
+                headerStatusBarHeight: 10,
                 headerStyle: { backgroundColor: 'rgb(18, 18, 18)' },
                 tabBarStyle: {
                     backgroundColor: 'rgb(18, 18, 18)',

@@ -529,9 +529,12 @@ export default function HomeScreen({ navigation }) {
                                                                 }}
                                                             >
                                                                 {barberData.price !=
-                                                                ''
-                                                                    ? barberData.price
-                                                                    : ''}
+                                                                    '' &&
+                                                                onekey[1]
+                                                                    ?.haircutType ===
+                                                                    'kids'
+                                                                    ? barberData?.kidsHaircut
+                                                                    : barberData?.price}
                                                             </ListItem.Title>
                                                         </View>
                                                     )}

@@ -13,7 +13,7 @@ import {subtractDiscount, formatPhoneNumber, convertTime12to24} from '../../../u
 import {AuthenticatedUserContext} from '../../../navigation/AuthenticatedUserProvider'
 import Firebase from '../../../config/firebase'
 
-function HomeScreen(props, {navigation}) {
+function HomeScreen(props) {
 	const {user} = useContext(AuthenticatedUserContext)
 	const [image, setImage] = useState(null)
 	const [userData, setTestUser] = useState({})
@@ -24,20 +24,20 @@ function HomeScreen(props, {navigation}) {
 	function formatAppointments(data) {
 		let [upcomingData, previousData, removeDates] = [{}, {}, []]
 		Object.entries(data).map((onekey, i) => {
-			if (onekey[0] > moment().format('YYYY-MM-DD')) {
+			if (onekey[1].id > moment().format('YYYY-MM-DD')) {
 				upcomingData = {
 					...upcomingData,
-					...{[onekey[0]]: onekey[1]}
+					...{[onekey[1].id]: onekey[1]}
 				}
 			} else {
 				previousData = {
 					...previousData,
-					...{[onekey[0]]: onekey[1]}
+					...{[onekey[1].id]: onekey[1]}
 				}
-				removeDates.push(onekey[0])
+				removeDates.push(onekey[1].id)
 			}
 		})
-		if (Object.keys(previousData).length) {
+		if (Object.keys(previousData).length > 2) {
 			removeDates.splice(removeDates.length - 2, 2)
 			const docRef = Firebase.firestore().collection('users').doc(user.uid).collection('Haircuts')
 			removeDates.map((date) => docRef.doc(date).delete())
@@ -168,7 +168,7 @@ function HomeScreen(props, {navigation}) {
 							pricingStyle={styles.listItemSubTitle}
 							color='#E8BD70'
 							title={
-								<Card.Title style={styles.cardTitle} onPress={() => navigation.navigate('SettingScreen')}>
+								<Card.Title style={styles.cardTitle} onPress={() => props.navigation.navigate('SettingScreen')}>
 									{userData.name}
 								</Card.Title>
 							}
@@ -176,7 +176,7 @@ function HomeScreen(props, {navigation}) {
 								<Card.Title
 									style={styles.cardTitle}
 									onPress={() =>
-										navigation.navigate('GoatPoint', {
+										props.navigation.navigate('GoatPoint', {
 											userGoatPoints: userData.points
 										})
 									}>
@@ -186,7 +186,7 @@ function HomeScreen(props, {navigation}) {
 							info={['Goat Points', 'Use Goat Points for discounts on haircuts']}
 							button={{title: 'Schedule Haircut'}}
 							onButtonPress={() => {
-								navigation.navigate('Appointment')
+								props.navigation.navigate('Appointment')
 							}}
 						/>
 					</View>
@@ -204,6 +204,7 @@ function HomeScreen(props, {navigation}) {
 									.map((onekey, i) => (
 										<ListItem.Swipeable
 											bottomDivider
+											containerStyle={styles.listItemContainer}
 											key={i}
 											rightContent={
 												<Button
@@ -321,7 +322,7 @@ function HomeScreen(props, {navigation}) {
 											<ListItem.Content>
 												<View style={styles.row}>
 													<View style={styles.rowStart}>
-														<ListItem.Title style={styles.listItemSubTitle}>
+														<ListItem.Title style={styles.listItemTitle}>
 															{onekey[1].id}, {onekey[1].time.toString().toLowerCase()}
 														</ListItem.Title>
 													</View>

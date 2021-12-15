@@ -5,11 +5,7 @@ import {Ionicons} from '@expo/vector-icons'
 
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import {
-	fetchUser,
-	fetchUserAppointments,
-	fetchBarber
-} from '../redux/actions/index'
+import {fetchUser, fetchUserAppointments, fetchBarber} from '../redux/actions/index'
 
 import HomeScreen from '../screens/client/home'
 import AppointmentScreen from '../screens/client/appointment'
@@ -24,7 +20,6 @@ function homeSettingStackScreen({navigation}) {
 	return (
 		<homeSettingStack.Navigator
 			screenOptions={{
-				headerStatusBarHeight: 20,
 				headerStyle: {
 					backgroundColor: '#121212',
 					shadowColor: '#E8BD70'
@@ -37,29 +32,11 @@ function homeSettingStackScreen({navigation}) {
 				component={HomeScreen}
 				options={{
 					headerShown: false,
-					headerRight: () => (
-						<Ionicons
-							name='settings'
-							color={'#E8BD70'}
-							size={23}
-							onPress={() => navigation.navigate('SettingScreen')}
-						/>
-					)
+					headerRight: () => <Ionicons name='settings' color={'#E8BD70'} size={23} onPress={() => navigation.navigate('SettingScreen')} />
 				}}
 			/>
-			<homeSettingStack.Screen
-				name='SettingScreen'
-				options={{title: 'Settings', headerTitleAlign: 'center'}}
-				component={SettingScreen}
-			/>
-			{/* <homeSettingStack.Screen screenOptions={{ presentation: 'modal' }}> */}
-			<homeSettingStack.Screen
-				name='GoatPoint'
-				mode='modal'
-				screenOptions={{mode: 'modal'}}
-				component={ModalScreen}
-			/>
-			{/* </homeSettingStack.Screen> */}
+			<homeSettingStack.Screen name='SettingScreen' options={{title: 'Settings', headerTitleAlign: 'center'}} component={SettingScreen} />
+			<homeSettingStack.Screen name='GoatPoint' mode='modal' screenOptions={{mode: 'modal'}} component={ModalScreen} />
 		</homeSettingStack.Navigator>
 	)
 }
@@ -70,18 +47,13 @@ function AboutStackScreen({navigation}) {
 	return (
 		<AboutStack.Navigator
 			screenOptions={{
-				headerStatusBarHeight: 20,
 				headerStyle: {
 					backgroundColor: '#121212'
 				},
 				headerTintColor: '#E8BD70',
 				headerTitleAlign: 'left'
 			}}>
-			<AboutStack.Screen
-				name='Nate'
-				component={BarberScreen}
-				options={{headerShown: false}}
-			/>
+			<AboutStack.Screen name='Nate' component={BarberScreen} options={{headerShown: false}} />
 			<AboutStack.Screen
 				name='ViewImage'
 				options={{
@@ -106,7 +78,6 @@ export class HomeStack extends Component {
 		return (
 			<Tab.Navigator
 				screenOptions={{
-					headerStatusBarHeight: 10,
 					headerStyle: {
 						backgroundColor: '#121212',
 						shadowColor: '#E8BD70'
@@ -129,9 +100,7 @@ export class HomeStack extends Component {
 					component={homeSettingStackScreen}
 					options={{
 						headerShown: false,
-						tabBarIcon: ({color, size}) => (
-							<Ionicons name='home' color={color} size={size} />
-						)
+						tabBarIcon: ({color, size}) => <Ionicons name='home' color={color} size={size} />
 					}}
 				/>
 				<Tab.Screen
@@ -139,13 +108,7 @@ export class HomeStack extends Component {
 					component={AppointmentScreen}
 					options={{
 						headerShown: false,
-						tabBarIcon: ({color, size}) => (
-							<Ionicons
-								name='calendar'
-								color={color}
-								size={size}
-							/>
-						)
+						tabBarIcon: ({color, size}) => <Ionicons name='calendar' color={color} size={size} />
 					}}
 				/>
 				<Tab.Screen
@@ -153,13 +116,7 @@ export class HomeStack extends Component {
 					component={AboutStackScreen}
 					options={{
 						headerShown: false,
-						tabBarIcon: ({color, size}) => (
-							<Ionicons
-								name='list-circle'
-								color={color}
-								size={size}
-							/>
-						)
+						tabBarIcon: ({color, size}) => <Ionicons name='list-circle' color={color} size={size} />
 					}}
 				/>
 			</Tab.Navigator>
@@ -171,10 +128,6 @@ const mapStateToProps = (store) => ({
 	currentUser: store.userState.currentUser
 })
 
-const mapDispatchProps = (dispatch) =>
-	bindActionCreators(
-		{fetchUser, fetchUserAppointments, fetchBarber},
-		dispatch
-	)
+const mapDispatchProps = (dispatch) => bindActionCreators({fetchUser, fetchUserAppointments, fetchBarber}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchProps)(HomeStack)

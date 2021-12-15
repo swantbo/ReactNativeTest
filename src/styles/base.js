@@ -1,10 +1,13 @@
-import React from 'react'
 import {StyleSheet} from 'react-native'
 
 const baseStyles = {
 	container: {
 		flex: 1,
 		backgroundColor: '#E8BD70'
+	},
+	settingsContainer: {
+		flex: 1,
+		backgroundColor: '#000'
 	},
 	title: {
 		fontSize: 24,
@@ -36,7 +39,7 @@ const baseStyles = {
 		borderTopRightRadius: 15
 	},
 	pricingCard: {
-		backgroundColor: '#000',
+		backgroundColor: '#121212',
 		margin: 0,
 		borderColor: '#000',
 		color: '#E8BD70'
@@ -75,6 +78,60 @@ const baseStyles = {
 		fontWeight: 'bold',
 		color: '#fff',
 		alignSelf: 'center'
+	},
+	cardBio: {
+		backgroundColor: '#000',
+		margin: 0,
+		borderColor: '#000',
+		color: '#E8BD70'
+	},
+	barberPricing: {
+		fontSize: 20,
+		color: '#fff'
+	},
+	barberSocialIcons: {
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		backgroundColor: '#121212',
+		margin: 0,
+		marginLeft: 15,
+		marginRight: 15,
+		padding: 5
+	},
+	socialIcons: {
+		backgroundColor: '#E8BD70'
+	},
+	barberAddress: {
+		borderRadius: 5,
+		backgroundColor: '#121212',
+		borderColor: '#121212'
+	},
+	addressTitle: {
+		fontSize: 15,
+		fontWeight: 'bold',
+		color: '#fff'
+	},
+	addressText: {
+		fontSize: 15,
+		fontWeight: 'normal',
+		color: '#fff'
+	},
+	barberPhotoContainer: {
+		margin: 15,
+		borderRadius: 10,
+		backgroundColor: '#121212',
+		borderColor: '#121212'
+	},
+	containerGallery: {
+		flex: 1
+	},
+	image: {
+		flex: 1,
+		aspectRatio: 1 / 1
+	},
+	containerImage: {
+		flex: 1 / 2
 	}
 }
 

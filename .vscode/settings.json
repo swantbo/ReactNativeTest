@@ -1,5 +1,4 @@
 {
-    "editor.formatOnSave": true,
     "editor.formatOnPaste": true,
     "prettier.jsxSingleQuote": true,
     "prettier.semi": false,
@@ -8,5 +7,10 @@
     "prettier.htmlWhitespaceSensitivity": "ignore",
     "prettier.jsxBracketSameLine": true,
     "prettier.trailingComma": "none",
-    "prettier.vueIndentScriptAndStyle": true
+    "prettier.vueIndentScriptAndStyle": true,
+    "prettier.bracketSpacing": false,
+    "prettier.proseWrap": "never",
+    "prettier.printWidth": 250,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

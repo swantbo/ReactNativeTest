@@ -4,5 +4,9 @@
     "prettier.jsxSingleQuote": true,
     "prettier.semi": false,
     "prettier.tabWidth": 4,
-    "prettier.singleQuote": true
+    "prettier.singleQuote": true,
+    "prettier.htmlWhitespaceSensitivity": "ignore",
+    "prettier.jsxBracketSameLine": true,
+    "prettier.trailingComma": "none",
+    "prettier.vueIndentScriptAndStyle": true
 }

@@ -56,20 +56,21 @@ const BarberScreen = ({ navigation }) => {
         getBarberData()
 
         async function getBarberImage() {
-            await firebase
-                .storage()
-                .ref('Barber/ProfilePicture')
-                .getDownloadURL()
-                .then((ProfileImage) => {
-                    setImage(ProfileImage)
-                })
-            const imageRefs = await firebase
-                .storage()
-                .ref('Barber/HaircutPictures/')
-                .listAll()
-            const urls = await Promise.all(
-                imageRefs.items.map((ref) => ref.getDownloadURL())
-            )
+            // await firebase
+            //     .storage()
+            //     .ref('Barber/ProfilePicture')
+            //     .getDownloadURL()
+            //     .then((ProfileImage) => {
+            //         setImage(ProfileImage)
+            //     })
+            // const imageRefs = await firebase
+            //     .storage()
+            //     .ref('Barber/HaircutPictures/')
+            //     .listAll()
+            // const urls = await Promise.all(
+            //     imageRefs.items.map((ref) => ref.getDownloadURL())
+            // )
+            const url = []
             setHaircutImages(urls)
         }
 

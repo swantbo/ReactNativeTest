@@ -1,16 +1,20 @@
 import React from 'react'
 
-import { AuthenticatedUserProvider } from './AuthenticatedUserProvider'
+import {AuthenticatedUserProvider} from './AuthenticatedUserProvider'
 import RootNavigator from './RootNavigator'
 
-/**
- * Wrap all providers here
- */
+import {Provider} from 'react-redux'
+import {createStore, applyMiddleware} from 'redux'
+import rootReducer from '../redux/reducers/index'
+import thunk from 'redux-thunk'
+const store = createStore(rootReducer, applyMiddleware(thunk))
 
 export default function Routes() {
-    return (
-        <AuthenticatedUserProvider>
-            <RootNavigator />
-        </AuthenticatedUserProvider>
-    )
+	return (
+		<Provider store={store}>
+			<AuthenticatedUserProvider>
+				<RootNavigator />
+			</AuthenticatedUserProvider>
+		</Provider>
+	)
 }

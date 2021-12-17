@@ -7,6 +7,7 @@ import createStyles from '../../../styles/base'
 import {connect} from 'react-redux'
 
 import {AuthenticatedUserContext} from '../../../navigation/AuthenticatedUserProvider'
+
 import Firebase from '../../../config/firebase'
 const auth = Firebase.auth()
 
@@ -25,9 +26,9 @@ function SettingScreen(props) {
 		}
 	}
 
-	const changeInfo = (onekey) => {
-		setChangeUserInfo(onekey[1])
-		setUserDataType(onekey[0].toLowerCase())
+	const changeInfo = (value, type) => {
+		setChangeUserInfo(value)
+		setUserDataType(type)
 	}
 
 	const setUserData = (newUserInfo) => {
@@ -42,97 +43,46 @@ function SettingScreen(props) {
 		}
 	}
 
-	function getUserData() {
-		Firebase.firestore()
-			.collection('users')
-			.doc(user.uid)
-			.get()
-			.then((userData) => {
-				const userInfo = {
-					Name: userData.data().name,
-					Phone: formatPhoneNumber(userData.data().phone) ? formatPhoneNumber(userData.data().phone) : userData.data().phone
-				}
-				setUserInfo(userInfo)
-			})
-	}
-
 	useEffect(() => {
-		getUserData()
-	}, [])
+		const {currentUser} = props
+		setUserInfo(currentUser)
+	}, [props])
 
 	return (
 		<View style={styles.settingsContainer}>
 			<ListItem bottomDivider containerStyle={{backgroundColor: '#000'}}>
 				<ListItem.Content>
-					<ListItem.Title
-						style={{
-							fontWeight: 'bold',
-							alignSelf: 'center',
-							color: '#fff'
-						}}>
-						My Account Details
-					</ListItem.Title>
+					<ListItem.Title style={styles.listItemNoAppointments}>My Account Details</ListItem.Title>
 				</ListItem.Content>
 			</ListItem>
 			{changeUserInfo && (
 				<View>
 					<TextInput placeholder={changeUserInfo} placeholderTextColor='#fff' onChangeText={setNewUserInfo} value={newUserInfo} style={styles.textInput} />
-					<TouchableOpacity
-						style={{
-							backgroundColor: '#E8BD70',
-							borderRadius: 5,
-							padding: 10,
-							margin: 5
-						}}
-						onPress={() => setUserData(newUserInfo)}>
+					<TouchableOpacity style={styles.goldButton} onPress={() => setUserData(newUserInfo)}>
 						<ListItem.Title style={{color: '#000', alignSelf: 'center'}}>{`Change ${userDataType.charAt(0).toUpperCase() + userDataType.slice(1)}`}</ListItem.Title>
 					</TouchableOpacity>
 				</View>
 			)}
-			{Object.entries(userInfo).map((onekey, index) => (
-				<ListItem key={index} containerStyle={{backgroundColor: '#121212'}} bottomDivider onPress={() => changeInfo(onekey)}>
-					<ListItem.Content>
-						<ListItem.Title style={styles.text}>
-							{onekey[0]}: {onekey[1]}
-						</ListItem.Title>
-					</ListItem.Content>
-				</ListItem>
-			))}
-			<ListItem bottomDivider containerStyle={{backgroundColor: '#121212'}} onPress={() => handleSignOut()}>
+			<ListItem containerStyle={styles.avatarBackground} bottomDivider onPress={() => changeInfo(userInfo.name, 'name')}>
 				<ListItem.Content>
-					<ListItem.Title
-						style={{
-							fontWeight: 'bold',
-							alignSelf: 'center',
-							color: '#E8BD70'
-						}}>
-						Sign Out
-					</ListItem.Title>
+					<ListItem.Title style={styles.text}>Name: {userInfo.name}</ListItem.Title>
+				</ListItem.Content>
+			</ListItem>
+			<ListItem containerStyle={styles.avatarBackground} bottomDivider onPress={() => changeInfo(userInfo.phone, 'phone')}>
+				<ListItem.Content>
+					<ListItem.Title style={styles.text}>Phone: {userInfo.phone}</ListItem.Title>
+				</ListItem.Content>
+			</ListItem>
+
+			<ListItem bottomDivider containerStyle={styles.avatarBackground} onPress={() => handleSignOut()}>
+				<ListItem.Content>
+					<ListItem.Title style={styles.signOut}>Sign Out</ListItem.Title>
 				</ListItem.Content>
 			</ListItem>
 		</View>
 	)
 }
 
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         backgroundColor: '#000000',
-//     },
-//     text: {
-//         fontSize: 16,
-//         fontWeight: 'normal',
-//         color: '#fff',
-//     },
-//     textInput: {
-//         borderWidth: 1,
-//         borderColor: 'grey',
-//         padding: 10,
-//         marginBottom: 10,
-//         borderRadius: 5,
-//         color: '#fff',
-//     },
-// })
 const styles = createStyles()
 
 const mapStateToProps = (store) => ({

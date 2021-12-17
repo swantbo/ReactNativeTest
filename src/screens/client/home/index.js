@@ -156,7 +156,7 @@ function HomeScreen(props) {
 			<SafeAreaView style={styles.cardHeader}>
 				<Card containerStyle={styles.cardGold}>
 					<Card.Title style={{alignSelf: 'center'}}>
-						<Avatar rounded size='xlarge' title={userData.name?.[0]} source={{uri: image}} onPress={() => pickImage()} />
+						<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={userData.name?.[0]} source={{uri: image}} onPress={() => pickImage()} />
 					</Card.Title>
 				</Card>
 			</SafeAreaView>

@@ -124,14 +124,34 @@ const baseStyles = {
 		borderColor: '#121212'
 	},
 	containerGallery: {
-		flex: 1
+		flex: 1,
+		flexDirection: 'row'
 	},
 	image: {
 		flex: 1,
 		aspectRatio: 1 / 1
 	},
 	containerImage: {
-		flex: 1 / 2
+		flex: 1 / 2,
+		margin: 5
+	},
+	avatarBackground: {
+		backgroundColor: '#121212'
+	},
+	barberInfoTitles: {
+		alignSelf: 'flex-start',
+		color: '#E8BD70'
+	},
+	signOut: {
+		fontWeight: 'bold',
+		alignSelf: 'center',
+		color: '#E8BD70'
+	},
+	goldButton: {
+		backgroundColor: '#E8BD70',
+		borderRadius: 5,
+		padding: 10,
+		margin: 5
 	}
 }
 

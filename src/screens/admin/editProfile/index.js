@@ -75,7 +75,6 @@ function EditProfileScreen(props) {
 
 	useEffect(() => {
 		const {currentUser, barber} = props
-		console.log('barber', barber)
 		setBarberProfile(barber)
 		setUserInfo(currentUser)
 	}, [props])

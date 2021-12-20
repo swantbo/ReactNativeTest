@@ -55,6 +55,9 @@ const baseStyles = {
 	listItemContainer: {
 		backgroundColor: '#000'
 	},
+	searchContainer: {
+		backgroundColor: '#121212'
+	},
 	listItemTitle: {
 		fontWeight: 'bold',
 		color: '#E8BD70'
@@ -208,6 +211,33 @@ const baseStyles = {
 		margin: 10,
 		borderRadius: 5,
 		color: '#fff'
+	},
+	revenueText: {
+		color: 'lightgrey',
+		alignSelf: 'center'
+	},
+	pointsCard: {
+		backgroundColor: '#121212',
+		borderColor: '#121212',
+		borderRadius: 10
+	},
+	swipableButton: {
+		fontWeight: 'bold',
+		paddingBottom: 10,
+		color: 'red'
+	},
+	calendarButton: {
+		minHeight: '100%',
+		backgroundColor: 'red'
+	},
+	selectedDate: {
+		color: '#fff',
+		alignSelf: 'center'
+	},
+	addView: {
+		padding: 5,
+		margin: 15,
+		backgroundColor: '#121212'
 	}
 }
 

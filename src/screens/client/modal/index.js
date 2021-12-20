@@ -1,107 +1,54 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import { Card } from 'react-native-elements'
-import { InputField } from '../../../components'
-import { insertDecimal } from '../../../utils/DataFormatting'
+import React, {useEffect, useState} from 'react'
+import {View, Text, StyleSheet} from 'react-native'
+import {Card} from 'react-native-elements'
+import {InputField} from '../../../components'
+import {insertDecimal} from '../../../utils/DataFormatting'
 
-const ModalScreen = ({ route }) => {
-    const { userGoatPoints } = route.params
-    const [goatPoints, setGoatPoints] = useState('')
-    const [convertGoatPoints, setConvertGoatPoints] = useState('0')
-    const [convertedGoatPoints, setConvertedGoatPoints] = useState('0.00')
+import createStyles from '../../../styles/base'
 
-    function ConvertGoatPoints(changedGoatPoints) {
-        setConvertGoatPoints(changedGoatPoints)
-        const tempNum = (changedGoatPoints / 100).toFixed(2)
-        setConvertedGoatPoints(tempNum)
-    }
+const ModalScreen = ({route}) => {
+	const {userGoatPoints} = route.params
+	const [goatPoints, setGoatPoints] = useState('')
+	const [convertGoatPoints, setConvertGoatPoints] = useState('0')
+	const [convertedGoatPoints, setConvertedGoatPoints] = useState('0.00')
 
-    useEffect(() => {
-        setGoatPoints(userGoatPoints)
-    }, [])
+	function ConvertGoatPoints(changedGoatPoints) {
+		setConvertGoatPoints(changedGoatPoints)
+		const tempNum = (changedGoatPoints / 100).toFixed(2)
+		setConvertedGoatPoints(tempNum)
+	}
 
-    return (
-        <View style={styles.container}>
-            <Card
-                containerStyle={{
-                    backgroundColor: '#121212',
-                    borderColor: '#121212',
-                }}
-            >
-                <Card.Title style={styles.text}>Goat Points</Card.Title>
-                <Card.Divider />
-                <View>
-                    <Text style={styles.text}>
-                        Goat Points are a currency that can be used for
-                        Haircuts. When setting up an appointment you can use
-                        your Goat Points to get money off your haircut.
-                    </Text>
-                    <Text style={styles.text}>
-                        To earn Goat Points talk to your Barber!
-                    </Text>
-                </View>
-            </Card>
-            <Card
-                containerStyle={{
-                    backgroundColor: '#121212',
-                    borderColor: '#121212',
-                }}
-            >
-                <Card.Title style={styles.text}>
-                    Goat Points Conversion
-                </Card.Title>
-                <Card.Divider />
-                <View style={{ alignItems: 'center' }}>
-                    <Text style={styles.text}>
-                        1 Goat Point is equal to 1 cent.
-                    </Text>
-                    <Text style={styles.text}>
-                        Your {goatPoints} GP's = ${insertDecimal(goatPoints)}
-                    </Text>
-                    <Text></Text>
-                    <InputField
-                        inputStyle={{
-                            fontSize: 14,
-                        }}
-                        containerStyle={{
-                            backgroundColor: '#fff',
-                            marginBottom: 20,
-                            borderColor: 'black',
-                            borderWidth: 1,
-                        }}
-                        placeholder='Enter Goat Points'
-                        value={convertGoatPoints}
-                        onChangeText={(text) => ConvertGoatPoints(text)}
-                    />
-                    <InputField
-                        inputStyle={{
-                            fontSize: 14,
-                        }}
-                        containerStyle={{
-                            backgroundColor: '#fff',
-                            marginBottom: 20,
-                            borderColor: 'black',
-                            borderWidth: 1,
-                        }}
-                        placeholder='Convereted Goat Points'
-                        value={'$' + convertedGoatPoints}
-                    />
-                </View>
-            </Card>
-        </View>
-    )
+	useEffect(() => {
+		setGoatPoints(userGoatPoints)
+	}, [])
+
+	return (
+		<View style={styles.settingsContainer}>
+			<Card containerStyle={styles.barberAddress}>
+				<Card.Title style={styles.modalTitle}>Goat Points</Card.Title>
+				<Card.Divider />
+				<View>
+					<Text style={styles.text}>Goat Points are a currency that can be used for Haircuts. When setting up an appointment you can use your Goat Points to get money off your haircut.</Text>
+					<Text style={styles.text}>To earn Goat Points talk to your Barber!</Text>
+				</View>
+			</Card>
+			<Card containerStyle={styles.barberAddress}>
+				<Card.Title style={styles.modalTitle}>Goat Points Conversion</Card.Title>
+				<Card.Divider />
+				<View style={{alignItems: 'center'}}>
+					<Text style={styles.text}>1 Goat Point is equal to 1 cent.</Text>
+					<Text style={styles.text}>
+						Your {goatPoints} GP's = ${insertDecimal(goatPoints)}
+					</Text>
+					<Text></Text>
+					<InputField containerStyle={styles.inputField} placeholder='Enter Goat Points' value={convertGoatPoints} onChangeText={(text) => ConvertGoatPoints(text)} />
+					<InputField containerStyle={styles.inputField} placeholder='Convereted Goat Points' value={'$' + convertedGoatPoints} />
+				</View>
+			</Card>
+		</View>
+	)
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#000000',
-    },
-    text: {
-        fontSize: 16,
-        fontWeight: 'normal',
-        color: '#fff',
-    },
-})
+const styles = createStyles()
 
 export default ModalScreen

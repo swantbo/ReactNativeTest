@@ -1,6 +1,10 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {createStackNavigator} from '@react-navigation/stack'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
+
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
+import {fetchUser, fetchUserAppointments, fetchBarber} from '../redux/actions/index'
 
 import AddAppointmentScreen from '../screens/admin/addAppointment'
 import PointsScreen from '../screens/admin/points'
@@ -18,7 +22,6 @@ function AdminCalendarStackScreen({navigation}) {
 	return (
 		<AdminCalendarStack.Navigator
 			screenOptions={{
-				headerStatusBarHeight: 10,
 				headerStyle: {
 					backgroundColor: '#121212',
 					shadowColor: '#E8BD70'
@@ -31,42 +34,12 @@ function AdminCalendarStackScreen({navigation}) {
 				component={CalendarScreen}
 				options={{
 					title: 'Calendar',
-					headerLeft: () => (
-						<Ionicons
-							name='airplane'
-							color={'#E8BD70'}
-							size={23}
-							style={{padding: 10}}
-							onPress={() => navigation.navigate('TimeOffScreen')}
-							title='Add'
-							color='#E8BD70'
-						/>
-					),
-					headerRight: () => (
-						<Ionicons
-							name='add-circle'
-							color={'#E8BD70'}
-							size={23}
-							style={{padding: 10}}
-							onPress={() =>
-								navigation.navigate('AddAppointmentScreen')
-							}
-							title='Add'
-							color='#E8BD70'
-						/>
-					)
+					headerLeft: () => <Ionicons name='airplane' color={'#E8BD70'} size={23} style={{padding: 10}} onPress={() => navigation.navigate('TimeOffScreen')} title='Add' color='#E8BD70' />,
+					headerRight: () => <Ionicons name='add-circle' color={'#E8BD70'} size={23} style={{padding: 10}} onPress={() => navigation.navigate('AddAppointmentScreen')} title='Add' color='#E8BD70' />
 				}}
 			/>
-			<AdminCalendarStack.Screen
-				name='AddAppointmentScreen'
-				options={{title: 'Add Appointments'}}
-				component={AddAppointmentScreen}
-			/>
-			<AdminCalendarStack.Screen
-				name='TimeOffScreen'
-				options={{title: 'Time Off'}}
-				component={TimeOffScreen}
-			/>
+			<AdminCalendarStack.Screen name='AddAppointmentScreen' options={{title: 'Add Appointments'}} component={AddAppointmentScreen} />
+			<AdminCalendarStack.Screen name='TimeOffScreen' options={{title: 'Time Off'}} component={TimeOffScreen} />
 		</AdminCalendarStack.Navigator>
 	)
 }
@@ -77,7 +50,6 @@ function AdminSettingsStackScreen({navigation}) {
 	return (
 		<AdminSettingsStack.Navigator
 			screenOptions={{
-				headerStatusBarHeight: 10,
 				headerStyle: {
 					backgroundColor: '#121212',
 					shadowColor: '#E8BD70'
@@ -91,27 +63,11 @@ function AdminSettingsStackScreen({navigation}) {
 				options={{
 					title: 'Edit Accounts',
 					headerTitleAlign: 'center',
-					headerRight: () => (
-						<Ionicons
-							name='bar-chart'
-							color={'#E8BD70'}
-							size={23}
-							style={{padding: 10}}
-							onPress={() =>
-								navigation.navigate('OverviewScreen')
-							}
-							title='Add'
-							color='#E8BD70'
-						/>
-					)
+					headerRight: () => <Ionicons name='bar-chart' color={'#E8BD70'} size={23} style={{padding: 10}} onPress={() => navigation.navigate('OverviewScreen')} title='Add' color='#E8BD70' />
 				}}
 				component={EditAccountScreen}
 			/>
-			<AdminSettingsStack.Screen
-				name='PointsScreen'
-				options={{title: 'Points', headerTitleAlign: 'center'}}
-				component={PointsScreen}
-			/>
+			<AdminSettingsStack.Screen name='PointsScreen' options={{title: 'Points', headerTitleAlign: 'center'}} component={PointsScreen} />
 			<AdminSettingsStack.Screen
 				name='OverviewScreen'
 				options={{
@@ -130,7 +86,6 @@ function AdminAboutStackScreen({navigation}) {
 	return (
 		<AdminAboutStack.Navigator
 			screenOptions={{
-				headerStatusBarHeight: 10,
 				headerStyle: {
 					backgroundColor: '#121212',
 					shadowColor: '#E8BD70'
@@ -153,62 +108,65 @@ function AdminAboutStackScreen({navigation}) {
 				}}
 				component={HomeScreen}
 			/>
-			<AdminAboutStack.Screen
-				name='EditProfile'
-				options={{title: 'Edit Profile', headerTitleAlign: 'center'}}
-				component={EditProfileScreen}
-			/>
+			<AdminAboutStack.Screen name='EditProfile' options={{title: 'Edit Profile', headerTitleAlign: 'center'}} component={EditProfileScreen} />
 		</AdminAboutStack.Navigator>
 	)
 }
 
 const Tab = createBottomTabNavigator()
 
-export default function AdminStack() {
-	return (
-		<Tab.Navigator
-			screenOptions={{
-				headerStatusBarHeight: 10,
-				headerStyle: {backgroundColor: 'rgb(18, 18, 18)'},
-				tabBarStyle: {
-					backgroundColor: 'rgb(18, 18, 18)',
-					//backgroundColor: 'transparent',
-					position: 'relative',
-					borderTopColor: '#E8BD70',
-					bottom: 0,
-					elevation: 0
-				},
-				headerShown: false,
-				tabBarActiveTintColor: '#E8BD70',
-				tabBarInactiveTintColor: '#fff'
-			}}>
-			<Tab.Screen
-				name='About'
-				component={AdminAboutStackScreen}
-				options={{
-					tabBarIcon: ({color, size}) => (
-						<Ionicons name='home' color={color} size={size} />
-					)
-				}}
-			/>
-			<Tab.Screen
-				name='Calendar'
-				component={AdminCalendarStackScreen}
-				options={{
-					tabBarIcon: ({color, size}) => (
-						<Ionicons name='calendar' color={color} size={size} />
-					)
-				}}
-			/>
-			<Tab.Screen
-				name='Admin'
-				component={AdminSettingsStackScreen}
-				options={{
-					tabBarIcon: ({color, size}) => (
-						<Ionicons name='settings' color={color} size={size} />
-					)
-				}}
-			/>
-		</Tab.Navigator>
-	)
+export class AdminStack extends Component {
+	componentDidMount() {
+		this.props.fetchUser()
+		this.props.fetchUserAppointments()
+		this.props.fetchBarber()
+	}
+	render() {
+		return (
+			<Tab.Navigator
+				screenOptions={{
+					tabBarStyle: {
+						backgroundColor: 'rgb(18, 18, 18)',
+						//backgroundColor: 'transparent',
+						position: 'relative',
+						borderTopColor: '#E8BD70',
+						bottom: 0,
+						elevation: 0
+					},
+					headerShown: false,
+					tabBarActiveTintColor: '#E8BD70',
+					tabBarInactiveTintColor: '#fff'
+				}}>
+				<Tab.Screen
+					name='About'
+					component={AdminAboutStackScreen}
+					options={{
+						tabBarIcon: ({color, size}) => <Ionicons name='home' color={color} size={size} />
+					}}
+				/>
+				<Tab.Screen
+					name='Calendar'
+					component={AdminCalendarStackScreen}
+					options={{
+						tabBarIcon: ({color, size}) => <Ionicons name='calendar' color={color} size={size} />
+					}}
+				/>
+				<Tab.Screen
+					name='Admin'
+					component={AdminSettingsStackScreen}
+					options={{
+						tabBarIcon: ({color, size}) => <Ionicons name='settings' color={color} size={size} />
+					}}
+				/>
+			</Tab.Navigator>
+		)
+	}
 }
+
+const mapStateToProps = (store) => ({
+	currentUser: store.userState.currentUser
+})
+
+const mapDispatchProps = (dispatch) => bindActionCreators({fetchUser, fetchUserAppointments, fetchBarber}, dispatch)
+
+export default connect(mapStateToProps, mapDispatchProps)(AdminStack)

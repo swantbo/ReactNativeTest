@@ -14,6 +14,10 @@ const baseStyles = {
 		fontWeight: 'bold',
 		color: '#fff'
 	},
+	appointmentTitle: {
+		fontWeight: 'bold',
+		color: '#fff'
+	},
 	text: {
 		fontSize: 16,
 		fontWeight: 'normal',
@@ -152,6 +156,58 @@ const baseStyles = {
 		borderRadius: 5,
 		padding: 10,
 		margin: 5
+	},
+	inputField: {
+		backgroundColor: '#fff',
+		marginBottom: 20,
+		borderColor: 'black',
+		borderWidth: 1
+	},
+	checkBox: {
+		backgroundColor: '#121212',
+		width: '100%',
+		padding: 5,
+		margin: 5
+	},
+	calendarTitle: {
+		color: '#E8BD70',
+		fontSize: 17
+	},
+	listItemContent: {
+		backgroundColor: '#E8BD70',
+		borderRadius: 10,
+		padding: 5
+	},
+	scrollViewAppointment: {
+		padding: 0,
+		alignSelf: 'center'
+	},
+	goldButton: {
+		backgroundColor: '#E8BD70',
+		borderRadius: 10,
+		marginTop: 10
+	},
+	buttonTitle: {
+		color: '#000',
+		padding: 5,
+		fontWeight: 'bold'
+	},
+	footer: {
+		flex: 1,
+		justifyContent: 'flex-end'
+	},
+	modalTitle: {
+		fontSize: 20,
+		fontWeight: 'bold',
+		color: '#fff'
+	},
+	textInput: {
+		borderWidth: 1,
+		borderColor: 'grey',
+		padding: 10,
+		margin: 10,
+		borderRadius: 5,
+		color: '#fff'
 	}
 }
 

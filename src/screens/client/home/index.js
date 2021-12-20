@@ -160,7 +160,7 @@ function HomeScreen(props) {
 					</Card.Title>
 				</Card>
 			</SafeAreaView>
-			<View style={styles.container}>
+			<View style={styles.settingsContainer}>
 				<ScrollView style={styles.scrollView}>
 					<View>
 						<PricingCard
@@ -174,7 +174,7 @@ function HomeScreen(props) {
 							}
 							price={
 								<Card.Title
-									style={styles.cardTitle}
+									style={styles.title}
 									onPress={() =>
 										props.navigation.navigate('GoatPoint', {
 											userGoatPoints: userData.points
@@ -242,15 +242,15 @@ function HomeScreen(props) {
 																	}
 																])
 															}>
-															<ListItem.Title style={styles.listItemTitle}>
-																{onekey[1].id}, {onekey[1].time.toString().toLowerCase()}
+															<ListItem.Title style={styles.listItemSubTitle}>
+																{moment(onekey[1].id).format('ddd, MMM Do YYYY')}, {onekey[1].time.toString().toLowerCase()}
 															</ListItem.Title>
 														</TouchableOpacity>
 													</View>
 													{onekey[1].points ? (
 														<>
 															<View style={styles.rowEnd}>
-																<ListItem.Title style={styles.listItemTitle}>
+																<ListItem.Title style={styles.listItemSubTitle}>
 																	{onekey[1].points != ''
 																		? '$' + subtractDiscount(onekey[1]?.haircutType, onekey[1]?.haircutType === 'kids' ? barberData?.kidsHaircut : barberData?.price, onekey[1].points)
 																		: '$' + barberData.price}
@@ -271,11 +271,11 @@ function HomeScreen(props) {
 																	Linking.openURL(`sms:${barberData?.phone}`)
 																})
 															}>
-															<Text style={styles.text}>{barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} </Text>
+															<Text style={styles.listItemSubTitle}>{barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} </Text>
 														</TouchableOpacity>
 													</View>
 													<View style={styles.rowEnd}>
-														<Text style={styles.text}>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </Text>
+														<Text style={styles.listItemSubTitle}>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </Text>
 													</View>
 												</View>
 												<View style={styles.row}>
@@ -286,14 +286,14 @@ function HomeScreen(props) {
 																	Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
 																})
 															}>
-															<Text style={styles.text}>{barberData.location != '' ? barberData.location : ''}</Text>
+															<Text style={styles.listItemSubTitle}>{barberData.location != '' ? barberData.location : ''}</Text>
 														</TouchableOpacity>
 													</View>
 												</View>
 												<View style={styles.row}>
 													{onekey[1]?.friend && (
 														<View style={styles.rowStart}>
-															<Text style={styles.text}>Friend: {onekey[1]?.friend}</Text>
+															<Text style={styles.listItemSubTitle}>Friend: {onekey[1]?.friend}</Text>
 														</View>
 													)}
 												</View>
@@ -322,8 +322,8 @@ function HomeScreen(props) {
 											<ListItem.Content>
 												<View style={styles.row}>
 													<View style={styles.rowStart}>
-														<ListItem.Title style={styles.listItemTitle}>
-															{onekey[1].id}, {onekey[1].time.toString().toLowerCase()}
+														<ListItem.Title style={styles.listItemSubTitle}>
+															{moment(onekey[1].id).format('ddd, MMM Do YYYY')}, {onekey[1].time.toString().toLowerCase()}
 														</ListItem.Title>
 													</View>
 													<View style={styles.rowEnd}>
@@ -335,24 +335,12 @@ function HomeScreen(props) {
 													</View>
 												</View>
 												<View style={styles.row}>
-													<View style={styles.rowStart}>
-														<Text style={styles.text}>{barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} </Text>
-													</View>
-													<View style={styles.rowEnd}>
-														<Text style={styles.text}>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </Text>
-													</View>
+													<View style={styles.rowEnd}>{onekey[1].points ? <Text style={styles.listItemSubTitle}>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </Text> : null}</View>
 												</View>
 												<View style={styles.row}>
 													<View style={styles.rowStart}>
-														<Text style={styles.text}>{barberData.location != '' ? barberData.location : ''} </Text>
+														<Text style={styles.listItemSubTitle}>{onekey[1]?.friend && 'Friend: ' + onekey[1]?.friend}</Text>
 													</View>
-												</View>
-												<View style={styles.row}>
-													{onekey[1]?.friend && (
-														<View style={styles.rowStart}>
-															<Text style={styles.text}>Friend: {onekey[1]?.friend}</Text>
-														</View>
-													)}
 												</View>
 											</ListItem.Content>
 										</ListItem>

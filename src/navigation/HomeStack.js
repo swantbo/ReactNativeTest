@@ -103,14 +103,7 @@ export class HomeStack extends Component {
 						tabBarIcon: ({color, size}) => <Ionicons name='home' color={color} size={size} />
 					}}
 				/>
-				<Tab.Screen
-					name='Appointment'
-					component={AppointmentScreen}
-					options={{
-						headerShown: false,
-						tabBarIcon: ({color, size}) => <Ionicons name='calendar' color={color} size={size} />
-					}}
-				/>
+				<Tab.Screen name='Appointment' component={AppointmentScreen} options={{tabBarIcon: ({color, size}) => <Ionicons name='calendar' color={color} size={size} />}} />
 				<Tab.Screen
 					name='Nate'
 					component={AboutStackScreen}

@@ -15,17 +15,6 @@ function HomeScreen(props) {
 	const [image, setImage] = useState(null)
 	const [haircutImages, setHaircutImages] = useState([])
 
-	async function getBarberData() {
-		await firebase
-			.firestore()
-			.collection('Barber')
-			.doc('Nate')
-			.get()
-			.then((barber) => {
-				//setBarberData({...barberData, ...barber.data()})
-			})
-	}
-
 	const pickImage = async (type, id) => {
 		let result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -44,39 +33,33 @@ function HomeScreen(props) {
 		result = null
 	}
 
-	// async function uploadImageAsync(uri, type, id) {
-	//     const response = await fetch(uri)
-	//     const blob = await response.blob()
-	//     type === 'Profile'
-	//         ? await firebase.storage().ref('Barber/ProfilePicture').put(blob)
-	//         : await firebase
-	//               .storage()
-	//               .ref('Barber/HaircutPictures/' + id)
-	//               .put(blob)
-	// }
+	async function uploadImageAsync(uri, type, id) {
+		const response = await fetch(uri)
+		const blob = await response.blob()
+		type === 'Profile'
+			? await firebase.storage().ref('Barber/ProfilePicture').put(blob)
+			: await firebase
+					.storage()
+					.ref('Barber/HaircutPictures/' + id)
+					.put(blob)
+	}
 
 	useEffect(() => {
 		const {currentUser, barber} = props
 		setBarber(barber)
 		console.log('props', props)
-		getBarberData()
 
 		async function getBarberImage() {
-			// await firebase
-			//     .storage()
-			//     .ref('Barber/ProfilePicture')
-			//     .getDownloadURL()
-			//     .then((ProfileImage) => {
-			//         setImage(ProfileImage)
-			//     })
-			// const imageRefs = await firebase
-			//     .storage()
-			//     .ref('Barber/HaircutPictures/')
-			//     .listAll()
-			// const urls = await Promise.all(
-			//     imageRefs.items.map((ref) => ref.getDownloadURL())
-			// )
-			const urls = []
+			await firebase
+				.storage()
+				.ref('Barber/ProfilePicture')
+				.getDownloadURL()
+				.then((ProfileImage) => {
+					setImage(ProfileImage)
+				})
+			const imageRefs = await firebase.storage().ref('Barber/HaircutPictures/').listAll()
+			const urls = await Promise.all(imageRefs.items.map((ref) => ref.getDownloadURL()))
+			// const urls = []
 			setHaircutImages(urls)
 		}
 

@@ -46,6 +46,22 @@ function HomeScreen(props) {
 		setPreviousAppointments(previousData)
 	}
 
+	async function getUserInfo() {
+		try {
+			await Firebase.storage()
+				.ref('Users/' + user.uid)
+				.getDownloadURL()
+				.then((image) => {
+					setImage(image)
+				})
+				.catch((error) => {
+					console.log('error', error)
+				})
+		} catch (err) {
+			Alert.alert('There is an error.', err.message)
+		}
+	}
+
 	const pickImage = async () => {
 		let result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -134,6 +150,7 @@ function HomeScreen(props) {
 		const {currentUser, barber, appointments} = props
 		setTestUser(currentUser)
 		setTestBarber(barber)
+		getUserInfo()
 		formatAppointments(appointments),
 			(async () => {
 				const {status} = await Calendar.requestCalendarPermissionsAsync()

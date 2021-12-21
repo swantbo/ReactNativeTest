@@ -193,7 +193,9 @@ const baseStyles = {
 	buttonTitle: {
 		color: '#000',
 		padding: 5,
-		fontWeight: 'bold'
+		fontWeight: 'bold',
+		alignSelf: 'center',
+		fontSize: 17
 	},
 	footer: {
 		flex: 1,
@@ -238,6 +240,44 @@ const baseStyles = {
 		padding: 5,
 		margin: 15,
 		backgroundColor: '#121212'
+	},
+	pickedDateContainer: {
+		padding: 10,
+		backgroundColor: '#121212',
+		color: 'white',
+		flexDirection: 'row'
+	},
+	pickedDate: {
+		padding: 10,
+		borderWidth: 1,
+		borderColor: '#fff',
+		fontSize: 18,
+		color: 'white',
+		borderRadius: 10,
+		textAlign: 'center',
+		fontWeight: 'normal'
+	},
+	pickedDatePressed: {
+		padding: 10,
+		borderWidth: 1,
+		borderColor: '#fff',
+		fontSize: 18,
+		color: 'white',
+		borderRadius: 10,
+		textAlign: 'center',
+		fontWeight: 'bold'
+	},
+	btnContainer: {
+		padding: 30
+	},
+	alignContent: {
+		flex: 1,
+		alignContent: 'flex-start'
+	},
+	alignText: {
+		color: '#fff',
+		fontSize: 20,
+		alignSelf: 'center'
 	}
 }
 

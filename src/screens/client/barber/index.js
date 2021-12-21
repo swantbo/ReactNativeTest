@@ -9,6 +9,8 @@ import {connect} from 'react-redux'
 import {formatPhoneNumber} from '../../../utils/DataFormatting'
 import {AuthenticatedUserContext} from '../../../navigation/AuthenticatedUserProvider'
 
+import Firebase from '../../../config/firebase'
+
 function BarberScreen(props) {
 	const {user} = useContext(AuthenticatedUserContext)
 	const [barber, setBarber] = useState({})
@@ -20,21 +22,15 @@ function BarberScreen(props) {
 		setBarber(barber)
 
 		async function getBarberImage() {
-			// await Firebase
-			//     .storage()
-			//     .ref('Barber/ProfilePicture')
-			//     .getDownloadURL()
-			//     .then((ProfileImage) => {
-			//         setImage(ProfileImage)
-			//     })
-			// const imageRefs = await Firebase
-			//     .storage()
-			//     .ref('Barber/HaircutPictures/')
-			//     .listAll()
-			// const urls = await Promise.all(
-			//     imageRefs.items.map((ref) => ref.getDownloadURL())
-			// )
-			const urls = ['https://picsum.photos/200/300?random=1', 'https://picsum.photos/200/300?random=2', 'https://picsum.photos/200/300?random=3', 'https://picsum.photos/200/300?random=4']
+			await Firebase.storage()
+				.ref('Barber/ProfilePicture')
+				.getDownloadURL()
+				.then((ProfileImage) => {
+					setImage(ProfileImage)
+				})
+			const imageRefs = await Firebase.storage().ref('Barber/HaircutPictures/').listAll()
+			const urls = await Promise.all(imageRefs.items.map((ref) => ref.getDownloadURL()))
+			//const urls = ['https://picsum.photos/200/300?random=1', 'https://picsum.photos/200/300?random=2', 'https://picsum.photos/200/300?random=3', 'https://picsum.photos/200/300?random=4']
 			setHaircutImages(urls)
 		}
 
@@ -45,11 +41,11 @@ function BarberScreen(props) {
 		<>
 			<SafeAreaView style={styles.cardHeader} />
 
-			<Card containerStyle={styles.cardGold}>
-				<Card.Title style={{alignSelf: 'center'}}>
-					<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={'N'} source={{uri: image}} />
-				</Card.Title>
-			</Card>
+				<Card containerStyle={styles.cardGold}>
+					<Card.Title style={{alignSelf: 'center'}}>
+						<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={'N'} source={{uri: image}} />
+					</Card.Title>
+				</Card>
 
 			<View style={styles.container}>
 				<ScrollView style={styles.scrollView}>

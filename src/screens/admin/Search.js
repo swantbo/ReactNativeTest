@@ -2,21 +2,21 @@ import React, {useEffect, useState} from 'react'
 import {View, StyleSheet, Alert, TouchableOpacity, Linking} from 'react-native'
 import {ListItem, Button} from 'react-native-elements'
 import {ScrollView} from 'react-native-gesture-handler'
-import {formatPhoneNumber} from '../../../utils/DataFormatting'
-import {InputField} from '../../../components'
-import createStyles from '../../../styles/base'
+import {formatPhoneNumber} from '../../utils/DataFormatting'
+import {InputField} from '../../components'
+import createStyles from '../../styles/base'
 
-import * as firebase from 'firebase'
+import Firebase from '../../config/firebase'
 import moment from 'moment'
 
-const EditAccountScreen = ({navigation}) => {
+const Search = ({navigation}) => {
 	const [userInfo, setUserInfo] = useState([])
 	const [search, setSearch] = useState('')
 	const [searchResults, setSearchResults] = useState([])
 
 	async function getUsers() {
 		let data = []
-		const snapshot = await firebase.firestore().collection('users').get()
+		const snapshot = await Firebase.firestore().collection('users').get()
 		snapshot.docs.map((doc) => {
 			let tempData = doc.data()
 			let id = doc.id
@@ -26,8 +26,7 @@ const EditAccountScreen = ({navigation}) => {
 	}
 
 	const deleteUser = (user_id) => {
-		firebase
-			.firestore()
+		Firebase.firestore()
 			.collection('users')
 			.doc(user_id)
 			.delete()
@@ -42,8 +41,7 @@ const EditAccountScreen = ({navigation}) => {
 			const newStikes = {
 				strikes: strikesTotal.toString()
 			}
-			firebase
-				.firestore()
+			Firebase.firestore()
 				.collection('users')
 				.doc(user_id)
 				.set(newStikes, {merge: true})
@@ -61,8 +59,7 @@ const EditAccountScreen = ({navigation}) => {
 		const newStikes = {
 			strikes: strikesTotal.toString()
 		}
-		firebase
-			.firestore()
+		Firebase.firestore()
 			.collection('users')
 			.doc(user_id)
 			.set(newStikes, {merge: true})
@@ -208,4 +205,4 @@ const EditAccountScreen = ({navigation}) => {
 
 const styles = createStyles()
 
-export default EditAccountScreen
+export default Search

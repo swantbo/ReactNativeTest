@@ -1,9 +1,9 @@
 import React from 'react'
 import {SafeAreaView, ActivityIndicator} from 'react-native'
 import ImageViewer from 'react-native-image-zoom-viewer'
-import createStyles from '../../../styles/base'
+import createStyles from '../../styles/base'
 
-const ImageScreen = ({route}) => {
+const Image = ({route}) => {
 	const {selectedImage} = route.params
 
 	const images = [
@@ -20,4 +20,4 @@ const ImageScreen = ({route}) => {
 
 const styles = createStyles()
 
-export default ImageScreen
+export default Image

@@ -2,14 +2,14 @@ import React, {useEffect, useState} from 'react'
 import {View, StyleSheet, Text, Dimensions, ScrollView, ActivityIndicator, Alert} from 'react-native'
 import {Card, PricingCard} from 'react-native-elements'
 import {LineChart, BarChart} from 'react-native-chart-kit'
-import createStyles from '../../../styles/base'
+import createStyles from '../../styles/base'
 import moment from 'moment'
 
-import {subtractRevenueDiscount} from '../../../utils/DataFormatting'
-import Firebase from '../../../config/firebase'
-import {AuthenticatedUserContext} from '../../../navigation/AuthenticatedUserProvider'
+import {subtractRevenueDiscount} from '../../utils/DataFormatting'
+import Firebase from '../../config/firebase'
+import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
 
-const OverviewScreen = ({navigation}) => {
+const OverView = ({navigation}) => {
 	const [currentMonthData, setCurrentMonthData] = useState({
 		haircuts: '',
 		goatPoints: ''
@@ -107,4 +107,4 @@ const OverviewScreen = ({navigation}) => {
 
 const styles = createStyles()
 
-export default OverviewScreen
+export default OverView

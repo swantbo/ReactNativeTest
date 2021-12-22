@@ -3,15 +3,15 @@ import {View, StyleSheet, ScrollView, ActivityIndicator, Alert, Linking, Touchab
 import CalendarStrip from 'react-native-calendar-strip'
 import moment from 'moment'
 import {ListItem, Button} from 'react-native-elements'
-import {formatPhoneNumber} from '../../../utils/DataFormatting'
-import createStyles from '../../../styles/base'
+import {formatPhoneNumber} from '../../utils/DataFormatting'
+import createStyles from '../../styles/base'
 
 import {connect} from 'react-redux'
-import Firebase from '../../../config/firebase'
+import Firebase from '../../config/firebase'
 
-import {AuthenticatedUserContext} from '../../../navigation/AuthenticatedUserProvider'
+import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
 
-function CalendarScreen(props) {
+function Calendar(props) {
 	const [isLoading, setIsLoading] = useState(false)
 	const [barberData, setBarberData] = useState({})
 	const [calendarData, setCalendarData] = useState([])
@@ -351,4 +351,4 @@ const mapStateToProps = (store) => ({
 	barber: store.userState.barber
 })
 
-export default connect(mapStateToProps, null)(CalendarScreen)
+export default connect(mapStateToProps, null)(Calendar)

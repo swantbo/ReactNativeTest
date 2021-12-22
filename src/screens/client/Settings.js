@@ -1,17 +1,17 @@
 import React, {useEffect, useState, useContext} from 'react'
 import {View, StyleSheet, TextInput, Alert, TouchableOpacity} from 'react-native'
 import {ListItem, Button} from 'react-native-elements'
-import {formatPhoneNumber} from '../../../utils/DataFormatting'
-import createStyles from '../../../styles/base'
+import {formatPhoneNumber} from '../../utils/DataFormatting'
+import createStyles from '../../styles/base'
 
 import {connect} from 'react-redux'
 
-import {AuthenticatedUserContext} from '../../../navigation/AuthenticatedUserProvider'
+import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
 
-import Firebase from '../../../config/firebase'
+import Firebase from '../../config/firebase'
 const auth = Firebase.auth()
 
-function SettingScreen(props) {
+function Settings(props) {
 	const {user} = useContext(AuthenticatedUserContext)
 	const [userInfo, setUserInfo] = useState({})
 	const [changeUserInfo, setChangeUserInfo] = useState()
@@ -91,4 +91,4 @@ const mapStateToProps = (store) => ({
 	barber: store.userState.barber
 })
 
-export default connect(mapStateToProps, null)(SettingScreen)
+export default connect(mapStateToProps, null)(Settings)

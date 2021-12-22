@@ -6,15 +6,15 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {fetchUser, fetchUserAppointments, fetchBarber} from '../redux/actions/index'
 
-import AddAppointmentScreen from '../screens/admin/addAppointment'
-import PointsScreen from '../screens/admin/points'
-import CalendarScreen from '../screens/admin/calendar'
-import EditAccountScreen from '../screens/admin/editAccount'
-import EditProfileScreen from '../screens/admin/editProfile'
-import HomeScreen from '../screens/admin/home'
+import AddAppointmentScreen from '../screens/admin/Add'
+import PointsScreen from '../screens/admin/Points'
+import CalendarScreen from '../screens/admin/Calendar'
+import SearchScreen from '../screens/admin/Search'
+import SettingsScreen from '../screens/admin/Settings'
+import HomeScreen from '../screens/admin/Home'
 import {Ionicons} from '@expo/vector-icons'
-import TimeOffScreen from '../screens/admin/timeOff'
-import OverviewScreen from '../screens/admin/overview'
+import TimeOffScreen from '../screens/admin/Off'
+import OverviewScreen from '../screens/admin/OverView'
 
 const AdminCalendarStack = createStackNavigator()
 
@@ -59,13 +59,13 @@ function AdminSettingsStackScreen({navigation}) {
 			}}>
 			{/* <AdminSettingsStack.Screen name="Admin Settings" options={{ title: 'Admin Settings', headerTitleAlign: 'center' }} component={AdminSettingsScreen}/> */}
 			<AdminSettingsStack.Screen
-				name='EditAccountScreen'
+				name='SearchScreen'
 				options={{
 					title: 'Edit Accounts',
 					headerTitleAlign: 'center',
 					headerRight: () => <Ionicons name='bar-chart' color={'#E8BD70'} size={23} style={{padding: 10}} onPress={() => navigation.navigate('OverviewScreen')} title='Add' color='#E8BD70' />
 				}}
-				component={EditAccountScreen}
+				component={SearchScreen}
 			/>
 			<AdminSettingsStack.Screen name='PointsScreen' options={{title: 'Points', headerTitleAlign: 'center'}} component={PointsScreen} />
 			<AdminSettingsStack.Screen
@@ -108,7 +108,7 @@ function AdminAboutStackScreen({navigation}) {
 				}}
 				component={HomeScreen}
 			/>
-			<AdminAboutStack.Screen name='EditProfile' options={{title: 'Edit Profile', headerTitleAlign: 'center'}} component={EditProfileScreen} />
+			<AdminAboutStack.Screen name='EditProfile' options={{title: 'Edit Profile', headerTitleAlign: 'center'}} component={SettingsScreen} />
 		</AdminAboutStack.Navigator>
 	)
 }

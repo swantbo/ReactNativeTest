@@ -3,17 +3,17 @@ import React, {useEffect, useState, useContext} from 'react'
 import {View, SafeAreaView, ScrollView, ActivityIndicator, Alert, TouchableOpacity, Linking, KeyboardAvoidingView} from 'react-native'
 import CalendarStrip from 'react-native-calendar-strip'
 import {ListItem, Avatar} from 'react-native-elements'
-import {insertDecimal, subtractDiscount, formatPhoneNumber, subtractPrice} from '../../../utils/DataFormatting'
+import {insertDecimal, subtractDiscount, formatPhoneNumber, subtractPrice} from '../../utils/DataFormatting'
 
-import createStyles from '../../../styles/base'
-import {InputField} from '../../../components'
+import createStyles from '../../styles/base'
+import {InputField} from '../../components'
 
 import {connect} from 'react-redux'
 
-import * as firebase from 'firebase'
-import {AuthenticatedUserContext} from '../../../navigation/AuthenticatedUserProvider'
+import Firebase from '../../config/firebase'
+import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
 
-function AppointmentScreen(props) {
+function Appointment(props) {
 	const {user} = useContext(AuthenticatedUserContext)
 	const [isLoading, setIsLoading] = useState(false)
 	const [userData, setUserData] = useState({})
@@ -76,8 +76,7 @@ function AppointmentScreen(props) {
 	}
 
 	const onGetData = async (selectedDate, newIntervals) => {
-		await firebase
-			.firestore()
+		await Firebase.firestore()
 			.collection('Calendar')
 			.doc(moment(selectedDate).format('MMM YY'))
 			.collection(moment(selectedDate).format('YYYY-MM-DD'))
@@ -123,16 +122,15 @@ function AppointmentScreen(props) {
 			userId: user.uid
 		}
 
-		const userRef = firebase.firestore().collection('Calendar').doc(moment(selectedDate).format('MMM YY')).collection('OverView').doc('data')
-		const increment = firebase.firestore.FieldValue.increment(1)
+		const userRef = Firebase.firestore().collection('Calendar').doc(moment(selectedDate).format('MMM YY')).collection('OverView').doc('data')
+		const increment = Firebase.firestore.FieldValue.increment(1)
 
 		userRef.update({
-			goatPoints: discount != false ? firebase.firestore.FieldValue.increment(Number(userData.points)) : firebase.firestore.FieldValue.increment(0),
+			goatPoints: discount != false ? Firebase.firestore.FieldValue.increment(Number(userData.points)) : Firebase.firestore.FieldValue.increment(0),
 			haircuts: increment
 		})
 
-		await firebase
-			.firestore()
+		await Firebase.firestore()
 			.collection('Calendar')
 			.doc(moment(selectedDate).format('MMM YY'))
 			.collection(moment(selectedDate).format('YYYY-MM-DD'))
@@ -157,8 +155,8 @@ function AppointmentScreen(props) {
 			points: discount != false ? userData.points : '',
 			haircutType: haircutType
 		}
-		await firebase.firestore().collection('users').doc(user.uid).collection('Haircuts').doc(selectedDate).set(appointmentData, {merge: true})
-		discount != false ? await firebase.firestore().collection('users').doc(user.uid).set({points: '0'}, {merge: true}) : null
+		await Firebase.firestore().collection('users').doc(user.uid).collection('Haircuts').doc(selectedDate).set(appointmentData, {merge: true})
+		discount != false ? await Firebase.firestore().collection('users').doc(user.uid).set({points: '0'}, {merge: true}) : null
 	}
 
 	useEffect(() => {
@@ -172,7 +170,7 @@ function AppointmentScreen(props) {
 		<KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.settingsContainer}>
 			<View>
 				<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-					<Avatar source={require('../../../assets/123_1.jpeg')} rounded size='large' />
+					<Avatar source={require('../../assets/123_1.jpeg')} rounded size='large' />
 					<ListItem.Content>
 						<ListItem.Title style={styles.text}>{barberInfo.name}</ListItem.Title>
 						<TouchableOpacity
@@ -310,4 +308,4 @@ const mapStateToProps = (store) => ({
 	barber: store.userState.barber
 })
 
-export default connect(mapStateToProps, null)(AppointmentScreen)
+export default connect(mapStateToProps, null)(Appointment)

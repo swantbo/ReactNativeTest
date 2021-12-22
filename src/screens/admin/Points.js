@@ -1,13 +1,13 @@
 import React, {useContext, useState} from 'react'
 import {View, Alert} from 'react-native'
 import {Card} from 'react-native-elements'
-import {Button, InputField} from '../../../components'
-import createStyles from '../../../styles/base'
+import {Button, InputField} from '../../components'
+import createStyles from '../../styles/base'
 
-import Firebase from '../../../config/firebase'
-import {AuthenticatedUserContext} from '../../../navigation/AuthenticatedUserProvider'
+import Firebase from '../../config/firebase'
+import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
 
-const PointsScreen = ({route}) => {
+const Points = ({route}) => {
 	const {user} = useContext(AuthenticatedUserContext)
 	const {name, userId, goatPoints} = route.params
 	const [points, onChangePoints] = useState('')
@@ -43,27 +43,5 @@ const PointsScreen = ({route}) => {
 }
 
 const styles = createStyles()
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         backgroundColor: '#000000',
-//     },
-//     textInput: {
-//         borderWidth: 1,
-//         borderColor: '#fff',
-//         padding: 10,
-//         marginBottom: 20,
-//         borderRadius: 5,
-//         color: '#fff',
-//         backgroundColor: '#121212',
-//         margin: 10,
-//     },
-//     text: {
-//         color: '#fff',
-//     },
-//     ListItem: {
-//         backgroundColor: '#121212',
-//     },
-// })
 
-export default PointsScreen
+export default Points

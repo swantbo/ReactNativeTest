@@ -7,12 +7,12 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {fetchUser, fetchUserAppointments, fetchBarber} from '../redux/actions/index'
 
-import HomeScreen from '../screens/client/home'
-import AppointmentScreen from '../screens/client/appointment'
-import BarberScreen from '../screens/client/barber'
-import SettingScreen from '../screens/client/setting'
-import ImageScreen from '../screens/client/image'
-import ModalScreen from '../screens/client/modal'
+import HomeScreen from '../screens/client/Home'
+import AppointmentScreen from '../screens/client/Appointment'
+import BarberScreen from '../screens/client/Barber'
+import SettingScreen from '../screens/client/Settings'
+import ImageScreen from '../screens/client/Image'
+import PointsScreen from '../screens/client/Points'
 
 const homeSettingStack = createStackNavigator()
 
@@ -36,7 +36,7 @@ function homeSettingStackScreen({navigation}) {
 				}}
 			/>
 			<homeSettingStack.Screen name='SettingScreen' options={{title: 'Settings', headerTitleAlign: 'center'}} component={SettingScreen} />
-			<homeSettingStack.Screen name='GoatPoint' mode='modal' screenOptions={{mode: 'modal'}} component={ModalScreen} />
+			<homeSettingStack.Screen name='GoatPoint' mode='modal' screenOptions={{mode: 'modal'}} component={PointsScreen} />
 		</homeSettingStack.Navigator>
 	)
 }

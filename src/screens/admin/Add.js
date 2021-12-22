@@ -3,12 +3,12 @@ import {View, Button, StyleSheet, TouchableOpacity, Text} from 'react-native'
 import CalendarStrip from 'react-native-calendar-strip'
 import moment from 'moment'
 import {ListItem} from 'react-native-elements'
-import {InputField} from '../../../components'
-import createStyles from '../../../styles/base'
+import {InputField} from '../../components'
+import createStyles from '../../styles/base'
 
-import Firebase from '../../../config/firebase'
+import Firebase from '../../config/firebase'
 
-const AddAppointmentScreen = ({route}) => {
+const Add = ({route}) => {
 	const [number, onChangeNumber] = useState('')
 	const [name, onChangeName] = useState('')
 	const [time, onChangeTime] = useState('')
@@ -124,27 +124,5 @@ const AddAppointmentScreen = ({route}) => {
 }
 
 const styles = createStyles()
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         backgroundColor: '#000000',
-//     },
-//     textInput: {
-//         borderWidth: 1,
-//         borderColor: '#fff',
-//         padding: 10,
-//         marginBottom: 20,
-//         borderRadius: 5,
-//         color: '#fff',
-//         backgroundColor: '#121212',
-//         margin: 10,
-//     },
-//     ListItem: {
-//         backgroundColor: '#121212',
-//     },
-//     text: {
-//         color: '#fff',
-//     },
-// })
 
-export default AddAppointmentScreen
+export default Add

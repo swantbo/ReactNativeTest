@@ -1,36 +1,65 @@
-import React, {useEffect, useState, useContext} from 'react'
-import {View, Text, ScrollView, Linking, ActivityIndicator, SafeAreaView, ImageBackground, TouchableOpacity, SectionList, Item} from 'react-native'
+import React, {useEffect, useState} from 'react'
+import {View, Text, StyleSheet, ScrollView, Linking, ActivityIndicator, SafeAreaView, ImageBackground, TouchableOpacity} from 'react-native'
 import {Card, SocialIcon, Avatar, Image, PricingCard} from 'react-native-elements'
+import * as firebase from 'firebase'
+import * as ImagePicker from 'expo-image-picker'
+import {formatPhoneNumber} from '../../utils/DataFormatting'
 import MapView from 'react-native-maps'
-import createStyles from '../../../styles/base'
+
+import createStyles from '../../styles/base'
 
 import {connect} from 'react-redux'
 
-import {formatPhoneNumber} from '../../../utils/DataFormatting'
-import {AuthenticatedUserContext} from '../../../navigation/AuthenticatedUserProvider'
-
-import Firebase from '../../../config/firebase'
-
-function BarberScreen(props) {
-	const {user} = useContext(AuthenticatedUserContext)
+function Home(props) {
 	const [barber, setBarber] = useState({})
 	const [image, setImage] = useState(null)
 	const [haircutImages, setHaircutImages] = useState([])
 
+	const pickImage = async (type, id) => {
+		let result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.All,
+			allowsEditing: true,
+			aspect: [4, 3],
+			quality: 1
+		})
+
+		if (!result.cancelled && type === 'Profile') {
+			setImage(result.uri)
+		}
+		if (!result.cancelled && !type === 'Profile') {
+			setHaircutPictures(result.uri)
+		}
+		uploadImageAsync(result.uri, type, id)
+		result = null
+	}
+
+	async function uploadImageAsync(uri, type, id) {
+		const response = await fetch(uri)
+		const blob = await response.blob()
+		type === 'Profile'
+			? await firebase.storage().ref('Barber/ProfilePicture').put(blob)
+			: await firebase
+					.storage()
+					.ref('Barber/HaircutPictures/' + id)
+					.put(blob)
+	}
+
 	useEffect(() => {
-		const {barber} = props
+		const {currentUser, barber} = props
 		setBarber(barber)
+		console.log('props', props)
 
 		async function getBarberImage() {
-			await Firebase.storage()
+			await firebase
+				.storage()
 				.ref('Barber/ProfilePicture')
 				.getDownloadURL()
 				.then((ProfileImage) => {
 					setImage(ProfileImage)
 				})
-			const imageRefs = await Firebase.storage().ref('Barber/HaircutPictures/').listAll()
+			const imageRefs = await firebase.storage().ref('Barber/HaircutPictures/').listAll()
 			const urls = await Promise.all(imageRefs.items.map((ref) => ref.getDownloadURL()))
-			//const urls = ['https://picsum.photos/200/300?random=1', 'https://picsum.photos/200/300?random=2', 'https://picsum.photos/200/300?random=3', 'https://picsum.photos/200/300?random=4']
+			// const urls = []
 			setHaircutImages(urls)
 		}
 
@@ -41,16 +70,18 @@ function BarberScreen(props) {
 		<>
 			<SafeAreaView style={styles.cardHeader} />
 
-				<Card containerStyle={styles.cardGold}>
-					<Card.Title style={{alignSelf: 'center'}}>
-						<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={'N'} source={{uri: image}} />
-					</Card.Title>
-				</Card>
+			<Card containerStyle={styles.cardGold}>
+				<Card.Title style={{alignSelf: 'center'}}>
+					<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={'N'} source={{uri: image}} onPress={() => pickImage('Profile')} />
+				</Card.Title>
+			</Card>
 
 			<View style={styles.container}>
 				<ScrollView style={styles.scrollView}>
 					<Card containerStyle={styles.cardBio}>
-						<Card.Title style={styles.cardTitle}>{barber.name}</Card.Title>
+						<Card.Title style={styles.cardTitle} onPress={() => props.navigation.navigate('EditProfile')}>
+							{barber.name}
+						</Card.Title>
 						<Card.Title style={styles.listItemSubTitle}>{barber.bio}</Card.Title>
 					</Card>
 					<View style={styles.row}>
@@ -190,80 +221,26 @@ function BarberScreen(props) {
 						<Card.Title style={styles.barberInfoTitles}>Photos</Card.Title>
 						<View style={styles.containerGallery}>
 							<View style={styles.containerImage}>
-								<Image
-									style={styles.image}
-									source={{uri: haircutImages[0]}}
-									PlaceholderContent={<ActivityIndicator />}
-									onPress={() =>
-										props.navigation.navigate('ViewImage', {
-											selectedImage: haircutImages[0]
-										})
-									}
-								/>
+								<Image style={styles.image} source={{uri: haircutImages[0]}} PlaceholderContent={<ActivityIndicator />} onPress={() => pickImage('Haircut', 1)} />
 							</View>
 							<View style={styles.containerImage}>
-								<Image
-									style={styles.image}
-									source={{uri: haircutImages[1]}}
-									PlaceholderContent={<ActivityIndicator />}
-									onPress={() =>
-										props.navigation.navigate('ViewImage', {
-											selectedImage: haircutImages[1]
-										})
-									}
-								/>
+								<Image style={styles.image} source={{uri: haircutImages[1]}} PlaceholderContent={<ActivityIndicator />} onPress={() => pickImage('Haircut', 2)} />
 							</View>
 						</View>
 						<View style={styles.containerGallery}>
 							<View style={styles.containerImage}>
-								<Image
-									style={styles.image}
-									source={{uri: haircutImages[2]}}
-									PlaceholderContent={<ActivityIndicator />}
-									onPress={() =>
-										props.navigation.navigate('ViewImage', {
-											selectedImage: haircutImages[2]
-										})
-									}
-								/>
+								<Image style={styles.image} source={{uri: haircutImages[2]}} PlaceholderContent={<ActivityIndicator />} onPress={() => pickImage('Haircut', 3)} />
 							</View>
 							<View style={styles.containerImage}>
-								<Image
-									style={styles.image}
-									source={{uri: haircutImages[3]}}
-									PlaceholderContent={<ActivityIndicator />}
-									onPress={() =>
-										props.navigation.navigate('ViewImage', {
-											selectedImage: haircutImages[3]
-										})
-									}
-								/>
+								<Image style={styles.image} source={{uri: haircutImages[3]}} PlaceholderContent={<ActivityIndicator />} onPress={() => pickImage('Haircut', 4)} />
 							</View>
 						</View>
 						<View style={styles.containerGallery}>
 							<View style={styles.containerImage}>
-								<Image
-									style={styles.image}
-									source={{uri: haircutImages[4]}}
-									PlaceholderContent={<ActivityIndicator />}
-									onPress={() =>
-										props.navigation.navigate('ViewImage', {
-											selectedImage: haircutImages[4]
-										})
-									}
-								/>
+								<Image style={styles.image} source={{uri: haircutImages[4]}} PlaceholderContent={<ActivityIndicator />} onPress={() => pickImage('Haircut', 5)} />
 							</View>
 							<View style={styles.containerImage}>
-								<Image
-									style={styles.image}
-									source={{uri: haircutImages[5]}}
-									PlaceholderContent={<ActivityIndicator />}
-									onPress={() =>
-										props.navigation.navigate('ViewImage', {
-											selectedImage: haircutImages[5]
-										})
-									}
-								/>
+								<Image style={styles.image} source={{uri: haircutImages[5]}} PlaceholderContent={<ActivityIndicator />} onPress={() => pickImage('Haircut', 6)} />
 							</View>
 						</View>
 					</Card>
@@ -281,4 +258,4 @@ const mapStateToProps = (store) => ({
 	barber: store.userState.barber
 })
 
-export default connect(mapStateToProps, null)(BarberScreen)
+export default connect(mapStateToProps, null)(Home)

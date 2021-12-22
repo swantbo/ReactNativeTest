@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react'
 import {View, Text, StyleSheet} from 'react-native'
 import {Card} from 'react-native-elements'
-import {InputField} from '../../../components'
-import {insertDecimal} from '../../../utils/DataFormatting'
+import {InputField} from '../../components'
+import {insertDecimal} from '../../utils/DataFormatting'
 
-import createStyles from '../../../styles/base'
+import createStyles from '../../styles/base'
 
-const ModalScreen = ({route}) => {
+const Points = ({route}) => {
 	const {userGoatPoints} = route.params
 	const [goatPoints, setGoatPoints] = useState('')
 	const [convertGoatPoints, setConvertGoatPoints] = useState('0')
@@ -51,4 +51,4 @@ const ModalScreen = ({route}) => {
 
 const styles = createStyles()
 
-export default ModalScreen
+export default Points

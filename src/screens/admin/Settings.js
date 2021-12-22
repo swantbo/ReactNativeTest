@@ -5,15 +5,15 @@ import {ScrollView} from 'react-native-gesture-handler'
 
 import * as firebase from 'firebase'
 
-import Firebase from '../../../config/firebase'
+import Firebase from '../../config/firebase'
 const auth = Firebase.auth()
-import {AuthenticatedUserContext} from '../../../navigation/AuthenticatedUserProvider'
+import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
 
-import createStyles from '../../../styles/base'
+import createStyles from '../../styles/base'
 
 import {connect} from 'react-redux'
 
-function EditProfileScreen(props) {
+function Settings(props) {
 	const {user} = useContext(AuthenticatedUserContext)
 	const [isLoading, setIsLoading] = useState(false)
 	const [barberProfile, setBarberProfile] = useState({})
@@ -211,4 +211,4 @@ const mapStateToProps = (store) => ({
 	barber: store.userState.barber
 })
 
-export default connect(mapStateToProps, null)(EditProfileScreen)
+export default connect(mapStateToProps, null)(Settings)

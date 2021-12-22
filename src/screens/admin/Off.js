@@ -3,17 +3,17 @@ import {View, Text, StyleSheet, Alert, TouchableOpacity, Linking, KeyboardAvoidi
 import moment from 'moment'
 import {Card, ListItem, Avatar} from 'react-native-elements'
 import DateTimePicker from '@react-native-community/datetimepicker'
-import {formatPhoneNumber} from '../../../utils/DataFormatting'
+import {formatPhoneNumber} from '../../utils/DataFormatting'
 
-import {InputField} from '../../../components'
-import {AuthenticatedUserContext} from '../../../navigation/AuthenticatedUserProvider'
+import {InputField} from '../../components'
+import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {connect} from 'react-redux'
-import createStyles from '../../../styles/base'
-import Firebase from '../../../config/firebase'
+import createStyles from '../../styles/base'
+import Firebase from '../../config/firebase'
 
-function TimeOffScreen(props) {
+function Off(props) {
 	const {user} = useContext(AuthenticatedUserContext)
 	const [startTime, setStartTime] = useState(new Date('2020-08-22T05:00:00.000Z'))
 	const [endTime, setEndTime] = useState(new Date('2020-08-22T17:00:00.000Z'))
@@ -201,7 +201,7 @@ function TimeOffScreen(props) {
 	return (
 		<View style={styles.settingsContainer}>
 			<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-				<Avatar source={require('../../../assets/123_1.jpeg')} rounded size='large' />
+				<Avatar source={require('../../assets/123_1.jpeg')} rounded size='large' />
 				<ListItem.Content>
 					<ListItem.Title style={{color: 'white'}}>{barberInfo.name}</ListItem.Title>
 					<TouchableOpacity
@@ -306,62 +306,6 @@ function TimeOffScreen(props) {
 	)
 }
 
-// const styles = StyleSheet.create({
-// 	container: {
-// 		flex: 1,
-// 		backgroundColor: '#000',
-// 		justifyContent: 'center',
-// 		alignContent: 'center'
-// 	},
-// 	textInput: {
-// 		borderWidth: 1,
-// 		borderColor: '#fff',
-// 		padding: 10,
-// 		marginBottom: 20,
-// 		borderRadius: 5,
-// 		color: '#fff',
-// 		backgroundColor: '#121212',
-// 		margin: 10
-// 	},
-// 	text: {
-// 		color: '#fff',
-// 		fontSize: 20,
-// 		alignSelf: 'center'
-// 	},
-// 	ListItem: {
-// 		backgroundColor: '#121212'
-// 	},
-// 	pickedDateContainer: {
-// 		padding: 10,
-// 		backgroundColor: '#121212',
-// 		color: 'white',
-// 		flexDirection: 'row'
-// 	},
-// 	pickedDate: {
-// 		padding: 10,
-// 		borderWidth: 1,
-// 		borderColor: '#fff',
-// 		fontSize: 18,
-// 		color: 'white',
-// 		borderRadius: 10,
-// 		textAlign: 'center',
-// 		fontWeight: 'normal'
-// 	},
-// 	pickedDatePressed: {
-// 		padding: 10,
-// 		borderWidth: 1,
-// 		borderColor: '#fff',
-// 		fontSize: 18,
-// 		color: 'white',
-// 		borderRadius: 10,
-// 		textAlign: 'center',
-// 		fontWeight: 'bold'
-// 	},
-// 	btnContainer: {
-// 		padding: 30
-// 	}
-// })
-
 const styles = createStyles()
 
 const mapStateToProps = (store) => ({
@@ -370,4 +314,4 @@ const mapStateToProps = (store) => ({
 	barber: store.userState.barber
 })
 
-export default connect(mapStateToProps, null)(TimeOffScreen)
+export default connect(mapStateToProps, null)(Off)

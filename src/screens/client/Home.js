@@ -2,18 +2,18 @@ import React, {useContext, useEffect, useState} from 'react'
 import {View, Text, StyleSheet, Alert, Linking, TouchableOpacity, SafeAreaView, Image} from 'react-native'
 import {Card, ListItem, Button, Avatar, PricingCard} from 'react-native-elements'
 import {ScrollView} from 'react-native-gesture-handler'
-import createStyles from '../../../styles/base'
+import createStyles from '../../styles/base'
 
 import {connect} from 'react-redux'
 import moment from 'moment'
 import * as ImagePicker from 'expo-image-picker'
 import * as Calendar from 'expo-calendar'
-import {subtractDiscount, formatPhoneNumber, convertTime12to24} from '../../../utils/DataFormatting'
+import {subtractDiscount, formatPhoneNumber, convertTime12to24} from '../../utils/DataFormatting'
 
-import {AuthenticatedUserContext} from '../../../navigation/AuthenticatedUserProvider'
-import Firebase from '../../../config/firebase'
+import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
+import Firebase from '../../config/firebase'
 
-function HomeScreen(props) {
+function Home(props) {
 	const {user} = useContext(AuthenticatedUserContext)
 	const [image, setImage] = useState(null)
 	const [userData, setTestUser] = useState({})
@@ -193,9 +193,11 @@ function HomeScreen(props) {
 								<Card.Title
 									style={styles.title}
 									onPress={() =>
-										props.navigation.navigate('GoatPoint', {
-											userGoatPoints: userData.points
-										})
+										Alert.alert('Goat Points', `Goat Points are a currency that can be used for discounts on Haircuts. 100 Goat Points is equal to $1. Talk to your Barber about how to earn Goat Points.`, [
+											{
+												text: 'Okay'
+											}
+										])
 									}>
 									{userData.points}
 								</Card.Title>
@@ -208,12 +210,12 @@ function HomeScreen(props) {
 						/>
 					</View>
 					<View>
+						<ListItem bottomDivider containerStyle={{justifyContent: 'space-between'}}>
+							<ListItem.Title style={{justifyContent: 'flex-start'}}>Test</ListItem.Title>
+							<ListItem.Title style={{justifyContent: 'flex-end'}}>Work</ListItem.Title>
+						</ListItem>
 						<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-							<ListItem.Content>
-								<ListItem.Title style={styles.listItemTitle}>
-									<Text>Upcoming Appointments</Text>
-								</ListItem.Title>
-							</ListItem.Content>
+							<ListItem.Title style={styles.listItemTitle}>Upcoming Appointments</ListItem.Title>
 						</ListItem>
 						{Object.keys(upcomingAppointments).length > 0 ? (
 							<>
@@ -367,7 +369,7 @@ function HomeScreen(props) {
 						) : (
 							<ListItem bottomDivider containerStyle={styles.listItemContainer}>
 								<ListItem.Content>
-									<ListItem.Title style={styles.listItemNoAppointments}>No Upcoming Appointments</ListItem.Title>
+									<ListItem.Title style={styles.listItemNoAppointments}>No Previous Appointments</ListItem.Title>
 								</ListItem.Content>
 							</ListItem>
 						)}
@@ -386,4 +388,4 @@ const mapStateToProps = (store) => ({
 	barber: store.userState.barber
 })
 
-export default connect(mapStateToProps, null)(HomeScreen)
+export default connect(mapStateToProps, null)(Home)

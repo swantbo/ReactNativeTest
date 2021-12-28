@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useContext} from 'react'
 import {View, Text, ScrollView, Linking, ActivityIndicator, SafeAreaView, ImageBackground, TouchableOpacity, SectionList, Item} from 'react-native'
-import {Card, SocialIcon, Avatar, Image, PricingCard} from 'react-native-elements'
+import {Card, SocialIcon, Avatar, Image, PricingCard, ListItem} from 'react-native-elements'
 import MapView from 'react-native-maps'
 import createStyles from '../../styles/base'
 
@@ -39,54 +39,71 @@ function Barber(props) {
 
 	return (
 		<>
-			<SafeAreaView style={styles.cardHeader} />
-
-			<Card containerStyle={styles.cardGold}>
-				<Card.Title style={{alignSelf: 'center'}}>
-					<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={'N'} source={{uri: image}} />
-				</Card.Title>
-			</Card>
-
+			<SafeAreaView style={styles.cardHeader}>
+				<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={'N'} source={{uri: image}} />
+			</SafeAreaView>
 			<View style={styles.container}>
 				<ScrollView style={styles.scrollView}>
 					<Card containerStyle={styles.cardBio}>
 						<Card.Title style={styles.cardTitle}>{barber.name}</Card.Title>
 						<Card.Title style={styles.listItemSubTitle}>{barber.bio}</Card.Title>
 					</Card>
-					<View style={styles.row}>
-						<View style={{flex: 1}}>
-							<PricingCard
-								containerStyle={styles.pricingCard}
-								pricingStyle={styles.listItemSubTitle}
-								color='#E8BD70'
-								title={<Card.Title style={styles.cardTitle}>Men's Haircut</Card.Title>}
-								price={<Card.Title style={styles.barberPricing}>{barber.price}</Card.Title>}
-								info={['Includes Haircut, Eyebrows and Beard trim']}
-								button={{
-									title: 'Schedule Now'
-								}}
-								onButtonPress={() => {
-									props.navigation.navigate('Appointment')
-								}}
-							/>
-						</View>
-						<View style={{flex: 1}}>
-							<PricingCard
-								containerStyle={styles.pricingCard}
-								pricingStyle={styles.listItemSubTitle}
-								color='#E8BD70'
-								title={<Card.Title style={styles.cardTitle}>Kid's Haircut</Card.Title>}
-								price={<Card.Title style={styles.barberPricing}>{barber.kidsHaircut}</Card.Title>}
-								info={["Includes Full Haircut, for Kid's"]}
-								button={{
-									title: 'Schedule Now'
-								}}
-								onButtonPress={() => {
-									props.navigation.navigate('Appointment')
-								}}
-							/>
-						</View>
-					</View>
+
+					<ListItem bottomDivider containerStyle={styles.listItemContainer}>
+						<ListItem.Content>
+							<View style={styles.row}>
+								<View style={styles.rowStart}>
+									<ListItem.Title style={styles.listItemSubTitle}>Men's Haircut</ListItem.Title>
+								</View>
+								<View style={styles.rowEnd}>
+									<ListItem.Title style={styles.listItemSubTitle}>{barber.price}</ListItem.Title>
+								</View>
+							</View>
+							<ListItem.Subtitle style={styles.listItemSubTitle}>Full Haircut, Eyebrows, and Beard Trim</ListItem.Subtitle>
+						</ListItem.Content>
+					</ListItem>
+					<ListItem bottomDivider containerStyle={styles.listItemContainer}>
+						<ListItem.Content>
+							<View style={styles.row}>
+								<View style={styles.rowStart}>
+									<ListItem.Title style={styles.listItemSubTitle}>Kid's Haircut</ListItem.Title>
+								</View>
+								<View style={styles.rowEnd}>
+									<ListItem.Title style={styles.listItemSubTitle}>{barber.kidsHaircut}</ListItem.Title>
+								</View>
+							</View>
+							<ListItem.Subtitle style={styles.listItemSubTitle}>Full Haircut, for Kid's</ListItem.Subtitle>
+						</ListItem.Content>
+					</ListItem>
+					<PricingCard
+						containerStyle={styles.pricingCard}
+						pricingStyle={styles.listItemSubTitle}
+						color='#E8BD70'
+						title={<Card.Title style={styles.cardTitle}>Men's Haircut</Card.Title>}
+						price={<Card.Title style={styles.barberPricing}>{barber.price}</Card.Title>}
+						info={['Full Haircut, Eyebrows and Beard Trim']}
+						button={{
+							title: 'Schedule Now'
+						}}
+						onButtonPress={() => {
+							props.navigation.navigate('Appointment')
+						}}
+					/>
+					<PricingCard
+						containerStyle={styles.pricingCard}
+						pricingStyle={styles.listItemSubTitle}
+						color='#E8BD70'
+						title={<Card.Title style={styles.cardTitle}>Kid's Haircut</Card.Title>}
+						price={<Card.Title style={styles.barberPricing}>{barber.kidsHaircut}</Card.Title>}
+						info={["Includes Full Haircut, for Kid's"]}
+						button={{
+							title: 'Schedule Now'
+						}}
+						onButtonPress={() => {
+							props.navigation.navigate('Appointment')
+						}}
+					/>
+
 					<View style={styles.barberSocialIcons}>
 						<SocialIcon
 							onPress={() => {

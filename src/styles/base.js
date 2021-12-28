@@ -5,6 +5,19 @@ const baseStyles = {
 		flex: 1,
 		backgroundColor: '#E8BD70'
 	},
+	listItemRow: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		backgroundColor: '#000'
+	},
+	listItemLeft: {
+		color: '#fff',
+		justifyContent: 'flex-start'
+	},
+	listItemRight: {
+		justifyContent: 'flex-end',
+		color: '#fff'
+	},
 	settingsContainer: {
 		flex: 1,
 		backgroundColor: '#000'
@@ -44,16 +57,16 @@ const baseStyles = {
 	},
 	pricingCard: {
 		backgroundColor: '#121212',
-		margin: 0,
 		borderColor: '#000',
-		color: '#E8BD70'
+		color: '#E8BD70',
+		marginTop: 0
 	},
 	cardTitle: {
 		fontSize: 24,
 		color: '#E8BD70'
 	},
 	listItemContainer: {
-		backgroundColor: '#000'
+		backgroundColor: '#121212'
 	},
 	searchContainer: {
 		backgroundColor: '#121212'
@@ -143,7 +156,9 @@ const baseStyles = {
 		margin: 5
 	},
 	avatarBackground: {
-		backgroundColor: '#121212'
+		alignSelf: 'center',
+		backgroundColor: '#121212',
+		marginBottom: 10
 	},
 	barberInfoTitles: {
 		alignSelf: 'flex-start',
@@ -278,6 +293,12 @@ const baseStyles = {
 		color: '#fff',
 		fontSize: 20,
 		alignSelf: 'center'
+	},
+	viewFlex: {
+		flex: 1
+	},
+	listItemContainerBlack: {
+		backgroundColor: '#000'
 	}
 }
 

@@ -171,51 +171,32 @@ function Home(props) {
 	return (
 		<>
 			<SafeAreaView style={styles.cardHeader}>
-				<Card containerStyle={styles.cardGold}>
-					<Card.Title style={{alignSelf: 'center'}}>
-						<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={userData.name?.[0]} source={{uri: image}} onPress={() => pickImage()} />
-					</Card.Title>
-				</Card>
+				<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={userData.name?.[0]} source={{uri: image}} onPress={() => pickImage()} />
 			</SafeAreaView>
-			<View style={styles.settingsContainer}>
+			<View style={styles.container}>
 				<ScrollView style={styles.scrollView}>
+					<Card containerStyle={styles.cardBio}>
+						<Card.Title style={styles.cardTitle} onPress={() => props.navigation.navigate('SettingScreen')}>
+							{userData.name}
+						</Card.Title>
+						<Card.Title
+							style={styles.title}
+							onPress={() =>
+								Alert.alert('Goat Points', `Goat Points are a currency that can be used for discounts on Haircuts. 100 Goat Points is equal to $1. Talk to your Barber about how to earn Goat Points.`, [
+									{
+										text: 'Okay'
+									}
+								])
+							}>
+							{userData.points}
+						</Card.Title>
+						<Card.Title style={styles.listItemSubTitle}>Goat Points</Card.Title>
+					</Card>
 					<View>
-						<PricingCard
-							containerStyle={styles.pricingCard}
-							pricingStyle={styles.listItemSubTitle}
-							color='#E8BD70'
-							title={
-								<Card.Title style={styles.cardTitle} onPress={() => props.navigation.navigate('SettingScreen')}>
-									{userData.name}
-								</Card.Title>
-							}
-							price={
-								<Card.Title
-									style={styles.title}
-									onPress={() =>
-										Alert.alert('Goat Points', `Goat Points are a currency that can be used for discounts on Haircuts. 100 Goat Points is equal to $1. Talk to your Barber about how to earn Goat Points.`, [
-											{
-												text: 'Okay'
-											}
-										])
-									}>
-									{userData.points}
-								</Card.Title>
-							}
-							info={['Goat Points', 'Use Goat Points for discounts on haircuts']}
-							button={{title: 'Schedule Haircut'}}
-							onButtonPress={() => {
-								props.navigation.navigate('Appointment')
-							}}
-						/>
-					</View>
-					<View>
-						<ListItem bottomDivider containerStyle={{justifyContent: 'space-between'}}>
-							<ListItem.Title style={{justifyContent: 'flex-start'}}>Test</ListItem.Title>
-							<ListItem.Title style={{justifyContent: 'flex-end'}}>Work</ListItem.Title>
-						</ListItem>
 						<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-							<ListItem.Title style={styles.listItemTitle}>Upcoming Appointments</ListItem.Title>
+							<ListItem.Content>
+								<ListItem.Title style={styles.listItemTitle}>Upcoming Appointments</ListItem.Title>
+							</ListItem.Content>
 						</ListItem>
 						{Object.keys(upcomingAppointments).length > 0 ? (
 							<>
@@ -266,32 +247,31 @@ function Home(props) {
 															</ListItem.Title>
 														</TouchableOpacity>
 													</View>
-													{onekey[1].points ? (
-														<>
-															<View style={styles.rowEnd}>
+													<View style={styles.rowEnd}>
+														{onekey[1].points ? (
+															<>
 																<ListItem.Title style={styles.listItemSubTitle}>
 																	{onekey[1].points != ''
 																		? '$' + subtractDiscount(onekey[1]?.haircutType, onekey[1]?.haircutType === 'kids' ? barberData?.kidsHaircut : barberData?.price, onekey[1].points)
 																		: '$' + barberData.price}
 																</ListItem.Title>
-															</View>
-														</>
-													) : (
-														<View style={styles.rowEnd}>
+															</>
+														) : (
 															<ListItem.Title style={styles.listItemSubTitle}>{barberData.price != '' && onekey[1]?.haircutType === 'kids' ? barberData?.kidsHaircut : barberData?.price}</ListItem.Title>
-														</View>
-													)}
+														)}
+													</View>
 												</View>
 												<View style={styles.row}>
 													<View style={styles.rowStart}>
-														<TouchableOpacity
+														<ListItem.Subtitle
+															style={styles.listItemSubTitle}
 															onPress={() =>
 																Linking.openURL(`sms:${barberData?.phone}`).catch(() => {
 																	Linking.openURL(`sms:${barberData?.phone}`)
 																})
 															}>
-															<Text style={styles.listItemSubTitle}>{barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''} </Text>
-														</TouchableOpacity>
+															{barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''}{' '}
+														</ListItem.Subtitle>
 													</View>
 													<View style={styles.rowEnd}>
 														<Text style={styles.listItemSubTitle}>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </Text>
@@ -299,20 +279,21 @@ function Home(props) {
 												</View>
 												<View style={styles.row}>
 													<View style={styles.rowStart}>
-														<TouchableOpacity
+														<ListItem.Subtitle
+															style={styles.listItemSubTitle}
 															onPress={() =>
 																Linking.openURL('maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647').catch(() => {
 																	Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
 																})
 															}>
-															<Text style={styles.listItemSubTitle}>{barberData.location != '' ? barberData.location : ''}</Text>
-														</TouchableOpacity>
+															{barberData.location != '' ? barberData.location : ''}
+														</ListItem.Subtitle>
 													</View>
 												</View>
 												<View style={styles.row}>
 													{onekey[1]?.friend && (
 														<View style={styles.rowStart}>
-															<Text style={styles.listItemSubTitle}>Friend: {onekey[1]?.friend}</Text>
+															<ListItem.Subtitle style={styles.listItemSubTitle}>Friend: {onekey[1]?.friend}</ListItem.Subtitle>
 														</View>
 													)}
 												</View>
@@ -323,15 +304,11 @@ function Home(props) {
 							</>
 						) : (
 							<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-								<ListItem.Content>
-									<ListItem.Title style={styles.listItemNoAppointments}>No Upcoming Appointments</ListItem.Title>
-								</ListItem.Content>
+								<ListItem.Title style={styles.listItemNoAppointments}>No Upcoming Appointments</ListItem.Title>
 							</ListItem>
 						)}
 						<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-							<ListItem.Content>
-								<ListItem.Title style={styles.listItemTitle}>Previous Appointments</ListItem.Title>
-							</ListItem.Content>
+							<ListItem.Title style={styles.listItemTitle}>Previous Appointments</ListItem.Title>
 						</ListItem>
 						{Object.keys(previousAppointments).length > 0 ? (
 							<>
@@ -354,11 +331,13 @@ function Home(props) {
 													</View>
 												</View>
 												<View style={styles.row}>
-													<View style={styles.rowEnd}>{onekey[1].points ? <Text style={styles.listItemSubTitle}>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </Text> : null}</View>
+													<View style={styles.rowEnd}>
+														{onekey[1].points ? <ListItem.Subtitle style={styles.listItemSubTitle}>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </ListItem.Subtitle> : null}
+													</View>
 												</View>
 												<View style={styles.row}>
 													<View style={styles.rowStart}>
-														<Text style={styles.listItemSubTitle}>{onekey[1]?.friend && 'Friend: ' + onekey[1]?.friend}</Text>
+														<ListItem.Subtitle style={styles.listItemSubTitle}>{onekey[1]?.friend && 'Friend: ' + onekey[1]?.friend}</ListItem.Subtitle>
 													</View>
 												</View>
 											</ListItem.Content>
@@ -368,9 +347,7 @@ function Home(props) {
 							</>
 						) : (
 							<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-								<ListItem.Content>
-									<ListItem.Title style={styles.listItemNoAppointments}>No Previous Appointments</ListItem.Title>
-								</ListItem.Content>
+								<ListItem.Title style={styles.listItemNoAppointments}>No Previous Appointments</ListItem.Title>
 							</ListItem>
 						)}
 					</View>

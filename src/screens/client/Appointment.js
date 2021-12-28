@@ -10,6 +10,7 @@ import {InputField} from '../../components'
 
 import {connect} from 'react-redux'
 
+import * as firebase from 'firebase'
 import Firebase from '../../config/firebase'
 import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
 
@@ -18,7 +19,7 @@ function Appointment(props) {
 	const [isLoading, setIsLoading] = useState(false)
 	const [userData, setUserData] = useState({})
 	const [barberInfo, setBarberInfo] = useState({})
-	const [selectedDate, setSelectedDate] = useState(moment())
+	const [selectedDate, setSelectedDate] = useState()
 	const [selectedTime, setSelectedTime] = useState('')
 	const [calendarDatesRemoved, setCalendarDatesRemoved] = useState([])
 	const [comment, onChangeComment] = useState('')
@@ -114,7 +115,7 @@ function Appointment(props) {
 			name: userData.name,
 			haircutType: haircutType,
 			friend: friend,
-			comment: text,
+			comment: comment,
 			time: selectedTime,
 			phone: userData.phone,
 			goatPoints: discount != false ? userData.points : '',
@@ -123,10 +124,10 @@ function Appointment(props) {
 		}
 
 		const userRef = Firebase.firestore().collection('Calendar').doc(moment(selectedDate).format('MMM YY')).collection('OverView').doc('data')
-		const increment = Firebase.firestore.FieldValue.increment(1)
+		const increment = firebase.firestore.FieldValue.increment(1)
 
 		userRef.update({
-			goatPoints: discount != false ? Firebase.firestore.FieldValue.increment(Number(userData.points)) : Firebase.firestore.FieldValue.increment(0),
+			goatPoints: discount != false ? firebase.firestore.FieldValue.increment(Number(userData.points)) : firebase.firestore.FieldValue.increment(0),
 			haircuts: increment
 		})
 
@@ -168,32 +169,30 @@ function Appointment(props) {
 
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.settingsContainer}>
+			<ListItem bottomDivider containerStyle={styles.listItemContainerBlack}>
+				<Avatar source={require('../../assets/123_1.jpeg')} rounded size='large' />
+				<ListItem.Content>
+					<ListItem.Title style={styles.text}>{barberInfo.name}</ListItem.Title>
+					<TouchableOpacity
+						onPress={() =>
+							Linking.openURL(`sms:${barberInfo?.phone}`).catch(() => {
+								Linking.openURL(`sms:${barberInfo?.phone}`)
+							})
+						}>
+						<ListItem.Subtitle style={styles.listItemSubTitle}>{barberInfo.phone != '' ? formatPhoneNumber(barberInfo.phone) : ''}</ListItem.Subtitle>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={() =>
+							Linking.openURL('maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647').catch(() => {
+								Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
+							})
+						}>
+						<ListItem.Subtitle style={styles.listItemSubTitle}>{barberInfo.location != '' ? barberInfo.location : ''}</ListItem.Subtitle>
+					</TouchableOpacity>
+				</ListItem.Content>
+			</ListItem>
 			<View>
-				<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-					<Avatar source={require('../../assets/123_1.jpeg')} rounded size='large' />
-					<ListItem.Content>
-						<ListItem.Title style={styles.text}>{barberInfo.name}</ListItem.Title>
-						<TouchableOpacity
-							onPress={() =>
-								Linking.openURL(`sms:${barberInfo?.phone}`).catch(() => {
-									Linking.openURL(`sms:${barberInfo?.phone}`)
-								})
-							}>
-							<ListItem.Subtitle style={styles.listItemSubTitle}>{barberInfo.phone != '' ? formatPhoneNumber(barberInfo.phone) : ''}</ListItem.Subtitle>
-						</TouchableOpacity>
-						<TouchableOpacity
-							onPress={() =>
-								Linking.openURL('maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647').catch(() => {
-									Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
-								})
-							}>
-							<ListItem.Subtitle style={styles.listItemSubTitle}>{barberInfo.location != '' ? barberInfo.location : ''}</ListItem.Subtitle>
-						</TouchableOpacity>
-					</ListItem.Content>
-				</ListItem>
-			</View>
-			<View>
-				<ListItem containerStyle={styles.listItemContainer}>
+				<ListItem containerStyle={styles.listItemContainerBlack}>
 					<ListItem.Content>
 						<ListItem.Title style={styles.listItemTitle}>Appointment Type</ListItem.Title>
 						<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={{color: '#fff'}} title="Men's Haircut" checked={haircutType === 'mens' ? true : false} onPress={() => setHaircutType('mens')} />
@@ -225,7 +224,7 @@ function Appointment(props) {
 				{!isLoading && Object.keys(newTimes).length !== 0 ? (
 					<ScrollView horizontal={true} style={{}}>
 						{Object.entries(newTimes).map((onekey, i) => (
-							<ListItem bottomDivider containerStyle={styles.listItemContainer} key={i} onPress={() => selectedTimeChange(onekey[0])}>
+							<ListItem bottomDivider containerStyle={styles.listItemContainerBlack} key={i} onPress={() => selectedTimeChange(onekey[0])}>
 								<ListItem.Content style={styles.listItemContent}>
 									<ListItem.Title style={{fontWeight: 'bold'}}>{onekey[1] ? null : onekey[0]}</ListItem.Title>
 								</ListItem.Content>
@@ -234,7 +233,7 @@ function Appointment(props) {
 					</ScrollView>
 				) : isLoading ? (
 					<ScrollView horizontal={true} style={styles.scrollViewAppointment}>
-						<ListItem bottomDivider containerStyle={styles.listItemContainer}>
+						<ListItem bottomDivider containerStyle={styles.listItemContainerBlack}>
 							<ListItem.Content style={styles.listItemContent}>
 								<ActivityIndicator color='#fff' size='large' />
 							</ListItem.Content>
@@ -243,7 +242,7 @@ function Appointment(props) {
 				) : (
 					Object.keys(newTimes).length == 0 && (
 						<ScrollView horizontal={true} style={styles.scrollViewAppointment}>
-							<ListItem bottomDivider containerStyle={styles.listItemContainer}>
+							<ListItem bottomDivider containerStyle={styles.listItemContainerBlack}>
 								<ListItem.Content style={styles.listItemContent}>
 									<ListItem.Title style={styles.text}>No Available Times</ListItem.Title>
 								</ListItem.Content>
@@ -253,7 +252,7 @@ function Appointment(props) {
 				)}
 			</View>
 			<View>
-				<ListItem bottomDivider containerStyle={styles.listItemContainer}>
+				<ListItem bottomDivider containerStyle={styles.listItemContainerBlack}>
 					<ListItem.Content>
 						<ListItem.Title style={styles.text}>For a Friend?</ListItem.Title>
 						<InputField containerStyle={styles.inputField} leftIcon='account-plus' placeholder='Friends Name' autoCapitalize='words' value={friend} onChangeText={(text) => setFriend(text)} />

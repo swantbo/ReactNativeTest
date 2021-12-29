@@ -1,11 +1,12 @@
 import {StatusBar} from 'expo-status-bar'
 import React from 'react'
 import {useState} from 'react'
-import {ImageBackground, StyleSheet, Text, View, Button as RNButton} from 'react-native'
+import {ImageBackground, Text, View, Button as RNButton, SafeAreaView, TouchableOpacity} from 'react-native'
+import {ListItem} from 'react-native-elements'
 
-import {Button, InputField, ErrorMessage} from '../../components'
+import createStyles from '../../styles/base'
+import {InputField, ErrorMessage} from '../../components'
 import Firebase from '../../config/firebase'
-import * as firebase from 'firebase'
 
 const auth = Firebase.auth()
 
@@ -40,10 +41,10 @@ export default function Signup({navigation}) {
 						referral: referral,
 						points: '0',
 						strikes: '0',
-						created: firebase.firestore.Timestamp.now()
+						created: Firebase.firestore.Timestamp.now()
 					}
-					firebase.firestore().collection('users').doc(data.user.uid).set(user)
-					firebase.firestore().collection('users').doc(data.user.uid).collection('Haircuts').set()
+					Firebase.firestore().collection('users').doc(data.user.uid).set(user)
+					Firebase.firestore().collection('users').doc(data.user.uid).collection('Haircuts').set()
 				})
 			}
 		} catch (error) {
@@ -52,134 +53,98 @@ export default function Signup({navigation}) {
 	}
 
 	return (
-		<View style={styles.container}>
-			<StatusBar style='dark-content' />
-			<Text style={styles.title}>Create new account</Text>
-			<InputField
-				inputStyle={{
-					fontSize: 14
-				}}
-				containerStyle={{
-					backgroundColor: '#fff',
-					marginBottom: 20,
-					borderColor: 'black',
-					borderWidth: 1
-				}}
-				leftIcon='account'
-				placeholder='Enter name'
-				autoCapitalize='none'
-				autoFocus={true}
-				value={name}
-				onChangeText={(text) => setName(text)}
-			/>
-			<InputField
-				inputStyle={{
-					fontSize: 14
-				}}
-				containerStyle={{
-					backgroundColor: '#fff',
-					marginBottom: 20,
-					borderColor: 'black',
-					borderWidth: 1
-				}}
-				leftIcon='phone'
-				placeholder='Enter phone number'
-				autoCapitalize='none'
-				keyboardType='phone-pad'
-				autoFocus={true}
-				value={phone}
-				onChangeText={(text) => setPhone(text)}
-			/>
-			<InputField
-				inputStyle={{
-					fontSize: 14
-				}}
-				containerStyle={{
-					backgroundColor: '#fff',
-					marginBottom: 20,
-					borderColor: 'black',
-					borderWidth: 1
-				}}
-				leftIcon='account-supervisor'
-				placeholder='Enter Phone Number of Referral(optional)'
-				autoCapitalize='none'
-				keyboardType='phone-pad'
-				autoCorrect={false}
-				value={referral}
-				onChangeText={(text) => setReferral(text)}
-			/>
-			<InputField
-				inputStyle={{
-					fontSize: 14
-				}}
-				containerStyle={{
-					backgroundColor: '#fff',
-					marginBottom: 20,
-					borderColor: 'black',
-					borderWidth: 1
-				}}
-				leftIcon='email'
-				placeholder='Enter email'
-				autoCapitalize='none'
-				keyboardType='email-address'
-				autoFocus={true}
-				value={email}
-				onChangeText={(text) => setEmail(text)}
-			/>
-			<InputField
-				inputStyle={{
-					fontSize: 14
-				}}
-				containerStyle={{
-					backgroundColor: '#fff',
-					marginBottom: 20,
-					borderColor: 'black',
-					borderWidth: 1
-				}}
-				leftIcon='lock'
-				placeholder='Enter password'
-				autoCapitalize='none'
-				autoCorrect={false}
-				secureTextEntry={passwordVisibility}
-				rightIcon={rightIcon}
-				value={password}
-				onChangeText={(text) => setPassword(text)}
-				handlePasswordVisibility={handlePasswordVisibility}
-			/>
-			{signupError ? <ErrorMessage error={signupError} visible={true} /> : null}
-			<Button
-				onPress={onHandleSignup}
-				backgroundColor='#000000'
-				title='Signup'
-				tileColor='#fff'
-				titleSize={20}
-				containerStyle={{
-					marginBottom: 24
-				}}
-			/>
-			<RNButton onPress={() => navigation.navigate('Login')} title='Go to Login' color='#000000' />
-			<ImageBackground source={require('../../assets/123_1.jpeg')} style={styles.image} resizeMode='cover'></ImageBackground>
-		</View>
+		<SafeAreaView style={styles.authContainer}>
+			<View style={{padding: 10}}>
+				<StatusBar style='dark-content' />
+				<Text style={styles.authTitle}>Create An Account</Text>
+				<InputField
+					inputStyle={{
+						fontSize: 14
+					}}
+					containerStyle={styles.inputField}
+					leftIcon='account'
+					placeholder='Enter name'
+					autoCapitalize='none'
+					autoFocus={true}
+					value={name}
+					onChangeText={(text) => setName(text)}
+				/>
+				<InputField
+					inputStyle={{
+						fontSize: 14
+					}}
+					containerStyle={styles.inputField}
+					leftIcon='phone'
+					placeholder='Enter phone number'
+					autoCapitalize='none'
+					keyboardType='phone-pad'
+					autoFocus={true}
+					value={phone}
+					onChangeText={(text) => setPhone(text)}
+				/>
+				<InputField
+					inputStyle={{
+						fontSize: 14
+					}}
+					containerStyle={styles.inputField}
+					leftIcon='account-supervisor'
+					placeholder='Enter Phone Number of Referral(optional)'
+					autoCapitalize='none'
+					keyboardType='phone-pad'
+					autoCorrect={false}
+					value={referral}
+					onChangeText={(text) => setReferral(text)}
+				/>
+				<InputField
+					inputStyle={{
+						fontSize: 14
+					}}
+					containerStyle={styles.inputField}
+					leftIcon='email'
+					placeholder='Enter email'
+					autoCapitalize='none'
+					keyboardType='email-address'
+					autoFocus={true}
+					value={email}
+					onChangeText={(text) => setEmail(text)}
+				/>
+				<InputField
+					inputStyle={{
+						fontSize: 14
+					}}
+					containerStyle={styles.inputField}
+					leftIcon='lock'
+					placeholder='Enter password'
+					autoCapitalize='none'
+					autoCorrect={false}
+					secureTextEntry={passwordVisibility}
+					rightIcon={rightIcon}
+					value={password}
+					onChangeText={(text) => setPassword(text)}
+					handlePasswordVisibility={handlePasswordVisibility}
+				/>
+				{signupError ? <ErrorMessage error={signupError} visible={true} /> : null}
+				<TouchableOpacity
+					style={{
+						backgroundColor: '#000',
+						borderRadius: 5,
+						padding: 10
+					}}
+					onPress={() => onHandleSignup()}>
+					<ListItem.Title
+						style={{
+							color: '#fff',
+							alignSelf: 'center',
+							fontWeight: 'bold'
+						}}>
+						Create Account
+					</ListItem.Title>
+				</TouchableOpacity>
+				<RNButton onPress={() => navigation.navigate('Login')} title='Go to Login' color='#000000' />
+				<ImageBackground source={require('../../assets/123_1.jpeg')} style={styles.authImage} resizeMode='cover'></ImageBackground>
+			</View>
+		</SafeAreaView>
 	)
 }
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: '#fff',
-		paddingTop: 50,
-		paddingHorizontal: 12
-	},
-	title: {
-		fontSize: 24,
-		fontWeight: '600',
-		color: '#000000',
-		alignSelf: 'center',
-		paddingBottom: 24
-	},
-	image: {
-		flex: 1,
-		justifyContent: 'center',
-		opacity: 0.5
-	}
-})
+const styles = createStyles()

@@ -57,7 +57,6 @@ function AdminSettingsStackScreen({navigation}) {
 				headerTintColor: '#E8BD70',
 				headerTitleAlign: 'center'
 			}}>
-			{/* <AdminSettingsStack.Screen name="Admin Settings" options={{ title: 'Admin Settings', headerTitleAlign: 'center' }} component={AdminSettingsScreen}/> */}
 			<AdminSettingsStack.Screen
 				name='SearchScreen'
 				options={{

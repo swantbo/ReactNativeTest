@@ -117,23 +117,25 @@ const baseStyles = {
 		margin: 0,
 		marginLeft: 15,
 		marginRight: 15,
-		padding: 5
+		padding: 5,
+		borderRadius: 10
 	},
 	socialIcons: {
 		backgroundColor: '#E8BD70'
 	},
 	barberAddress: {
-		borderRadius: 5,
+		borderRadius: 10,
+		marginBottom: 15,
 		backgroundColor: '#121212',
 		borderColor: '#121212'
 	},
 	addressTitle: {
-		fontSize: 15,
+		fontSize: 13,
 		fontWeight: 'bold',
 		color: '#fff'
 	},
 	addressText: {
-		fontSize: 15,
+		fontSize: 13,
 		fontWeight: 'normal',
 		color: '#fff'
 	},
@@ -299,6 +301,22 @@ const baseStyles = {
 	},
 	listItemContainerBlack: {
 		backgroundColor: '#000'
+	},
+	authContainer: {
+		flex: 1,
+		backgroundColor: '#fff'
+	},
+	authTitle: {
+		fontSize: 24,
+		fontWeight: '600',
+		color: '#000000',
+		alignSelf: 'center',
+		paddingBottom: 24
+	},
+	authImage: {
+		flex: 1,
+		justifyContent: 'center',
+		opacity: 0.5
 	}
 }
 

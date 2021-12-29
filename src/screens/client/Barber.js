@@ -49,61 +49,6 @@ function Barber(props) {
 						<Card.Title style={styles.listItemSubTitle}>{barber.bio}</Card.Title>
 					</Card>
 
-					<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-						<ListItem.Content>
-							<View style={styles.row}>
-								<View style={styles.rowStart}>
-									<ListItem.Title style={styles.listItemSubTitle}>Men's Haircut</ListItem.Title>
-								</View>
-								<View style={styles.rowEnd}>
-									<ListItem.Title style={styles.listItemSubTitle}>{barber.price}</ListItem.Title>
-								</View>
-							</View>
-							<ListItem.Subtitle style={styles.listItemSubTitle}>Full Haircut, Eyebrows, and Beard Trim</ListItem.Subtitle>
-						</ListItem.Content>
-					</ListItem>
-					<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-						<ListItem.Content>
-							<View style={styles.row}>
-								<View style={styles.rowStart}>
-									<ListItem.Title style={styles.listItemSubTitle}>Kid's Haircut</ListItem.Title>
-								</View>
-								<View style={styles.rowEnd}>
-									<ListItem.Title style={styles.listItemSubTitle}>{barber.kidsHaircut}</ListItem.Title>
-								</View>
-							</View>
-							<ListItem.Subtitle style={styles.listItemSubTitle}>Full Haircut, for Kid's</ListItem.Subtitle>
-						</ListItem.Content>
-					</ListItem>
-					<PricingCard
-						containerStyle={styles.pricingCard}
-						pricingStyle={styles.listItemSubTitle}
-						color='#E8BD70'
-						title={<Card.Title style={styles.cardTitle}>Men's Haircut</Card.Title>}
-						price={<Card.Title style={styles.barberPricing}>{barber.price}</Card.Title>}
-						info={['Full Haircut, Eyebrows and Beard Trim']}
-						button={{
-							title: 'Schedule Now'
-						}}
-						onButtonPress={() => {
-							props.navigation.navigate('Appointment')
-						}}
-					/>
-					<PricingCard
-						containerStyle={styles.pricingCard}
-						pricingStyle={styles.listItemSubTitle}
-						color='#E8BD70'
-						title={<Card.Title style={styles.cardTitle}>Kid's Haircut</Card.Title>}
-						price={<Card.Title style={styles.barberPricing}>{barber.kidsHaircut}</Card.Title>}
-						info={["Includes Full Haircut, for Kid's"]}
-						button={{
-							title: 'Schedule Now'
-						}}
-						onButtonPress={() => {
-							props.navigation.navigate('Appointment')
-						}}
-					/>
-
 					<View style={styles.barberSocialIcons}>
 						<SocialIcon
 							onPress={() => {
@@ -140,22 +85,51 @@ function Barber(props) {
 							}
 							style={styles.socialIcons}
 							type='google'
-							title='test'
 						/>
 					</View>
+
+					<Card containerStyle={styles.barberAddress}>
+						<Card.Title style={styles.barberInfoTitles}>SERVICES & PRICING</Card.Title>
+						<ListItem topDivider bottomDivider containerStyle={styles.listItemContainer}>
+							<ListItem.Content>
+								<View style={styles.row}>
+									<View style={styles.rowStart}>
+										<ListItem.Title style={styles.listItemSubTitle}>Men's Haircut</ListItem.Title>
+									</View>
+									<View style={styles.rowEnd}>
+										<ListItem.Title style={styles.listItemSubTitle}>{barber.price}</ListItem.Title>
+									</View>
+								</View>
+								<ListItem.Subtitle style={styles.listItemSubTitle}>Full Haircut, Eyebrows, and Beard Trim</ListItem.Subtitle>
+							</ListItem.Content>
+						</ListItem>
+						<ListItem bottomDivider containerStyle={styles.listItemContainer}>
+							<ListItem.Content>
+								<View style={styles.row}>
+									<View style={styles.rowStart}>
+										<ListItem.Title style={styles.listItemSubTitle}>Kid's Haircut</ListItem.Title>
+									</View>
+									<View style={styles.rowEnd}>
+										<ListItem.Title style={styles.listItemSubTitle}>{barber.kidsHaircut}</ListItem.Title>
+									</View>
+								</View>
+								<ListItem.Subtitle style={styles.listItemSubTitle}>Full Haircut, for Kid's</ListItem.Subtitle>
+							</ListItem.Content>
+						</ListItem>
+					</Card>
 
 					<Card containerStyle={styles.barberAddress}>
 						<Card.Title style={styles.barberInfoTitles}>ADDRESS & HOURS</Card.Title>
 						<View style={styles.row}>
 							<View style={styles.rowStart}>
-								<Text style={styles.addressText}>{barber.location}</Text>
+								<Text style={styles.addressTitle}>{barber.location}</Text>
 								<TouchableOpacity
 									onPress={() =>
 										Linking.openURL(`sms:${barber?.phone}`).catch(() => {
 											Linking.openURL(`sms:${barber?.phone}`)
 										})
 									}>
-									<Text style={styles.addressText}>{barber.phone != '' ? formatPhoneNumber(barber.phone) : ''}</Text>
+									<Text style={styles.addressTitle}>{barber.phone != '' ? formatPhoneNumber(barber.phone) : ''}</Text>
 								</TouchableOpacity>
 								<Text></Text>
 								<View style={styles.row}>
@@ -252,32 +226,6 @@ function Barber(props) {
 									onPress={() =>
 										props.navigation.navigate('ViewImage', {
 											selectedImage: haircutImages[3]
-										})
-									}
-								/>
-							</View>
-						</View>
-						<View style={styles.containerGallery}>
-							<View style={styles.containerImage}>
-								<Image
-									style={styles.image}
-									source={{uri: haircutImages[4]}}
-									PlaceholderContent={<ActivityIndicator />}
-									onPress={() =>
-										props.navigation.navigate('ViewImage', {
-											selectedImage: haircutImages[4]
-										})
-									}
-								/>
-							</View>
-							<View style={styles.containerImage}>
-								<Image
-									style={styles.image}
-									source={{uri: haircutImages[5]}}
-									PlaceholderContent={<ActivityIndicator />}
-									onPress={() =>
-										props.navigation.navigate('ViewImage', {
-											selectedImage: haircutImages[5]
 										})
 									}
 								/>

@@ -1,17 +1,18 @@
 import React, {useEffect, useState} from 'react'
 import {View, Button, StyleSheet, TouchableOpacity, Text} from 'react-native'
 import CalendarStrip from 'react-native-calendar-strip'
-import moment from 'moment'
 import {ListItem} from 'react-native-elements'
+
 import {InputField} from '../../components'
 import createStyles from '../../styles/base'
 
+import moment from 'moment'
 import Firebase from '../../config/firebase'
 
 const Add = ({route}) => {
 	const [number, onChangeNumber] = useState('')
 	const [name, onChangeName] = useState('')
-	const [time, onChangeTime] = useState('')
+	const [time, onChangeTime] = useState('12:00 AM')
 	const [comment, onChangeComment] = useState('')
 	const [selectedDate, setSelectedDate] = useState(moment())
 	const [formattedDate, setFormattedDate] = useState()
@@ -88,23 +89,53 @@ const Add = ({route}) => {
 			</ListItem>
 			{formattedDate && (
 				<View style={styles.addView}>
-					<InputField inputStyle={styles.text} containerStyle={styles.inputField} leftIcon='clock-time-eight' placeholder='Appointment Time' autoFocus={true} value={time} onChangeText={(text) => onChangeTime(text)} />
-
-					<InputField inputStyle={styles.text} containerStyle={styles.inputField} leftIcon='account' placeholder='Name' autoCapitalize='none' autoFocus={true} value={name} onChangeText={(text) => onChangeName(text)} />
+					<InputField
+						inputStyle={{
+							fontSize: 14
+						}}
+						containerStyle={styles.inputField}
+						leftIcon='clock-time-eight'
+						placeholder='Appointment Time'
+						value={time}
+						onChangeText={(text) => onChangeTime(text)}
+					/>
 
 					<InputField
-						inputStyle={styles.text}
+						inputStyle={{
+							fontSize: 14
+						}}
+						containerStyle={styles.inputField}
+						leftIcon='account'
+						placeholder='Name'
+						autoCapitalize='none'
+						value={name}
+						onChangeText={(text) => onChangeName(text)}
+					/>
+
+					<InputField
+						inputStyle={{
+							fontSize: 14
+						}}
 						containerStyle={styles.inputField}
 						leftIcon='phone'
 						placeholder='Phone Number'
 						autoCapitalize='none'
 						keyboardType='phone-pad'
-						autoFocus={true}
 						value={number}
 						onChangeText={(text) => onChangeNumber(text)}
 					/>
 
-					<InputField inputStyle={styles.text} containerStyle={styles.inputField} leftIcon='comment' placeholder='Comment' autoCapitalize='none' autoFocus={true} value={comment} onChangeText={(text) => onChangeComment(text)} />
+					<InputField
+						inputStyle={{
+							fontSize: 14
+						}}
+						containerStyle={styles.inputField}
+						leftIcon='comment'
+						placeholder='Comment'
+						autoCapitalize='none'
+						value={comment}
+						onChangeText={(text) => onChangeComment(text)}
+					/>
 
 					<TouchableOpacity style={styles.goldButton} onPress={() => scheduleAppoint()}>
 						<Text

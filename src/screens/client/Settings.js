@@ -29,6 +29,7 @@ function Settings(props) {
 	const changeInfo = (value, type) => {
 		setChangeUserInfo(value)
 		setUserDataType(type)
+		setNewUserInfo(value)
 	}
 
 	const setUserData = (newUserInfo) => {
@@ -57,24 +58,37 @@ function Settings(props) {
 			</ListItem>
 			{changeUserInfo && (
 				<View>
-					<TextInput placeholder={changeUserInfo} placeholderTextColor='#fff' onChangeText={setNewUserInfo} value={newUserInfo} style={styles.textInput} />
-					<TouchableOpacity style={styles.goldButton} onPress={() => setUserData(newUserInfo)}>
-						<ListItem.Title style={{color: '#000', alignSelf: 'center'}}>{`Change ${userDataType.charAt(0).toUpperCase() + userDataType.slice(1)}`}</ListItem.Title>
+					<TextInput placeholder={changeUserInfo.toString()} placeholderTextColor={'#fff'} onChangeText={setNewUserInfo} value={newUserInfo} style={styles.textInput} />
+					<TouchableOpacity
+						style={{
+							backgroundColor: '#E8BD70',
+							borderRadius: 5,
+							padding: 10,
+							margin: 5
+						}}
+						onPress={() => setUserData(newUserInfo)}>
+						<ListItem.Title
+							style={{
+								color: '#000',
+								alignSelf: 'center'
+							}}>
+							{`Change ${userDataType}: ${changeUserInfo}`}
+						</ListItem.Title>
 					</TouchableOpacity>
 				</View>
 			)}
-			<ListItem containerStyle={styles.avatarBackground} bottomDivider onPress={() => changeInfo(userInfo.name, 'name')}>
+			<ListItem containerStyle={styles.listItemContainer} bottomDivider onPress={() => changeInfo(userInfo.name, 'name')}>
 				<ListItem.Content>
 					<ListItem.Title style={styles.text}>Name: {userInfo.name}</ListItem.Title>
 				</ListItem.Content>
 			</ListItem>
-			<ListItem containerStyle={styles.avatarBackground} bottomDivider onPress={() => changeInfo(userInfo.phone, 'phone')}>
+			<ListItem containerStyle={styles.listItemContainer} bottomDivider onPress={() => changeInfo(userInfo.phone, 'phone')}>
 				<ListItem.Content>
 					<ListItem.Title style={styles.text}>Phone: {userInfo.phone}</ListItem.Title>
 				</ListItem.Content>
 			</ListItem>
 
-			<ListItem bottomDivider containerStyle={styles.avatarBackground} onPress={() => handleSignOut()}>
+			<ListItem bottomDivider containerStyle={styles.listItemContainer} onPress={() => handleSignOut()}>
 				<ListItem.Content>
 					<ListItem.Title style={styles.signOut}>Sign Out</ListItem.Title>
 				</ListItem.Content>
@@ -86,9 +100,7 @@ function Settings(props) {
 const styles = createStyles()
 
 const mapStateToProps = (store) => ({
-	currentUser: store.userState.currentUser,
-	appointments: store.userState.appointments,
-	barber: store.userState.barber
+	currentUser: store.userState.currentUser
 })
 
 export default connect(mapStateToProps, null)(Settings)

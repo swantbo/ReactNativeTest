@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
-import {View, StyleSheet, Text, Dimensions, ScrollView, ActivityIndicator, Alert} from 'react-native'
-import {Card, PricingCard} from 'react-native-elements'
-import {LineChart, BarChart} from 'react-native-chart-kit'
+import {View, Text, Dimensions, ScrollView, ActivityIndicator, Alert} from 'react-native'
+import {Card} from 'react-native-elements'
+import {BarChart} from 'react-native-chart-kit'
 import createStyles from '../../styles/base'
 import moment from 'moment'
 
@@ -9,7 +9,7 @@ import {subtractRevenueDiscount} from '../../utils/DataFormatting'
 import Firebase from '../../config/firebase'
 import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
 
-const OverView = ({navigation}) => {
+const OverView = () => {
 	const [currentMonthData, setCurrentMonthData] = useState({
 		haircuts: '',
 		goatPoints: ''
@@ -85,10 +85,10 @@ const OverView = ({navigation}) => {
 							<Text style={styles.revenueText}>Total Haicuts for {moment().format('MMM YYYY')}</Text>
 						</Card>
 						<Card containerStyle={styles.barberPhotoContainer}>
-							<Card.Title style={styles.cardTitle}>Total GoatPoints</Card.Title>
+							<Card.Title style={styles.cardTitle}>Total Goat Points Used</Card.Title>
 							<Card.Title style={styles.barberPricing}>{currentMonthData.goatPoints}</Card.Title>
 
-							<Text style={styles.revenueText}>Used GoatPoints for {moment().format('MMM YYYY')}</Text>
+							<Text style={styles.revenueText}>Used Goat Points for {moment().format('MMM YYYY')}</Text>
 						</Card>
 						<Card containerStyle={styles.barberPhotoContainer}>
 							<Card.Title style={styles.cardTitle}>Approximate Revenue</Card.Title>

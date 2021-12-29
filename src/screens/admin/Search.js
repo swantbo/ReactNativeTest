@@ -80,17 +80,17 @@ const Search = ({navigation}) => {
 
 	return (
 		<View style={styles.settingsContainer}>
+			<InputField
+				inputStyle={{fontSize: 14}}
+				containerStyle={styles.inputField}
+				leftIcon='account-search'
+				placeholder='Search Name, Number, or Email'
+				autoCapitalize='none'
+				autoCorrect={false}
+				value={search}
+				onChangeText={(text) => searchAccounts(text)}
+			/>
 			<ScrollView>
-				<InputField
-					inputStyle={{fontSize: 14}}
-					containerStyle={styles.inputField}
-					leftIcon='account-search'
-					placeholder='Search Name, Number, or Email'
-					autoCapitalize='none'
-					autoCorrect={false}
-					value={search}
-					onChangeText={(text) => searchAccounts(text)}
-				/>
 				{userInfo &&
 					(search !== '' ? searchResults : userInfo).map((onekey, i) => (
 						<>
@@ -181,7 +181,7 @@ const Search = ({navigation}) => {
 										</View>
 										<View style={styles.rowEnd}>
 											<ListItem.Subtitle style={styles.text} onPress={() => searchAccounts(onekey.referral)}>
-												{onekey.referral ? 'Referral: ' + onekey.referral : 'No Referral'}
+												{onekey.referral ? 'Ref: ' + onekey.referral : 'No Referral'}
 											</ListItem.Subtitle>
 										</View>
 									</View>

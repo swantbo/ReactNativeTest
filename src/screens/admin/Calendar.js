@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react'
 import {View, StyleSheet, ScrollView, ActivityIndicator, Alert, Linking, TouchableOpacity, Text} from 'react-native'
 import CalendarStrip from 'react-native-calendar-strip'
-import moment from 'moment'
 import {ListItem, Button} from 'react-native-elements'
+
 import {formatPhoneNumber} from '../../utils/DataFormatting'
 import createStyles from '../../styles/base'
 
+import moment from 'moment'
 import {connect} from 'react-redux'
 import Firebase from '../../config/firebase'
 
@@ -251,24 +252,21 @@ function Calendar(props) {
 									<View style={styles.rowStart}>
 										<ListItem.Title style={styles.text}>{key.time}</ListItem.Title>
 									</View>
-									{!key.name ? (
-										<View style={styles.rowEnd}>
+									<View style={styles.rowEnd}>
+										{!key.name ? (
 											<ListItem.Title style={styles.listItemTitle}>Avaliable</ListItem.Title>
-										</View>
-									) : key.name === 'Off' ? (
-										<View style={styles.rowEnd}>
+										) : key.name === 'Off' ? (
 											<ListItem.Title style={styles.listItemTitle}>{key.name}</ListItem.Title>
-										</View>
-									) : (
-										<View style={styles.rowEnd}>
+										) : (
 											<ListItem.Subtitle
 												style={{
-													color: '#121212'
+													color: '#121212',
+													fontSize: 4
 												}}>
 												{key.userId}
 											</ListItem.Subtitle>
-										</View>
-									)}
+										)}
+									</View>
 								</View>
 								{key.name !== 'Off' && key.name ? (
 									<>
@@ -296,12 +294,7 @@ function Calendar(props) {
 																	Linking.openURL(`sms:${key?.phone}`)
 																})
 															}>
-															<ListItem.Subtitle
-																style={{
-																	color: '#fff'
-																}}>
-																{formatPhoneNumber(key?.phone) ? formatPhoneNumber(key?.phone) : key.phone}
-															</ListItem.Subtitle>
+															<ListItem.Subtitle style={styles.text}>{formatPhoneNumber(key?.phone) ? formatPhoneNumber(key?.phone) : key.phone}</ListItem.Subtitle>
 														</TouchableOpacity>
 													) : (
 														<Text>''</Text>
@@ -309,11 +302,11 @@ function Calendar(props) {
 												</View>
 												{key?.goatPoints !== '' && undefined ? (
 													<View style={styles.rowEnd}>
-														<ListItem.Subtitle style={styles.text}>{'Goat Points: ' + key.goatPoints}</ListItem.Subtitle>
+														<ListItem.Subtitle style={styles.text}>{`GPs: ` + key.goatPoints}</ListItem.Subtitle>
 													</View>
 												) : (
 													<View style={styles.rowEnd}>
-														<ListItem.Subtitle style={styles.text}>GoatPoints: 0</ListItem.Subtitle>
+														<ListItem.Subtitle style={styles.text}>GPs: 0</ListItem.Subtitle>
 													</View>
 												)}
 											</>
@@ -346,8 +339,6 @@ function Calendar(props) {
 const styles = createStyles()
 
 const mapStateToProps = (store) => ({
-	currentUser: store.userState.currentUser,
-	appointments: store.userState.appointments,
 	barber: store.userState.barber
 })
 

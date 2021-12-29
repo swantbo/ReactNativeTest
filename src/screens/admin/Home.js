@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {View, Text, StyleSheet, ScrollView, Linking, ActivityIndicator, SafeAreaView, ImageBackground, TouchableOpacity} from 'react-native'
-import {Card, SocialIcon, Avatar, Image, PricingCard} from 'react-native-elements'
+import {Card, SocialIcon, Avatar, Image, ListItem} from 'react-native-elements'
 import * as firebase from 'firebase'
 import * as ImagePicker from 'expo-image-picker'
 import {formatPhoneNumber} from '../../utils/DataFormatting'
@@ -45,9 +45,8 @@ function Home(props) {
 	}
 
 	useEffect(() => {
-		const {currentUser, barber} = props
+		const {barber} = props
 		setBarber(barber)
-		console.log('props', props)
 
 		async function getBarberImage() {
 			await firebase
@@ -59,7 +58,6 @@ function Home(props) {
 				})
 			const imageRefs = await firebase.storage().ref('Barber/HaircutPictures/').listAll()
 			const urls = await Promise.all(imageRefs.items.map((ref) => ref.getDownloadURL()))
-			// const urls = []
 			setHaircutImages(urls)
 		}
 
@@ -68,13 +66,9 @@ function Home(props) {
 
 	return (
 		<>
-			<SafeAreaView style={styles.cardHeader} />
-
-			<Card containerStyle={styles.cardGold}>
-				<Card.Title style={{alignSelf: 'center'}}>
-					<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={'N'} source={{uri: image}} onPress={() => pickImage('Profile')} />
-				</Card.Title>
-			</Card>
+			<SafeAreaView style={styles.cardHeader}>
+				<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={'N'} source={{uri: image}} onPress={() => pickImage('Profile')} />
+			</SafeAreaView>
 
 			<View style={styles.container}>
 				<ScrollView style={styles.scrollView}>
@@ -84,40 +78,7 @@ function Home(props) {
 						</Card.Title>
 						<Card.Title style={styles.listItemSubTitle}>{barber.bio}</Card.Title>
 					</Card>
-					<View style={styles.row}>
-						<View style={{flex: 1}}>
-							<PricingCard
-								containerStyle={styles.pricingCard}
-								pricingStyle={styles.listItemSubTitle}
-								color='#E8BD70'
-								title={<Card.Title style={styles.cardTitle}>Men's Haircut</Card.Title>}
-								price={<Card.Title style={styles.barberPricing}>{barber.price}</Card.Title>}
-								info={['Includes Haircut, Eyebrows and Beard trim']}
-								button={{
-									title: 'Schedule Now'
-								}}
-								onButtonPress={() => {
-									props.navigation.navigate('Appointment')
-								}}
-							/>
-						</View>
-						<View style={{flex: 1}}>
-							<PricingCard
-								containerStyle={styles.pricingCard}
-								pricingStyle={styles.listItemSubTitle}
-								color='#E8BD70'
-								title={<Card.Title style={styles.cardTitle}>Kid's Haircut</Card.Title>}
-								price={<Card.Title style={styles.barberPricing}>{barber.kidsHaircut}</Card.Title>}
-								info={["Includes Full Haircut, for Kid's"]}
-								button={{
-									title: 'Schedule Now'
-								}}
-								onButtonPress={() => {
-									props.navigation.navigate('Appointment')
-								}}
-							/>
-						</View>
-					</View>
+
 					<View style={styles.barberSocialIcons}>
 						<SocialIcon
 							onPress={() => {
@@ -154,9 +115,38 @@ function Home(props) {
 							}
 							style={styles.socialIcons}
 							type='google'
-							title='test'
 						/>
 					</View>
+
+					<Card containerStyle={styles.barberAddress}>
+						<Card.Title style={styles.barberInfoTitles}>SERVICES & PRICING</Card.Title>
+						<ListItem topDivider bottomDivider containerStyle={styles.listItemContainer}>
+							<ListItem.Content>
+								<View style={styles.row}>
+									<View style={styles.rowStart}>
+										<ListItem.Title style={styles.listItemSubTitle}>Men's Haircut</ListItem.Title>
+									</View>
+									<View style={styles.rowEnd}>
+										<ListItem.Title style={styles.listItemSubTitle}>{barber.price}</ListItem.Title>
+									</View>
+								</View>
+								<ListItem.Subtitle style={styles.listItemSubTitle}>Full Haircut, Eyebrows, and Beard Trim</ListItem.Subtitle>
+							</ListItem.Content>
+						</ListItem>
+						<ListItem bottomDivider containerStyle={styles.listItemContainer}>
+							<ListItem.Content>
+								<View style={styles.row}>
+									<View style={styles.rowStart}>
+										<ListItem.Title style={styles.listItemSubTitle}>Kid's Haircut</ListItem.Title>
+									</View>
+									<View style={styles.rowEnd}>
+										<ListItem.Title style={styles.listItemSubTitle}>{barber.kidsHaircut}</ListItem.Title>
+									</View>
+								</View>
+								<ListItem.Subtitle style={styles.listItemSubTitle}>Full Haircut, for Kid's</ListItem.Subtitle>
+							</ListItem.Content>
+						</ListItem>
+					</Card>
 
 					<Card containerStyle={styles.barberAddress}>
 						<Card.Title style={styles.barberInfoTitles}>ADDRESS & HOURS</Card.Title>
@@ -235,14 +225,6 @@ function Home(props) {
 								<Image style={styles.image} source={{uri: haircutImages[3]}} PlaceholderContent={<ActivityIndicator />} onPress={() => pickImage('Haircut', 4)} />
 							</View>
 						</View>
-						<View style={styles.containerGallery}>
-							<View style={styles.containerImage}>
-								<Image style={styles.image} source={{uri: haircutImages[4]}} PlaceholderContent={<ActivityIndicator />} onPress={() => pickImage('Haircut', 5)} />
-							</View>
-							<View style={styles.containerImage}>
-								<Image style={styles.image} source={{uri: haircutImages[5]}} PlaceholderContent={<ActivityIndicator />} onPress={() => pickImage('Haircut', 6)} />
-							</View>
-						</View>
 					</Card>
 				</ScrollView>
 			</View>
@@ -253,8 +235,6 @@ function Home(props) {
 const styles = createStyles()
 
 const mapStateToProps = (store) => ({
-	currentUser: store.userState.currentUser,
-	appointments: store.userState.appointments,
 	barber: store.userState.barber
 })
 

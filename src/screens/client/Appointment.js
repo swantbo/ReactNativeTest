@@ -191,110 +191,112 @@ function Appointment(props) {
 					</TouchableOpacity>
 				</ListItem.Content>
 			</ListItem>
-			<View>
-				<ListItem containerStyle={styles.listItemContainerBlack}>
-					<ListItem.Content>
-						<ListItem.Title style={styles.listItemTitle}>Appointment Type</ListItem.Title>
-						<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={{color: '#fff'}} title="Men's Haircut" checked={haircutType === 'mens' ? true : false} onPress={() => setHaircutType('mens')} />
-						<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={styles.text} title="Kid's Haircut" checked={haircutType === 'kids' ? true : false} onPress={() => setHaircutType('kids')} />
-					</ListItem.Content>
-				</ListItem>
-				<CalendarStrip
-					scrollable
-					style={{
-						height: 100,
-						padding: 5
-					}}
-					calendarHeaderStyle={styles.calendarTitle}
-					calendarColor={'#121212'}
-					dateNumberStyle={{color: 'white'}}
-					dateNameStyle={{color: 'white'}}
-					iconContainer={{flex: 0.1}}
-					highlightDateNameStyle={{color: 'white'}}
-					highlightDateNumberStyle={{fontWeight: 'bold', color: 'white'}}
-					highlightDateContainerStyle={styles.socialIcons}
-					startingDate={moment()}
-					minDate={moment()}
-					maxDate={moment().add(30, 'days')}
-					selectedDate={selectedDate}
-					onDateSelected={onDateSelected}
-					datesBlacklist={calendarDatesRemoved}
-				/>
+			<ScrollView>
+				<View>
+					<ListItem containerStyle={styles.listItemContainerBlack}>
+						<ListItem.Content>
+							<ListItem.Title style={styles.listItemTitle}>Appointment Type</ListItem.Title>
+							<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={{color: '#fff'}} title="Men's Haircut" checked={haircutType === 'mens' ? true : false} onPress={() => setHaircutType('mens')} />
+							<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={styles.text} title="Kid's Haircut" checked={haircutType === 'kids' ? true : false} onPress={() => setHaircutType('kids')} />
+						</ListItem.Content>
+					</ListItem>
+					<CalendarStrip
+						scrollable
+						style={{
+							height: 100,
+							padding: 5
+						}}
+						calendarHeaderStyle={styles.calendarTitle}
+						calendarColor={'#121212'}
+						dateNumberStyle={{color: 'white'}}
+						dateNameStyle={{color: 'white'}}
+						iconContainer={{flex: 0.1}}
+						highlightDateNameStyle={{color: 'white'}}
+						highlightDateNumberStyle={{fontWeight: 'bold', color: 'white'}}
+						highlightDateContainerStyle={styles.socialIcons}
+						startingDate={moment()}
+						minDate={moment()}
+						maxDate={moment().add(30, 'days')}
+						selectedDate={selectedDate}
+						onDateSelected={onDateSelected}
+						datesBlacklist={calendarDatesRemoved}
+					/>
 
-				{!isLoading && Object.keys(newTimes).length !== 0 ? (
-					<ScrollView horizontal={true} style={{}}>
-						{Object.entries(newTimes).map((onekey, i) => (
-							<ListItem bottomDivider containerStyle={styles.listItemContainerBlack} key={i} onPress={() => selectedTimeChange(onekey[0])}>
-								<ListItem.Content style={styles.listItemContent}>
-									<ListItem.Title style={{fontWeight: 'bold'}}>{onekey[1] ? null : onekey[0]}</ListItem.Title>
-								</ListItem.Content>
-							</ListItem>
-						))}
-					</ScrollView>
-				) : isLoading ? (
-					<ScrollView horizontal={true} style={styles.scrollViewAppointment}>
-						<ListItem bottomDivider containerStyle={styles.listItemContainerBlack}>
-							<ListItem.Content style={styles.listItemContent}>
-								<ActivityIndicator color='#fff' size='large' />
-							</ListItem.Content>
-						</ListItem>
-					</ScrollView>
-				) : (
-					Object.keys(newTimes).length == 0 && (
+					{!isLoading && Object.keys(newTimes).length !== 0 ? (
+						<ScrollView horizontal={true} style={{}}>
+							{Object.entries(newTimes).map((onekey, i) => (
+								<ListItem bottomDivider containerStyle={styles.listItemContainerBlack} key={i} onPress={() => selectedTimeChange(onekey[0])}>
+									<ListItem.Content style={styles.listItemContent}>
+										<ListItem.Title style={{fontWeight: 'bold'}}>{onekey[1] ? null : onekey[0]}</ListItem.Title>
+									</ListItem.Content>
+								</ListItem>
+							))}
+						</ScrollView>
+					) : isLoading ? (
 						<ScrollView horizontal={true} style={styles.scrollViewAppointment}>
 							<ListItem bottomDivider containerStyle={styles.listItemContainerBlack}>
 								<ListItem.Content style={styles.listItemContent}>
-									<ListItem.Title style={styles.text}>No Available Times</ListItem.Title>
+									<ActivityIndicator color='#fff' size='large' />
 								</ListItem.Content>
 							</ListItem>
 						</ScrollView>
-					)
-				)}
-			</View>
-			<View>
-				<ListItem bottomDivider containerStyle={styles.listItemContainerBlack}>
-					<ListItem.Content>
-						<ListItem.Title style={styles.text}>For a Friend?</ListItem.Title>
-						<InputField containerStyle={styles.inputField} leftIcon='account-plus' placeholder='Friends Name' autoCapitalize='words' value={friend} onChangeText={(text) => setFriend(text)} />
-						<ListItem.Title style={styles.text}>Comments/Notes</ListItem.Title>
-						<InputField containerStyle={styles.inputField} leftIcon='comment' placeholder='Comment (optional)' autoCapitalize='sentences' value={comment} onChangeText={(text) => onChangeComment(text)} />
-					</ListItem.Content>
-				</ListItem>
-			</View>
-			<View style={styles.footer}>
-				<ListItem bottomDivider containerStyle={styles.avatarBackground}>
-					<ListItem.Content>
-						<View style={{flexDirection: 'row'}}>
-							<View style={styles.rowStart}>
-								<ListItem.Title style={styles.text}>
-									{selectedDate ? selectedDate + ' ' : 'Choose Date '}
-									{selectedTime ? selectedTime : 'Choose Time'}
-								</ListItem.Title>
-								<ListItem.Title style={styles.text}>{haircutType === 'mens' ? "Men's Haircut " : "Kid's Haircut "}</ListItem.Title>
-								<TouchableOpacity style={styles.goldButton} onPress={() => (discount === false && userData.points != 0 ? setDiscount(true) : setDiscount(false))}>
-									<ListItem.Title style={styles.buttonTitle}>Goat Points: {userData.points}</ListItem.Title>
-								</TouchableOpacity>
-							</View>
-							<View style={styles.rowEnd}>
-								<ListItem.Title style={styles.text}>{haircutType === 'mens' ? barberInfo.price : barberInfo.kidsHaircut}</ListItem.Title>
-								<ListItem.Title style={styles.text}>
-									<ListItem.Title style={styles.text}>{discount != false ? '-$' + insertDecimal(userData.points) : ' '}</ListItem.Title>
-								</ListItem.Title>
-								<TouchableOpacity style={styles.goldButton} onPress={() => scheduleAppointment(selectedDate, selectedTime)}>
-									<ListItem.Title style={styles.buttonTitle}>
-										Book{' '}
-										{discount != false
-											? '$' + subtractDiscount(haircutType, haircutType === 'kids' ? barberInfo.kidsHaircut : barberInfo.price, userData.points)
-											: haircutType === 'mens'
-											? barberInfo.price
-											: barberInfo.kidsHaircut}
+					) : (
+						Object.keys(newTimes).length == 0 && (
+							<ScrollView horizontal={true} style={styles.scrollViewAppointment}>
+								<ListItem bottomDivider containerStyle={styles.listItemContainerBlack}>
+									<ListItem.Content style={styles.listItemContent}>
+										<ListItem.Title style={styles.buttonTitle}>No Available Times</ListItem.Title>
+									</ListItem.Content>
+								</ListItem>
+							</ScrollView>
+						)
+					)}
+				</View>
+				<View>
+					<ListItem bottomDivider containerStyle={styles.listItemContainerBlack}>
+						<ListItem.Content>
+							<ListItem.Title style={styles.listItemTitle}>For a Friend?</ListItem.Title>
+							<InputField containerStyle={styles.inputField} leftIcon='account-plus' placeholder='Friends Name' autoCapitalize='words' value={friend} onChangeText={(text) => setFriend(text)} />
+							<ListItem.Title style={styles.listItemTitle}>Comments</ListItem.Title>
+							<InputField containerStyle={styles.inputField} leftIcon='comment' placeholder='Comment (optional)' autoCapitalize='sentences' value={comment} onChangeText={(text) => onChangeComment(text)} />
+						</ListItem.Content>
+					</ListItem>
+				</View>
+				<View style={styles.footer}>
+					<ListItem bottomDivider containerStyle={styles.avatarBackground}>
+						<ListItem.Content>
+							<View style={{flexDirection: 'row'}}>
+								<View style={styles.rowStart}>
+									<ListItem.Title style={styles.text}>
+										{selectedDate ? selectedDate + ' ' : 'Choose Date '}
+										{selectedTime ? selectedTime : 'Choose Time'}
 									</ListItem.Title>
-								</TouchableOpacity>
+									<ListItem.Title style={styles.text}>{haircutType === 'mens' ? "Men's Haircut " : "Kid's Haircut "}</ListItem.Title>
+									<TouchableOpacity style={styles.goldButton} onPress={() => (discount === false && userData.points != 0 ? setDiscount(true) : setDiscount(false))}>
+										<ListItem.Title style={styles.buttonTitle}>Goat Points: {userData.points}</ListItem.Title>
+									</TouchableOpacity>
+								</View>
+								<View style={styles.rowEnd}>
+									<ListItem.Title style={styles.text}>{haircutType === 'mens' ? barberInfo.price : barberInfo.kidsHaircut}</ListItem.Title>
+									<ListItem.Title style={styles.text}>
+										<ListItem.Title style={styles.text}>{discount != false ? '-$' + insertDecimal(userData.points) : ' '}</ListItem.Title>
+									</ListItem.Title>
+									<TouchableOpacity style={styles.goldButton} onPress={() => scheduleAppointment(selectedDate, selectedTime)}>
+										<ListItem.Title style={styles.buttonTitle}>
+											Book{' '}
+											{discount != false
+												? '$' + subtractDiscount(haircutType, haircutType === 'kids' ? barberInfo.kidsHaircut : barberInfo.price, userData.points)
+												: haircutType === 'mens'
+												? barberInfo.price
+												: barberInfo.kidsHaircut}
+										</ListItem.Title>
+									</TouchableOpacity>
+								</View>
 							</View>
-						</View>
-					</ListItem.Content>
-				</ListItem>
-			</View>
+						</ListItem.Content>
+					</ListItem>
+				</View>
+			</ScrollView>
 		</KeyboardAvoidingView>
 	)
 }

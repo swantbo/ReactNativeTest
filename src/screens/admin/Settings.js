@@ -3,8 +3,6 @@ import {View, Text, Button, StyleSheet, TextInput, Alert, ActivityIndicator, Tou
 import {ListItem} from 'react-native-elements'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import * as firebase from 'firebase'
-
 import Firebase from '../../config/firebase'
 const auth = Firebase.auth()
 import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
@@ -31,7 +29,7 @@ function Settings(props) {
 	}
 
 	const changeBarberData = (value, type) => {
-		setChangeData(value.toString()), setBarberDataType(type.toLowerCase())
+		setChangeData(value.toString()), setBarberDataType(type.toLowerCase()), setNewBarberData(value.toString())
 	}
 
 	const setBarberData = () => {
@@ -46,8 +44,7 @@ function Settings(props) {
 			}
 		}
 		if (barberDataType !== 'username' && barberDataType !== 'userphone' && newBarberData !== '') {
-			firebase
-				.firestore()
+			Firebase.firestore()
 				.collection('Barber')
 				.doc('Nate')
 				.set(barberData, {merge: true})
@@ -59,8 +56,7 @@ function Settings(props) {
 				})
 		}
 		if (barberDataType === 'username' || (barberDataType === 'userphone' && newBarberData !== '')) {
-			firebase
-				.firestore()
+			Firebase.firestore()
 				.collection('users')
 				.doc(user.uid)
 				.set(barberData, {merge: true})
@@ -84,25 +80,23 @@ function Settings(props) {
 			<ScrollView>
 				{changeData != '' ? (
 					<View>
-						<>
-							<TextInput placeholder={changeData.toString()} placeholderTextColor={'#fff'} onChangeText={setNewBarberData} value={newBarberData} style={styles.textInput} />
-							<TouchableOpacity
+						<TextInput placeholder={changeData.toString()} placeholderTextColor={'#fff'} onChangeText={setNewBarberData} value={newBarberData} style={styles.textInput} />
+						<TouchableOpacity
+							style={{
+								backgroundColor: '#E8BD70',
+								borderRadius: 5,
+								padding: 10,
+								margin: 5
+							}}
+							onPress={() => setBarberData()}>
+							<ListItem.Title
 								style={{
-									backgroundColor: '#E8BD70',
-									borderRadius: 5,
-									padding: 10,
-									margin: 5
-								}}
-								onPress={() => setBarberData()}>
-								<ListItem.Title
-									style={{
-										color: '#000',
-										alignSelf: 'center'
-									}}>
-									{`Change ${barberDataType}: ${changeData}`}
-								</ListItem.Title>
-							</TouchableOpacity>
-						</>
+									color: '#000',
+									alignSelf: 'center'
+								}}>
+								{`Change ${barberDataType}: ${changeData}`}
+							</ListItem.Title>
+						</TouchableOpacity>
 					</View>
 				) : (
 					<Text></Text>
@@ -207,7 +201,6 @@ const styles = createStyles()
 
 const mapStateToProps = (store) => ({
 	currentUser: store.userState.currentUser,
-	appointments: store.userState.appointments,
 	barber: store.userState.barber
 })
 

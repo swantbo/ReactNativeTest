@@ -88,7 +88,7 @@ function Barber(props) {
 						/>
 					</View>
 
-					<Card containerStyle={styles.barberAddress}>
+					<Card containerStyle={styles.barberInfoView}>
 						<Card.Title style={styles.barberInfoTitles}>SERVICES & PRICING</Card.Title>
 						<ListItem topDivider bottomDivider containerStyle={styles.listItemContainer}>
 							<ListItem.Content>
@@ -118,7 +118,7 @@ function Barber(props) {
 						</ListItem>
 					</Card>
 
-					<Card containerStyle={styles.barberAddress}>
+					<Card containerStyle={styles.barberInfoView}>
 						<Card.Title style={styles.barberInfoTitles}>ADDRESS & HOURS</Card.Title>
 						<View style={styles.row}>
 							<View style={styles.rowStart}>
@@ -177,7 +177,7 @@ function Barber(props) {
 						</View>
 					</Card>
 
-					<Card containerStyle={styles.barberAddress}>
+					<Card containerStyle={styles.barberInfoView}>
 						<Card.Title style={styles.barberInfoTitles}>Photos</Card.Title>
 						<View style={styles.containerGallery}>
 							<View style={styles.containerImage}>

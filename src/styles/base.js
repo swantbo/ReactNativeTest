@@ -114,18 +114,22 @@ const baseStyles = {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		backgroundColor: '#121212',
-		margin: 0,
-		marginLeft: 15,
-		marginRight: 15,
+		marginTop: 10,
+		marginBottom: 10,
+		marginLeft: 5,
+		marginRight: 5,
 		padding: 5,
 		borderRadius: 10
 	},
 	socialIcons: {
 		backgroundColor: '#E8BD70'
 	},
-	barberAddress: {
+	barberInfoView: {
 		borderRadius: 10,
-		marginBottom: 15,
+		marginTop: 10,
+		marginBottom: 10,
+		marginLeft: 5,
+		marginRight: 5,
 		backgroundColor: '#121212',
 		borderColor: '#121212'
 	},

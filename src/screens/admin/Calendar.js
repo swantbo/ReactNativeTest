@@ -210,7 +210,7 @@ function Calendar(props) {
 										}}
 										buttonStyle={styles.calendarButton}
 										onPress={() =>
-											Alert.alert('No Call No Show', `Would you like to add a strike to Account Name: ${key.name ? key.name : 'N/A'} ${'\n'}Account Id: ${key.id ? key.id : 'N/A'}`, [
+											Alert.alert('No Call No Show', `Would you like to add a strike to Account Name: ${key.name ? key.name : 'N/A'} ${'\n'}Account Id: ${key.userId ? key.userId : 'N/A'}`, [
 												{
 													text: 'Cancel'
 												},

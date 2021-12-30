@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react'
 import {View, Text, StyleSheet, ScrollView, Linking, ActivityIndicator, SafeAreaView, ImageBackground, TouchableOpacity} from 'react-native'
 import {Card, SocialIcon, Avatar, Image, ListItem} from 'react-native-elements'
-import * as firebase from 'firebase'
+
 import * as ImagePicker from 'expo-image-picker'
 import {formatPhoneNumber} from '../../utils/DataFormatting'
 import MapView from 'react-native-maps'
 
+import Firebase from '../../config/firebase'
 import createStyles from '../../styles/base'
 
 import {connect} from 'react-redux'
@@ -37,9 +38,8 @@ function Home(props) {
 		const response = await fetch(uri)
 		const blob = await response.blob()
 		type === 'Profile'
-			? await firebase.storage().ref('Barber/ProfilePicture').put(blob)
-			: await firebase
-					.storage()
+			? await Firebase.storage().ref('Barber/ProfilePicture').put(blob)
+			: await Firebase.storage()
 					.ref('Barber/HaircutPictures/' + id)
 					.put(blob)
 	}
@@ -49,18 +49,16 @@ function Home(props) {
 		setBarber(barber)
 
 		async function getBarberImage() {
-			await firebase
-				.storage()
+			await Firebase.storage()
 				.ref('Barber/ProfilePicture')
 				.getDownloadURL()
 				.then((ProfileImage) => {
 					setImage(ProfileImage)
 				})
-			const imageRefs = await firebase.storage().ref('Barber/HaircutPictures/').listAll()
+			const imageRefs = await Firebase.storage().ref('Barber/HaircutPictures/').listAll()
 			const urls = await Promise.all(imageRefs.items.map((ref) => ref.getDownloadURL()))
 			setHaircutImages(urls)
 		}
-
 		getBarberImage()
 	}, [props])
 
@@ -118,7 +116,7 @@ function Home(props) {
 						/>
 					</View>
 
-					<Card containerStyle={styles.barberAddress}>
+					<Card containerStyle={styles.barberInfoView}>
 						<Card.Title style={styles.barberInfoTitles}>SERVICES & PRICING</Card.Title>
 						<ListItem topDivider bottomDivider containerStyle={styles.listItemContainer}>
 							<ListItem.Content>
@@ -148,7 +146,7 @@ function Home(props) {
 						</ListItem>
 					</Card>
 
-					<Card containerStyle={styles.barberAddress}>
+					<Card containerStyle={styles.barberInfoView}>
 						<Card.Title style={styles.barberInfoTitles}>ADDRESS & HOURS</Card.Title>
 						<View style={styles.row}>
 							<View style={styles.rowStart}>
@@ -207,7 +205,7 @@ function Home(props) {
 						</View>
 					</Card>
 
-					<Card containerStyle={styles.barberAddress}>
+					<Card containerStyle={styles.barberInfoView}>
 						<Card.Title style={styles.barberInfoTitles}>Photos</Card.Title>
 						<View style={styles.containerGallery}>
 							<View style={styles.containerImage}>

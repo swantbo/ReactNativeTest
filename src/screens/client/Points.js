@@ -24,7 +24,7 @@ const Points = ({route}) => {
 
 	return (
 		<View style={styles.settingsContainer}>
-			<Card containerStyle={styles.barberAddress}>
+			<Card containerStyle={styles.barberInfoView}>
 				<Card.Title style={styles.modalTitle}>Goat Points</Card.Title>
 				<Card.Divider />
 				<View>
@@ -32,7 +32,7 @@ const Points = ({route}) => {
 					<Text style={styles.text}>To earn Goat Points talk to your Barber!</Text>
 				</View>
 			</Card>
-			<Card containerStyle={styles.barberAddress}>
+			<Card containerStyle={styles.barberInfoView}>
 				<Card.Title style={styles.modalTitle}>Goat Points Conversion</Card.Title>
 				<Card.Divider />
 				<View style={{alignItems: 'center'}}>

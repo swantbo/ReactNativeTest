@@ -95,9 +95,9 @@ const Search = ({navigation}) => {
 					(search !== '' ? searchResults : userInfo).map((onekey, i) => (
 						<>
 							<ListItem.Swipeable
+								key={onekey.id}
 								bottomDivider
 								containerStyle={styles.searchContainer}
-								key={i}
 								rightContent={
 									<Button
 										title='Delete'
@@ -193,6 +193,9 @@ const Search = ({navigation}) => {
 											<ListItem.Subtitle style={styles.text}>Points: {onekey.points}</ListItem.Subtitle>
 										</View>
 									</View>
+
+									<ListItem.Subtitle style={styles.text}>DOB: {onekey.dob ? onekey.dob : 'N/A'}</ListItem.Subtitle>
+
 									<ListItem.Subtitle style={{color: 'lightgrey'}}>{onekey.id ? onekey.id : 'N/A'}</ListItem.Subtitle>
 								</ListItem.Content>
 							</ListItem.Swipeable>

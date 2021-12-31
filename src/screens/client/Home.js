@@ -4,6 +4,7 @@ import {Card, ListItem, Button, Avatar, PricingCard} from 'react-native-elements
 import {ScrollView} from 'react-native-gesture-handler'
 import createStyles from '../../styles/base'
 
+import * as FileSystem from 'expo-file-system'
 import {connect} from 'react-redux'
 import moment from 'moment'
 import * as ImagePicker from 'expo-image-picker'
@@ -15,7 +16,6 @@ import Firebase from '../../config/firebase'
 
 function Home(props) {
 	const {user} = useContext(AuthenticatedUserContext)
-	const [image, setImage] = useState(null)
 	const [userData, setTestUser] = useState({})
 	const [barberData, setTestBarber] = useState({})
 	const [upcomingAppointments, setUpcomingAppointments] = useState({})
@@ -34,7 +34,7 @@ function Home(props) {
 					...previousData,
 					...{[onekey[1].id]: onekey[1]}
 				}
-				removeDates.push(onekey[1].id)
+				removeDates.push(onekey[1].id.split(' ')[0])
 			}
 		})
 		if (Object.keys(previousData).length > 2) {
@@ -46,22 +46,6 @@ function Home(props) {
 		setPreviousAppointments(previousData)
 	}
 
-	async function getUserInfo() {
-		try {
-			await Firebase.storage()
-				.ref('Users/' + user.uid)
-				.getDownloadURL()
-				.then((image) => {
-					setImage(image)
-				})
-				.catch((error) => {
-					console.log('error', error)
-				})
-		} catch (err) {
-			Alert.alert('There is an error.', err.message)
-		}
-	}
-
 	const pickImage = async () => {
 		let result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -70,18 +54,20 @@ function Home(props) {
 			quality: 1
 		})
 
-		if (!result.cancelled) {
-			setImage(result.uri)
-			uploadImageAsync(result.uri)
+		let cameraImageUri = ''
+		if (result) {
+			const fileName = result.uri.split('/').pop()
+			cameraImageUri = FileSystem.documentDirectory + fileName
+			try {
+				await FileSystem.moveAsync({from: result.uri, to: cameraImageUri})
+				const picture = {
+					profilePicture: cameraImageUri
+				}
+				await Firebase.firestore().collection('users').doc(user.uid).set(picture, {merge: true})
+			} catch (err) {
+				throw new Error('Something went wrong on moving image file!')
+			}
 		}
-	}
-
-	async function uploadImageAsync(uri) {
-		const response = await fetch(uri)
-		const blob = await response.blob()
-		await Firebase.storage()
-			.ref('Users/' + user.uid)
-			.put(blob)
 	}
 
 	async function createCalendar(appointmentDate, appointmentTime, address, phone) {
@@ -150,7 +136,6 @@ function Home(props) {
 		const {currentUser, barber, appointments} = props
 		setTestUser(currentUser)
 		setTestBarber(barber)
-		getUserInfo()
 		formatAppointments(appointments),
 			(async () => {
 				const {status} = await Calendar.requestCalendarPermissionsAsync()
@@ -171,7 +156,7 @@ function Home(props) {
 	return (
 		<>
 			<SafeAreaView style={styles.cardHeader}>
-				<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={userData.name?.[0]} source={{uri: image}} onPress={() => pickImage()} />
+				<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={userData.name?.[0]} source={{uri: userData.profilePicture}} onPress={() => pickImage()} />
 			</SafeAreaView>
 			<View style={styles.container}>
 				<ScrollView style={styles.scrollView}>
@@ -243,7 +228,7 @@ function Home(props) {
 																])
 															}>
 															<ListItem.Title style={styles.listItemSubTitle}>
-																{moment(onekey[1].id).format('ddd, MMM Do YYYY')}, {onekey[1].time.toString().toLowerCase()}
+																{moment(onekey[1].id.split(' ')[0]).format('ddd, MMM Do YYYY')}, {onekey[1].time.toString().toLowerCase()}
 															</ListItem.Title>
 														</TouchableOpacity>
 													</View>
@@ -319,7 +304,7 @@ function Home(props) {
 												<View style={styles.row}>
 													<View style={styles.rowStart}>
 														<ListItem.Title style={styles.listItemSubTitle}>
-															{moment(onekey[1].id).format('ddd, MMM Do YYYY')}, {onekey[1].time.toString().toLowerCase()}
+															{moment(onekey[1].id.split(' ')[0]).format('ddd, MMM Do YYYY')}, {onekey[1].time.toString().toLowerCase()}
 														</ListItem.Title>
 													</View>
 													<View style={styles.rowEnd}>

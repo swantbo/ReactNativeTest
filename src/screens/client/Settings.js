@@ -14,6 +14,8 @@ const auth = Firebase.auth()
 function Settings(props) {
 	const {user} = useContext(AuthenticatedUserContext)
 	const [userInfo, setUserInfo] = useState({})
+	const [changeName, setChangeName] = useState('')
+	const [changePhone, setChangePhone] = useState('')
 	const [changeUserInfo, setChangeUserInfo] = useState()
 	const [newUserInfo, setNewUserInfo] = useState('')
 	const [userDataType, setUserDataType] = useState('')
@@ -34,7 +36,9 @@ function Settings(props) {
 
 	const setUserData = (newUserInfo) => {
 		const updateUserData = {
-			[`${userDataType}`]: newUserInfo
+			name: changePhone,
+			phone,
+			changePhone
 		}
 		try {
 			Firebase.firestore().collection('users').doc(user.uid).update(updateUserData)
@@ -46,7 +50,8 @@ function Settings(props) {
 
 	useEffect(() => {
 		const {currentUser} = props
-		setUserInfo(currentUser)
+		setChangeName(currentUser.name)
+		setChangePhone(currentUser.phone)
 	}, [props])
 
 	return (
@@ -59,35 +64,26 @@ function Settings(props) {
 			{changeUserInfo && (
 				<View>
 					<TextInput placeholder={changeUserInfo.toString()} placeholderTextColor={'#fff'} onChangeText={setNewUserInfo} value={newUserInfo} style={styles.textInput} />
-					<TouchableOpacity
-						style={{
-							backgroundColor: '#E8BD70',
-							borderRadius: 5,
-							padding: 10,
-							margin: 5
-						}}
-						onPress={() => setUserData(newUserInfo)}>
-						<ListItem.Title
-							style={{
-								color: '#000',
-								alignSelf: 'center'
-							}}>
-							{`Change ${userDataType}: ${changeUserInfo}`}
-						</ListItem.Title>
-					</TouchableOpacity>
 				</View>
 			)}
-			<ListItem containerStyle={styles.listItemContainer} bottomDivider onPress={() => changeInfo(userInfo.name, 'name')}>
-				<ListItem.Content>
-					<ListItem.Title style={styles.text}>Name: {userInfo.name}</ListItem.Title>
-				</ListItem.Content>
-			</ListItem>
-			<ListItem containerStyle={styles.listItemContainer} bottomDivider onPress={() => changeInfo(userInfo.phone, 'phone')}>
-				<ListItem.Content>
-					<ListItem.Title style={styles.text}>Phone: {userInfo.phone}</ListItem.Title>
-				</ListItem.Content>
-			</ListItem>
-
+			<TextInput placeholder={changeName} placeholderTextColor={'#fff'} onChangeText={setChangeName} value={changeName} style={styles.textInput} />
+			<TextInput placeholder={changePhone} placeholderTextColor={'#fff'} onChangeText={setChangePhone} value={changePhone} style={styles.textInput} />
+			<TouchableOpacity
+				style={{
+					backgroundColor: '#E8BD70',
+					borderRadius: 5,
+					padding: 10,
+					margin: 5
+				}}
+				onPress={() => setUserData(newUserInfo)}>
+				<ListItem.Title
+					style={{
+						color: '#000',
+						alignSelf: 'center'
+					}}>
+					Change Info
+				</ListItem.Title>
+			</TouchableOpacity>
 			<ListItem bottomDivider containerStyle={styles.listItemContainer} onPress={() => handleSignOut()}>
 				<ListItem.Content>
 					<ListItem.Title style={styles.signOut}>Sign Out</ListItem.Title>

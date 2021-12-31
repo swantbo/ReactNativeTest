@@ -156,7 +156,7 @@ function Appointment(props) {
 			points: discount != false ? userData.points : '',
 			haircutType: haircutType
 		}
-		await Firebase.firestore().collection('users').doc(user.uid).collection('Haircuts').doc(selectedDate).set(appointmentData, {merge: true})
+		await Firebase.firestore().collection('users').doc(user.uid).collection('Haircuts').doc(`${selectedDate} ${selectedTime}`).set(appointmentData, {merge: true})
 		discount != false ? await Firebase.firestore().collection('users').doc(user.uid).set({points: '0'}, {merge: true}) : null
 	}
 
@@ -169,26 +169,32 @@ function Appointment(props) {
 
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.settingsContainer}>
-			<ListItem bottomDivider containerStyle={styles.listItemContainerBlack}>
-				<Avatar source={require('../../assets/123_1.jpeg')} rounded size='large' />
+			<ListItem bottomDivider containerStyle={styles.avatarBackground}>
 				<ListItem.Content>
-					<ListItem.Title style={styles.text}>{barberInfo.name}</ListItem.Title>
-					<TouchableOpacity
-						onPress={() =>
-							Linking.openURL(`sms:${barberInfo?.phone}`).catch(() => {
-								Linking.openURL(`sms:${barberInfo?.phone}`)
-							})
-						}>
-						<ListItem.Subtitle style={styles.listItemSubTitle}>{barberInfo.phone != '' ? formatPhoneNumber(barberInfo.phone) : ''}</ListItem.Subtitle>
-					</TouchableOpacity>
-					<TouchableOpacity
-						onPress={() =>
-							Linking.openURL('maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647').catch(() => {
-								Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
-							})
-						}>
-						<ListItem.Subtitle style={styles.listItemSubTitle}>{barberInfo.location != '' ? barberInfo.location : ''}</ListItem.Subtitle>
-					</TouchableOpacity>
+					<View style={{flexDirection: 'row'}}>
+						<View style={styles.rowStart}>
+							<ListItem.Title style={styles.text}>
+								{selectedDate ? moment(selectedDate).format('ddd, MMM Do YYYY') + ' ' : 'Select Date & '}
+								{selectedTime ? '@ ' + selectedTime : 'Select Time'}
+							</ListItem.Title>
+							<ListItem.Title style={styles.text}>{haircutType === 'mens' ? "Men's Haircut " : "Kid's Haircut "}</ListItem.Title>
+							<TouchableOpacity style={styles.goldButton} onPress={() => (discount === false && userData.points != 0 ? setDiscount(true) : setDiscount(false))}>
+								<ListItem.Title style={styles.buttonTitle}>Goat Points: {userData.points}</ListItem.Title>
+							</TouchableOpacity>
+						</View>
+						<View style={styles.rowEnd}>
+							<ListItem.Title style={styles.text}>{haircutType === 'mens' ? barberInfo.price : barberInfo.kidsHaircut}</ListItem.Title>
+							<ListItem.Title style={styles.text}>
+								<ListItem.Title style={styles.text}>{discount != false ? '-$' + insertDecimal(userData.points) : ' '}</ListItem.Title>
+							</ListItem.Title>
+							<TouchableOpacity style={styles.goldButton} onPress={() => scheduleAppointment(selectedDate, selectedTime)}>
+								<ListItem.Title style={styles.buttonTitle}>
+									Book{' '}
+									{discount != false ? '$' + subtractDiscount(haircutType, haircutType === 'kids' ? barberInfo.kidsHaircut : barberInfo.price, userData.points) : haircutType === 'mens' ? barberInfo.price : barberInfo.kidsHaircut}
+								</ListItem.Title>
+							</TouchableOpacity>
+						</View>
+					</View>
 				</ListItem.Content>
 			</ListItem>
 			<ScrollView>
@@ -259,40 +265,6 @@ function Appointment(props) {
 							<InputField containerStyle={styles.inputField} leftIcon='account-plus' placeholder='Friends Name' autoCapitalize='words' value={friend} onChangeText={(text) => setFriend(text)} />
 							<ListItem.Title style={styles.listItemTitle}>Comments</ListItem.Title>
 							<InputField containerStyle={styles.inputField} leftIcon='comment' placeholder='Comment (optional)' autoCapitalize='sentences' value={comment} onChangeText={(text) => onChangeComment(text)} />
-						</ListItem.Content>
-					</ListItem>
-				</View>
-				<View style={styles.footer}>
-					<ListItem bottomDivider containerStyle={styles.avatarBackground}>
-						<ListItem.Content>
-							<View style={{flexDirection: 'row'}}>
-								<View style={styles.rowStart}>
-									<ListItem.Title style={styles.text}>
-										{selectedDate ? selectedDate + ' ' : 'Choose Date '}
-										{selectedTime ? selectedTime : 'Choose Time'}
-									</ListItem.Title>
-									<ListItem.Title style={styles.text}>{haircutType === 'mens' ? "Men's Haircut " : "Kid's Haircut "}</ListItem.Title>
-									<TouchableOpacity style={styles.goldButton} onPress={() => (discount === false && userData.points != 0 ? setDiscount(true) : setDiscount(false))}>
-										<ListItem.Title style={styles.buttonTitle}>Goat Points: {userData.points}</ListItem.Title>
-									</TouchableOpacity>
-								</View>
-								<View style={styles.rowEnd}>
-									<ListItem.Title style={styles.text}>{haircutType === 'mens' ? barberInfo.price : barberInfo.kidsHaircut}</ListItem.Title>
-									<ListItem.Title style={styles.text}>
-										<ListItem.Title style={styles.text}>{discount != false ? '-$' + insertDecimal(userData.points) : ' '}</ListItem.Title>
-									</ListItem.Title>
-									<TouchableOpacity style={styles.goldButton} onPress={() => scheduleAppointment(selectedDate, selectedTime)}>
-										<ListItem.Title style={styles.buttonTitle}>
-											Book{' '}
-											{discount != false
-												? '$' + subtractDiscount(haircutType, haircutType === 'kids' ? barberInfo.kidsHaircut : barberInfo.price, userData.points)
-												: haircutType === 'mens'
-												? barberInfo.price
-												: barberInfo.kidsHaircut}
-										</ListItem.Title>
-									</TouchableOpacity>
-								</View>
-							</View>
 						</ListItem.Content>
 					</ListItem>
 				</View>

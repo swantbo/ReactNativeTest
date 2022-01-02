@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {View, Text, StyleSheet, Alert, Linking, TouchableOpacity, SafeAreaView, Image} from 'react-native'
+import {View, Text, Alert, Linking, TouchableOpacity, SafeAreaView, Image} from 'react-native'
 import {Card, ListItem, Button, Avatar, PricingCard} from 'react-native-elements'
 import {ScrollView} from 'react-native-gesture-handler'
 import createStyles from '../../styles/base'

@@ -107,7 +107,7 @@ function AdminAboutStackScreen({navigation}) {
 				}}
 				component={HomeScreen}
 			/>
-			<AdminAboutStack.Screen name='EditProfile' options={{title: 'Edit Profile', headerTitleAlign: 'center'}} component={SettingsScreen} />
+			<AdminAboutStack.Screen name='EditProfile' options={{title: 'Settings', headerTitleAlign: 'center'}} component={SettingsScreen} />
 		</AdminAboutStack.Navigator>
 	)
 }

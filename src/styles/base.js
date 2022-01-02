@@ -175,11 +175,17 @@ const baseStyles = {
 		alignSelf: 'center',
 		color: '#E8BD70'
 	},
+	signOutButton: {
+		fontWeight: 'bold',
+		alignSelf: 'center',
+		color: '#E8BD70',
+		backgroundColor: '#121212',
+		marginTop: 20
+	},
 	goldButton: {
 		backgroundColor: '#E8BD70',
 		borderRadius: 5,
-		padding: 10,
-		margin: 5
+		padding: 5
 	},
 	inputField: {
 		backgroundColor: '#fff',
@@ -206,17 +212,10 @@ const baseStyles = {
 		padding: 0,
 		alignSelf: 'center'
 	},
-	goldButton: {
-		backgroundColor: '#E8BD70',
-		borderRadius: 10,
-		marginTop: 10
-	},
 	buttonTitle: {
 		color: '#000',
-		padding: 5,
 		fontWeight: 'bold',
-		alignSelf: 'center',
-		fontSize: 17
+		alignSelf: 'center'
 	},
 	footer: {
 		flex: 1,
@@ -321,6 +320,26 @@ const baseStyles = {
 		flex: 1,
 		justifyContent: 'center',
 		opacity: 0.5
+	},
+	settingsTextInput: {
+		flex: 1,
+		borderWidth: 1,
+		borderColor: 'grey',
+		padding: 10,
+		margin: 10,
+		borderRadius: 5,
+		color: '#fff',
+		alignSelf: 'center'
+	},
+	settingsView: {
+		flexDirection: 'row',
+		alignContent: 'space-between',
+		margin: 5
+	},
+	settingsText: {
+		color: '#fff',
+		textAlign: 'center',
+		alignSelf: 'center'
 	}
 }
 

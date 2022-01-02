@@ -178,23 +178,13 @@ function Calendar(props) {
 									onPress={() =>
 										key.name && key.name !== 'Off'
 											? Alert.alert('Delete', `Are you sure you want to delete this ${'\n'}Appointment Time ${key.time} ${'\n'} with Client: ${key.name}`, [
-													{
-														text: 'Cancel'
-													},
-													{
-														text: 'Delete Appointment',
-														onPress: () => deleteAppointment(key.time)
-													}
+													{text: 'Cancel'},
+													{text: 'Delete Appointment', onPress: () => deleteAppointment(key.time)}
 											  ])
 											: key.name === 'Off'
 											? Alert.alert('Delete Time Off', `Are you sure you want to remove ${'\n'} ${formattedDate} at ${key.time} from requested time off?`, [
-													{
-														text: 'Cancel'
-													},
-													{
-														text: 'Delete Time Off',
-														onPress: () => deleteAppointment(key.time)
-													}
+													{text: 'Cancel'},
+													{text: 'Delete Time Off', onPress: () => deleteAppointment(key.time)}
 											  ])
 											: null
 									}
@@ -233,88 +223,95 @@ function Calendar(props) {
 									  })
 									: key.name === 'Off'
 									? Alert.alert('Time Off', `Would you like to schedule an appointment during your time off on ${formattedDate} at ${key.time}?`, [
-											{
-												text: 'Cancel'
-											},
-											{
-												text: 'Schedule Appointment',
-												onPress: () =>
-													props.navigation.navigate('AddAppointmentScreen', {
-														formattedDate,
-														time: [`${key.time}`]
-													})
-											}
+											{text: 'Cancel'},
+											{text: 'Schedule Appointment', onPress: () => props.navigation.navigate('AddAppointmentScreen', {formattedDate, time: [`${key.time}`]})}
 									  ])
 									: null
 							}>
 							<ListItem.Content>
-								<View style={styles.row}>
-									<View style={styles.rowStart}>
-										<ListItem.Title style={styles.text}>{key.time}</ListItem.Title>
-									</View>
-									<View style={styles.rowEnd}>
-										{!key.name ? (
-											<ListItem.Title style={styles.listItemTitle}>Avaliable</ListItem.Title>
-										) : key.name === 'Off' ? (
-											<ListItem.Title style={styles.listItemTitle}>{key.name}</ListItem.Title>
-										) : (
-											<ListItem.Subtitle
-												style={{
-													color: '#121212',
-													fontSize: 4
-												}}>
-												{key.userId}
-											</ListItem.Subtitle>
-										)}
-									</View>
-								</View>
 								{key.name !== 'Off' && key.name ? (
 									<>
-										<View style={styles.row}>
-											<View style={styles.rowStart}>
-												<ListItem.Subtitle style={styles.text}>
-													{key.name} {key.friend != '' && undefined ? 'Friend: ' + key.friend : ''}
-												</ListItem.Subtitle>
+										<View style={{flex: 1, flexDirection: 'row'}}>
+											<View style={{flex: 1, alignSelf: 'center'}}>
+												<ListItem.Title style={styles.text}>{key.time}</ListItem.Title>
 											</View>
-											{key.name !== 'Off' && key.name ? (
-												<View style={styles.rowEnd}>
-													<ListItem.Subtitle style={styles.text}>{key?.haircutType === 'mens' ? "Men's Haircut" : key?.haircutType === 'kids' ? "Kid's Haircut" : ''}</ListItem.Subtitle>
-												</View>
-											) : (
-												<Text>''</Text>
-											)}
+											<View
+												style={{
+													height: '100%',
+													width: 1,
+													backgroundColor: '#909090',
+													marginRight: 5,
+													marginLeft: 5
+												}}></View>
+											<View style={{flex: 2}}>
+												<ListItem.Title style={styles.listItemTitle}>{key.name}</ListItem.Title>
+												{key.friend !== '' && undefined && <ListItem.Title style={styles.listItemTitle}>'Friend: ' + key.friend</ListItem.Title>}
+												<TouchableOpacity
+													onPress={() =>
+														Linking.openURL(`sms:${key?.phone}`).catch(() => {
+															Linking.openURL(`sms:${key?.phone}`)
+														})
+													}>
+													<ListItem.Subtitle style={styles.text}>{formatPhoneNumber(key?.phone) ? formatPhoneNumber(key?.phone) : key.phone}</ListItem.Subtitle>
+												</TouchableOpacity>
+											</View>
+											<View style={{flex: 2}}>
+												<ListItem.Subtitle style={{color: '#fff', textAlign: 'right'}}>{key?.haircutType === 'mens' ? "Men's Haircut" : key?.haircutType === 'kids' && "Kid's Haircut"}</ListItem.Subtitle>
+												<ListItem.Subtitle style={{color: '#fff', textAlign: 'right'}}>{key.goatPoints ? `GP's: ` + key.goatPoints : `GP's: 0`}</ListItem.Subtitle>
+											</View>
 										</View>
-										<View style={styles.row}>
-											<>
-												<View style={styles.rowStart}>
-													{key?.phone !== '' ? (
-														<TouchableOpacity
-															onPress={() =>
-																Linking.openURL(`sms:${key?.phone}`).catch(() => {
-																	Linking.openURL(`sms:${key?.phone}`)
-																})
-															}>
-															<ListItem.Subtitle style={styles.text}>{formatPhoneNumber(key?.phone) ? formatPhoneNumber(key?.phone) : key.phone}</ListItem.Subtitle>
-														</TouchableOpacity>
-													) : (
-														<Text>''</Text>
-													)}
-												</View>
-												{key?.goatPoints !== '' && undefined ? (
-													<View style={styles.rowEnd}>
-														<ListItem.Subtitle style={styles.text}>{`GPs: ` + key.goatPoints}</ListItem.Subtitle>
-													</View>
-												) : (
-													<View style={styles.rowEnd}>
-														<ListItem.Subtitle style={styles.text}>GPs: 0</ListItem.Subtitle>
-													</View>
-												)}
-											</>
+										<View style={{flex: 1, flexDirection: 'row'}}>
+											<View style={{flex: 1}}></View>
+											<View
+												style={{
+													height: '100%',
+													width: 1,
+													backgroundColor: '#909090',
+													marginRight: 5,
+													marginLeft: 5
+												}}></View>
+											<View style={{flex: 4}}>
+												<ListItem.Subtitle style={styles.text}>Comment: {key?.comment !== '' ? key.comment : 'N/A'}</ListItem.Subtitle>
+											</View>
 										</View>
-										<ListItem.Subtitle style={styles.text}>Comment: {key?.comment !== '' ? key.comment : undefined}</ListItem.Subtitle>
 									</>
+								) : key.name === 'Off' ? (
+									<View style={{flex: 1, flexDirection: 'row'}}>
+										<View style={{flex: 1, alignSelf: 'center'}}>
+											<ListItem.Title style={styles.text}>{key.time}</ListItem.Title>
+										</View>
+										<View
+											style={{
+												height: '100%',
+												width: 1,
+												backgroundColor: '#909090',
+												marginRight: 5,
+												marginLeft: 5
+											}}></View>
+										<View style={{flex: 4}}>
+											<ListItem.Title style={{color: '#E8BD70', textAlign: 'right'}}>{key.name}</ListItem.Title>
+										</View>
+										<ListItem.Subtitle style={styles.text}>{key?.comment !== '' && undefined && 'Comment: ' + key.comment}</ListItem.Subtitle>
+									</View>
 								) : (
-									<ListItem.Subtitle style={styles.text}></ListItem.Subtitle>
+									!key.name && (
+										<View style={{flex: 1, flexDirection: 'row'}}>
+											<View style={{flex: 1, alignSelf: 'center'}}>
+												<ListItem.Title style={styles.text}>{key.time}</ListItem.Title>
+											</View>
+											<View
+												style={{
+													height: '100%',
+													width: 1,
+													backgroundColor: '#909090',
+													marginRight: 5,
+													marginLeft: 5
+												}}></View>
+											<View style={{flex: 4}}>
+												<ListItem.Title style={{color: '#E8BD70', textAlign: 'right'}}>Avaliable</ListItem.Title>
+											</View>
+										</View>
+									)
 								)}
 							</ListItem.Content>
 						</ListItem.Swipeable>

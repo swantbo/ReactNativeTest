@@ -1,64 +1,28 @@
-import React from 'react'
-import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import React, {forwardRef} from 'react'
+import {TextInput as RNTextInput, View, StyleSheet} from 'react-native'
+import {Entypo as Icon} from '@expo/vector-icons'
 
-const InputField = ({
-    leftIcon,
-    iconColor = '#000',
-    rightIcon,
-    inputStyle,
-    containerStyle,
-    placeholderTextColor = '#444',
-    handlePasswordVisibility,
-    ...rest
-}) => {
-    return (
-        <View style={[styles.container, containerStyle]}>
-            {leftIcon ? (
-                <MaterialCommunityIcons
-                    name={leftIcon}
-                    size={20}
-                    color={iconColor}
-                    style={styles.leftIcon}
-                />
-            ) : null}
-            <TextInput
-                {...rest}
-                placeholderTextColor={placeholderTextColor}
-                style={[styles.input, inputStyle]}
-            />
-            {rightIcon ? (
-                <TouchableOpacity onPress={handlePasswordVisibility}>
-                    <MaterialCommunityIcons
-                        name={rightIcon}
-                        size={20}
-                        color={iconColor}
-                        style={styles.rightIcon}
-                    />
-                </TouchableOpacity>
-            ) : null}
-        </View>
-    )
-}
-
-const styles = StyleSheet.create({
-    container: {
-        borderRadius: 4,
-        flexDirection: 'row',
-        padding: 12,
-    },
-    leftIcon: {
-        marginRight: 10,
-    },
-    input: {
-        flex: 1,
-        width: '100%',
-        fontSize: 18,
-    },
-    rightIcon: {
-        alignSelf: 'center',
-        marginLeft: 10,
-    },
+const InputField = forwardRef(({icon, error, touched, ...otherProps}, ref) => {
+	const validationColor = !touched ? '#223e4b' : error ? '#FF5A5F' : '#223e4b'
+	return (
+		<View
+			style={{
+				flexDirection: 'row',
+				alignItems: 'center',
+				height: 48,
+				borderRadius: 8,
+				borderColor: validationColor,
+				borderWidth: StyleSheet.hairlineWidth,
+				padding: 8
+			}}>
+			<View style={{padding: 8}}>
+				<Icon name={icon} color={validationColor} size={16} />
+			</View>
+			<View style={{flex: 1}}>
+				<RNTextInput underlineColorAndroid='transparent' placeholderTextColor='rgba(34, 62, 75, 0.7)' ref={ref} {...otherProps} />
+			</View>
+		</View>
+	)
 })
 
 export default InputField

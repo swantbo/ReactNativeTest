@@ -1,25 +1,34 @@
 import {StatusBar} from 'expo-status-bar'
-import React from 'react'
-import {useState} from 'react'
+import React, {useState, useRef} from 'react'
+
 import {ImageBackground, Text, View, Button as RNButton, SafeAreaView, TouchableOpacity} from 'react-native'
 import {ListItem} from 'react-native-elements'
+import {useFormik} from 'formik'
+import * as Yup from 'yup'
 
 import createStyles from '../../styles/base'
-import {InputField} from '../../components'
+import {InputField, ErrorMessage} from '../../components'
 import Firebase from '../../config/firebase'
 
 const auth = Firebase.auth()
 
-export default function Forgot({navigation}) {
-	const [email, setEmail] = useState('')
+const LoginSchema = Yup.object().shape({
+	email: Yup.string().email('Invalid Email').required('Required')
+})
 
-	const onChangePassword = async () => {
+export default function Signin({navigation}) {
+	const [loginError, setLoginError] = useState('')
+	const {handleChange, handleBlur, handleSubmit, values, errors, touched} = useFormik({
+		validationSchema: LoginSchema,
+		initialValues: {email: ''},
+		onSubmit: (values) => onChangePassword(values.email)
+	})
+
+	const onChangePassword = async (email) => {
 		try {
-			if (email !== '' && password !== '') {
-				await auth.sendPasswordResetEmail(email)
-			}
+			await auth.sendPasswordResetEmail(email)
 		} catch (error) {
-			setLoginError(error.message)
+			setLoginError('Unable to send email')
 		}
 	}
 
@@ -28,27 +37,31 @@ export default function Forgot({navigation}) {
 			<View style={{padding: 10}}>
 				<StatusBar style='dark-content' />
 				<Text style={styles.authTitle}>Forgot Password</Text>
+				<Text style={{color: 'red'}}>{!!errors.email && touched.email && errors.email}</Text>
 				<InputField
-					inputStyle={{
-						fontSize: 14
-					}}
-					containerStyle={styles.inputField}
-					leftIcon='email'
-					placeholder='Enter email'
+					icon='mail'
+					placeholder='Enter your email'
 					autoCapitalize='none'
+					autoCompleteType='email'
 					keyboardType='email-address'
-					textContentType='emailAddress'
-					autoFocus={true}
-					value={email}
-					onChangeText={(text) => setEmail(text)}
+					keyboardAppearance='dark'
+					returnKeyType='go'
+					returnKeyLabel='go'
+					onChangeText={handleChange('email')}
+					onBlur={handleBlur('email')}
+					error={errors.email}
+					touched={touched.email}
+					onSubmitEditing={() => handleSubmit()}
 				/>
+				{loginError !== '' && <Text style={{color: 'red'}}>{loginError}</Text>}
 				<TouchableOpacity
 					style={{
 						backgroundColor: '#000',
 						borderRadius: 5,
-						padding: 10
+						padding: 10,
+						marginTop: 15
 					}}
-					onPress={() => onChangePassword()}>
+					onPress={() => handleSubmit()}>
 					<ListItem.Title
 						style={{
 							color: '#fff',

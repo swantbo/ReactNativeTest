@@ -1,8 +1,10 @@
 import {StatusBar} from 'expo-status-bar'
-import React from 'react'
-import {useState} from 'react'
+import React, {useState, useRef} from 'react'
+
 import {ImageBackground, Text, View, Button as RNButton, SafeAreaView, TouchableOpacity} from 'react-native'
 import {ListItem} from 'react-native-elements'
+import {useFormik} from 'formik'
+import * as Yup from 'yup'
 
 import createStyles from '../../styles/base'
 import {InputField, ErrorMessage} from '../../components'
@@ -10,12 +12,21 @@ import Firebase from '../../config/firebase'
 
 const auth = Firebase.auth()
 
+const LoginSchema = Yup.object().shape({
+	email: Yup.string().required('Required'),
+	password: Yup.string().required('Required')
+})
+
 export default function Signin({navigation}) {
-	const [email, setEmail] = useState('')
-	const [password, setPassword] = useState('')
 	const [passwordVisibility, setPasswordVisibility] = useState(true)
 	const [rightIcon, setRightIcon] = useState('eye')
 	const [loginError, setLoginError] = useState('')
+
+	const {handleChange, handleBlur, handleSubmit, values, errors, touched} = useFormik({
+		validationSchema: LoginSchema,
+		initialValues: {email: '', password: ''},
+		onSubmit: (values) => onLogin(values.email, values.password)
+	})
 
 	const handlePasswordVisibility = () => {
 		if (rightIcon === 'eye') {
@@ -27,57 +38,63 @@ export default function Signin({navigation}) {
 		}
 	}
 
-	const onLogin = async () => {
+	const onLogin = async (email, password) => {
 		try {
 			if (email !== '' && password !== '') {
 				await auth.signInWithEmailAndPassword(email, password)
 			}
 		} catch (error) {
-			setLoginError(error.message)
+			setLoginError('Email or Password are incorrect')
 		}
 	}
+
+	const password = useRef(null)
 
 	return (
 		<SafeAreaView style={styles.authContainer}>
 			<View style={{padding: 10}}>
 				<StatusBar style='dark-content' />
 				<Text style={styles.authTitle}>Login</Text>
+				<Text style={{color: 'red'}}>{!!errors.email && touched.email && errors.email}</Text>
 				<InputField
-					inputStyle={{
-						fontSize: 14
-					}}
-					containerStyle={styles.inputField}
-					leftIcon='email'
-					placeholder='Enter email'
+					icon='mail'
+					placeholder='Enter your email'
 					autoCapitalize='none'
+					autoCompleteType='email'
 					keyboardType='email-address'
-					textContentType='emailAddress'
-					autoFocus={true}
-					value={email}
-					onChangeText={(text) => setEmail(text)}
+					keyboardAppearance='dark'
+					returnKeyType='next'
+					returnKeyLabel='next'
+					onChangeText={handleChange('email')}
+					onBlur={handleBlur('email')}
+					error={errors.email}
+					touched={touched.email}
+					onSubmitEditing={() => password.current?.focus()}
 				/>
+				<Text style={{color: 'red'}}>{!!errors.password && touched.password && errors.password}</Text>
 				<InputField
-					inputStyle={{
-						fontSize: 14
-					}}
-					containerStyle={styles.inputField}
-					leftIcon='lock'
-					placeholder='Enter password'
+					ref={password}
+					icon='key'
+					placeholder='Enter your password'
+					secureTextEntry
+					autoCompleteType='password'
 					autoCapitalize='none'
-					autoCorrect={false}
-					secureTextEntry={passwordVisibility}
-					textContentType='password'
-					rightIcon={rightIcon}
-					value={password}
-					onChangeText={(text) => setPassword(text)}
-					handlePasswordVisibility={handlePasswordVisibility}
+					keyboardAppearance='dark'
+					returnKeyType='go'
+					returnKeyLabel='go'
+					onChangeText={handleChange('password')}
+					onBlur={handleBlur('password')}
+					error={errors.password}
+					touched={touched.password}
+					onSubmitEditing={() => handleSubmit()}
 				/>
-				{loginError ? <ErrorMessage error={loginError} visible={true} /> : null}
+				{loginError !== '' && <Text style={{color: 'red'}}>{loginError}</Text>}
 				<TouchableOpacity
 					style={{
 						backgroundColor: '#000',
 						borderRadius: 5,
-						padding: 10
+						padding: 10,
+						marginTop: 15
 					}}
 					onPress={() => onLogin()}>
 					<ListItem.Title
@@ -98,24 +115,3 @@ export default function Signin({navigation}) {
 }
 
 const styles = createStyles()
-
-// const styles = StyleSheet.create({
-// 	container: {
-// 		flex: 1,
-// 		backgroundColor: '#fff',
-// 		paddingTop: 50,
-// 		paddingHorizontal: 12
-// 	},
-// 	title: {
-// 		fontSize: 24,
-// 		fontWeight: '600',
-// 		color: '#000000',
-// 		alignSelf: 'center',
-// 		paddingBottom: 24
-// 	},
-// 	image: {
-// 		flex: 1,
-// 		justifyContent: 'center',
-// 		opacity: 0.5
-// 	}
-// })

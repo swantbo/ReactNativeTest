@@ -3,36 +3,17 @@ import {StyleSheet} from 'react-native'
 const baseStyles = {
 	container: {
 		flex: 1,
+		backgroundColor: '#000'
+	},
+	goldContainer: {
+		flex: 1,
 		backgroundColor: '#E8BD70'
 	},
-	listItemRow: {
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		backgroundColor: '#000'
-	},
-	listItemLeft: {
-		color: '#fff',
-		justifyContent: 'flex-start'
-	},
-	listItemRight: {
-		justifyContent: 'flex-end',
-		color: '#fff'
-	},
-	settingsContainer: {
-		flex: 1,
-		backgroundColor: '#000'
-	},
 	title: {
-		fontSize: 24,
-		fontWeight: 'bold',
-		color: '#fff'
-	},
-	appointmentTitle: {
 		fontWeight: 'bold',
 		color: '#fff'
 	},
 	text: {
-		fontSize: 16,
 		fontWeight: 'normal',
 		color: '#fff'
 	},
@@ -44,36 +25,17 @@ const baseStyles = {
 		margin: 0,
 		borderWidth: 0
 	},
-	cardGold: {
-		backgroundColor: '#E8BD70',
-		padding: 0,
-		margin: 0,
-		borderColor: '#E8BD70'
-	},
 	scrollView: {
 		backgroundColor: '#000',
 		borderTopLeftRadius: 15,
 		borderTopRightRadius: 15
 	},
-	pricingCard: {
-		backgroundColor: '#121212',
-		borderColor: '#000',
-		color: '#E8BD70',
-		marginTop: 0
-	},
-	cardTitle: {
-		fontSize: 24,
+	goldTitle: {
+		fontWeight: 'bold',
 		color: '#E8BD70'
 	},
 	listItemContainer: {
 		backgroundColor: '#121212'
-	},
-	searchContainer: {
-		backgroundColor: '#121212'
-	},
-	listItemTitle: {
-		fontWeight: 'bold',
-		color: '#E8BD70'
 	},
 	listItemButton: {
 		minHeight: '100%',
@@ -91,10 +53,10 @@ const baseStyles = {
 		flex: 1,
 		alignItems: 'flex-end'
 	},
-	listItemSubTitle: {
+	subtitle: {
 		color: '#fff'
 	},
-	listItemNoAppointments: {
+	titleCenter: {
 		fontWeight: 'bold',
 		color: '#fff',
 		alignSelf: 'center'
@@ -104,10 +66,6 @@ const baseStyles = {
 		margin: 0,
 		borderColor: '#000',
 		color: '#E8BD70'
-	},
-	barberPricing: {
-		fontSize: 20,
-		color: '#fff'
 	},
 	barberSocialIcons: {
 		flex: 1,
@@ -132,16 +90,6 @@ const baseStyles = {
 		marginRight: 5,
 		backgroundColor: '#121212',
 		borderColor: '#121212'
-	},
-	addressTitle: {
-		fontSize: 13,
-		fontWeight: 'bold',
-		color: '#fff'
-	},
-	addressText: {
-		fontSize: 13,
-		fontWeight: 'normal',
-		color: '#fff'
 	},
 	barberPhotoContainer: {
 		margin: 15,
@@ -199,10 +147,6 @@ const baseStyles = {
 		padding: 5,
 		margin: 5
 	},
-	calendarTitle: {
-		color: '#E8BD70',
-		fontSize: 17
-	},
 	listItemContent: {
 		backgroundColor: '#E8BD70',
 		borderRadius: 10,
@@ -217,15 +161,6 @@ const baseStyles = {
 		fontWeight: 'bold',
 		alignSelf: 'center'
 	},
-	footer: {
-		flex: 1,
-		justifyContent: 'flex-end'
-	},
-	modalTitle: {
-		fontSize: 20,
-		fontWeight: 'bold',
-		color: '#fff'
-	},
 	textInput: {
 		borderWidth: 1,
 		borderColor: 'grey',
@@ -238,7 +173,7 @@ const baseStyles = {
 		color: 'lightgrey',
 		alignSelf: 'center'
 	},
-	pointsCard: {
+	card: {
 		backgroundColor: '#121212',
 		borderColor: '#121212',
 		borderRadius: 10
@@ -287,20 +222,14 @@ const baseStyles = {
 		textAlign: 'center',
 		fontWeight: 'bold'
 	},
-	btnContainer: {
-		padding: 30
-	},
-	alignContent: {
+	alignContentLeft: {
 		flex: 1,
 		alignContent: 'flex-start'
 	},
-	alignText: {
+	alignTextCenter: {
 		color: '#fff',
 		fontSize: 20,
 		alignSelf: 'center'
-	},
-	viewFlex: {
-		flex: 1
 	},
 	listItemContainerBlack: {
 		backgroundColor: '#000'
@@ -340,6 +269,43 @@ const baseStyles = {
 		color: '#fff',
 		textAlign: 'center',
 		alignSelf: 'center'
+	},
+	calendarTitle: {
+		flex: 1,
+		alignSelf: 'center'
+	},
+	calendarRightTitle: {
+		height: '100%',
+		width: 1,
+		backgroundColor: '#909090',
+		marginRight: 5,
+		marginLeft: 5
+	},
+	calendarSubtitle: {
+		color: '#fff',
+		textAlign: 'right'
+	},
+	calendarGoldTitleRight: {
+		color: '#E8BD70',
+		textAlign: 'right'
+	},
+	overViewTitle: {
+		fontWeight: 'bold',
+		color: '#E8BD70',
+		textAlign: 'center',
+		padding: 5
+	},
+	overViewSubtitle: {
+		color: '#fff',
+		textAlign: 'center',
+		padding: 5
+	},
+	accountTitle: {
+		fontWeight: 'bold',
+		color: '#E8BD70',
+		textAlign: 'center',
+		padding: 10,
+		fontSize: 25
 	}
 }
 

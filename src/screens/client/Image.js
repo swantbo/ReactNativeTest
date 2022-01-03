@@ -12,7 +12,7 @@ const Image = ({route}) => {
 		}
 	]
 	return (
-		<SafeAreaView style={styles.settingsContainer}>
+		<SafeAreaView style={styles.container}>
 			<ImageViewer imageUrls={images} renderIndicator={() => null} loadingRender={() => <ActivityIndicator />} />
 		</SafeAreaView>
 	)

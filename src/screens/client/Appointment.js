@@ -168,7 +168,7 @@ function Appointment(props) {
 	}, [props])
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.settingsContainer}>
+		<KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
 			<ListItem bottomDivider containerStyle={styles.avatarBackground}>
 				<ListItem.Content>
 					<View style={{flexDirection: 'row'}}>
@@ -201,7 +201,7 @@ function Appointment(props) {
 				<View>
 					<ListItem containerStyle={styles.listItemContainerBlack}>
 						<ListItem.Content>
-							<ListItem.Title style={styles.listItemTitle}>Appointment Type</ListItem.Title>
+							<ListItem.Title style={styles.goldTitle}>Appointment Type</ListItem.Title>
 							<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={{color: '#fff'}} title="Men's Haircut" checked={haircutType === 'mens' ? true : false} onPress={() => setHaircutType('mens')} />
 							<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={styles.text} title="Kid's Haircut" checked={haircutType === 'kids' ? true : false} onPress={() => setHaircutType('kids')} />
 						</ListItem.Content>
@@ -212,7 +212,7 @@ function Appointment(props) {
 							height: 100,
 							padding: 5
 						}}
-						calendarHeaderStyle={styles.calendarTitle}
+						calendarHeaderStyle={styles.goldTitle}
 						calendarColor={'#121212'}
 						dateNumberStyle={{color: 'white'}}
 						dateNameStyle={{color: 'white'}}
@@ -261,9 +261,9 @@ function Appointment(props) {
 				<View>
 					<ListItem bottomDivider containerStyle={styles.listItemContainerBlack}>
 						<ListItem.Content>
-							<ListItem.Title style={styles.listItemTitle}>For a Friend?</ListItem.Title>
+							<ListItem.Title style={styles.goldTitle}>For a Friend?</ListItem.Title>
 							<InputField containerStyle={styles.inputField} leftIcon='account-plus' placeholder='Friends Name' autoCapitalize='words' value={friend} onChangeText={(text) => setFriend(text)} />
-							<ListItem.Title style={styles.listItemTitle}>Comments</ListItem.Title>
+							<ListItem.Title style={styles.goldTitle}>Comments</ListItem.Title>
 							<InputField containerStyle={styles.inputField} leftIcon='comment' placeholder='Comment (optional)' autoCapitalize='sentences' value={comment} onChangeText={(text) => onChangeComment(text)} />
 						</ListItem.Content>
 					</ListItem>

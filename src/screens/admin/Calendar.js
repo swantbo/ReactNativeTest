@@ -72,7 +72,6 @@ function Calendar(props) {
 					const tempData = doc.data()
 					data.push(tempData)
 				})
-				let test
 				const calendarTimes = newIntervals.map((obj) => data.find((o) => o.time === obj.time) || obj)
 				let result = data.filter((o1) => !newIntervals.some((o2) => o1.time === o2.time))
 				if (result.length > 0) {
@@ -134,7 +133,7 @@ function Calendar(props) {
 	}, [props])
 
 	return (
-		<View style={styles.settingsContainer}>
+		<View style={styles.container}>
 			<CalendarStrip
 				scrollable
 				style={{height: 100, paddingTop: 10, paddingBottom: 10}}
@@ -160,7 +159,7 @@ function Calendar(props) {
 			</ListItem>
 			{isLoading ? (
 				<ActivityIndicator size='large' color='#0000ff' />
-			) : calendarData !== [] ? (
+			) : calendarData.length !== 0 ? (
 				<ScrollView style={styles.scrollView}>
 					{calendarData.map((key, index) => (
 						<ListItem.Swipeable
@@ -177,7 +176,7 @@ function Calendar(props) {
 									buttonStyle={styles.calendarButton}
 									onPress={() =>
 										key.name && key.name !== 'Off'
-											? Alert.alert('Delete', `Are you sure you want to delete this ${'\n'}Appointment Time ${key.time} ${'\n'} with Client: ${key.name}`, [
+											? Alert.alert('Delete Appointment', `Are you sure you want to delete this ${'\n'}Appointment Time ${key.time} ${'\n'} with Client: ${key.name}`, [
 													{text: 'Cancel'},
 													{text: 'Delete Appointment', onPress: () => deleteAppointment(key.time)}
 											  ])
@@ -201,13 +200,8 @@ function Calendar(props) {
 										buttonStyle={styles.calendarButton}
 										onPress={() =>
 											Alert.alert('No Call No Show', `Would you like to add a strike to Account Name: ${key.name ? key.name : 'N/A'} ${'\n'}Account Id: ${key.userId ? key.userId : 'N/A'}`, [
-												{
-													text: 'Cancel'
-												},
-												{
-													text: 'Add Strike',
-													onPress: () => addStrike(key.userId, key.strikes)
-												}
+												{text: 'Cancel'},
+												{text: 'Add Strike', onPress: () => addStrike(key.userId, key.strikes)}
 											])
 										}
 									/>
@@ -231,21 +225,14 @@ function Calendar(props) {
 							<ListItem.Content>
 								{key.name !== 'Off' && key.name ? (
 									<>
-										<View style={{flex: 1, flexDirection: 'row'}}>
-											<View style={{flex: 1, alignSelf: 'center'}}>
-												<ListItem.Title style={styles.text}>{key.time}</ListItem.Title>
+										<View style={styles.row}>
+											<View style={styles.calendarTitle}>
+												<ListItem.Subtitle style={styles.text}>{key.time}</ListItem.Subtitle>
 											</View>
-											<View
-												style={{
-													height: '100%',
-													width: 1,
-													backgroundColor: '#909090',
-													marginRight: 5,
-													marginLeft: 5
-												}}></View>
+											<View style={styles.calendarRightTitle}></View>
 											<View style={{flex: 2}}>
-												<ListItem.Title style={styles.listItemTitle}>{key.name}</ListItem.Title>
-												{key.friend !== '' && undefined && <ListItem.Title style={styles.listItemTitle}>'Friend: ' + key.friend</ListItem.Title>}
+												<ListItem.Title style={styles.goldTitle}>{key.name}</ListItem.Title>
+												{key.friend !== '' && undefined && <ListItem.Title style={styles.goldTitle}>'Friend: ' + key.friend</ListItem.Title>}
 												<TouchableOpacity
 													onPress={() =>
 														Linking.openURL(`sms:${key?.phone}`).catch(() => {
@@ -256,59 +243,40 @@ function Calendar(props) {
 												</TouchableOpacity>
 											</View>
 											<View style={{flex: 2}}>
-												<ListItem.Subtitle style={{color: '#fff', textAlign: 'right'}}>{key?.haircutType === 'mens' ? "Men's Haircut" : key?.haircutType === 'kids' && "Kid's Haircut"}</ListItem.Subtitle>
-												<ListItem.Subtitle style={{color: '#fff', textAlign: 'right'}}>{key.goatPoints ? `GP's: ` + key.goatPoints : `GP's: 0`}</ListItem.Subtitle>
+												<ListItem.Subtitle style={styles.calendarSubtitle}>{key?.haircutType === 'mens' ? "Men's Haircut" : key?.haircutType === 'kids' && "Kid's Haircut"}</ListItem.Subtitle>
+												<ListItem.Subtitle style={styles.calendarSubtitle}>{key.goatPoints ? `GP's: ` + key.goatPoints : `GP's: 0`}</ListItem.Subtitle>
 											</View>
 										</View>
-										<View style={{flex: 1, flexDirection: 'row'}}>
-											<View style={{flex: 1}}></View>
-											<View
-												style={{
-													height: '100%',
-													width: 1,
-													backgroundColor: '#909090',
-													marginRight: 5,
-													marginLeft: 5
-												}}></View>
-											<View style={{flex: 4}}>
-												<ListItem.Subtitle style={styles.text}>Comment: {key?.comment !== '' ? key.comment : 'N/A'}</ListItem.Subtitle>
+										{key?.comment !== '' && (
+											<View style={styles.row}>
+												<View style={{flex: 1}}></View>
+												<View style={styles.calendarRightTitle}></View>
+												<View style={{flex: 4}}>
+													<ListItem.Subtitle style={styles.text}>Comment: key.comment</ListItem.Subtitle>
+												</View>
 											</View>
-										</View>
+										)}
 									</>
 								) : key.name === 'Off' ? (
-									<View style={{flex: 1, flexDirection: 'row'}}>
-										<View style={{flex: 1, alignSelf: 'center'}}>
-											<ListItem.Title style={styles.text}>{key.time}</ListItem.Title>
+									<View style={styles.row}>
+										<View style={styles.calendarTitle}>
+											<ListItem.Subtitle style={styles.text}>{key.time}</ListItem.Subtitle>
 										</View>
-										<View
-											style={{
-												height: '100%',
-												width: 1,
-												backgroundColor: '#909090',
-												marginRight: 5,
-												marginLeft: 5
-											}}></View>
+										<View style={styles.calendarRightTitle}></View>
 										<View style={{flex: 4}}>
-											<ListItem.Title style={{color: '#E8BD70', textAlign: 'right'}}>{key.name}</ListItem.Title>
+											<ListItem.Title style={styles.calendarGoldTitleRight}>{key.name}</ListItem.Title>
 										</View>
 										<ListItem.Subtitle style={styles.text}>{key?.comment !== '' && undefined && 'Comment: ' + key.comment}</ListItem.Subtitle>
 									</View>
 								) : (
 									!key.name && (
-										<View style={{flex: 1, flexDirection: 'row'}}>
-											<View style={{flex: 1, alignSelf: 'center'}}>
-												<ListItem.Title style={styles.text}>{key.time}</ListItem.Title>
+										<View style={styles.row}>
+											<View style={styles.calendarTitle}>
+												<ListItem.Subtitle style={styles.text}>{key.time}</ListItem.Subtitle>
 											</View>
-											<View
-												style={{
-													height: '100%',
-													width: 1,
-													backgroundColor: '#909090',
-													marginRight: 5,
-													marginLeft: 5
-												}}></View>
+											<View style={styles.calendarRightTitle}></View>
 											<View style={{flex: 4}}>
-												<ListItem.Title style={{color: '#E8BD70', textAlign: 'right'}}>Avaliable</ListItem.Title>
+												<ListItem.Title style={styles.calendarGoldTitleRight}>Avaliable</ListItem.Title>
 											</View>
 										</View>
 									)
@@ -318,16 +286,13 @@ function Calendar(props) {
 					))}
 				</ScrollView>
 			) : (
-				isLoading === false &&
-				calendarData === [] && (
-					<ScrollView style={styles.scrollView}>
-						<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-							<ListItem.Content>
-								<ListItem.Title style={styles.listItemSubTitle}> No Appointments </ListItem.Title>
-							</ListItem.Content>
-						</ListItem>
-					</ScrollView>
-				)
+				<ScrollView style={styles.scrollView}>
+					<ListItem bottomDivider containerStyle={styles.listItemContainer}>
+						<ListItem.Content>
+							<ListItem.Title style={styles.signOut}> No Appointments </ListItem.Title>
+						</ListItem.Content>
+					</ListItem>
+				</ScrollView>
 			)}
 		</View>
 	)

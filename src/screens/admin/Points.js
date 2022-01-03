@@ -30,9 +30,9 @@ const Points = ({route}) => {
 	}
 
 	return (
-		<View style={styles.settingsContainer}>
-			<Card containerStyle={styles.pointsCard}>
-				<Card.Title style={styles.cardTitle}>{name}</Card.Title>
+		<View style={styles.container}>
+			<Card containerStyle={styles.card}>
+				<Card.Title style={styles.goldTitle}>{name}</Card.Title>
 				<Card.Divider />
 				<Card.Title style={styles.text}>Current Goat Points: {goatPoints}</Card.Title>
 				<InputField containerStyle={styles.inputField} keyboardType='phone-pad' placeholder='Add Goat Points' value={points} onChangeText={(text) => onChangePoints(text)} />

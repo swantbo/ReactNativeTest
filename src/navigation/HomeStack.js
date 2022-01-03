@@ -12,7 +12,6 @@ import AppointmentScreen from '../screens/client/Appointment'
 import BarberScreen from '../screens/client/Barber'
 import SettingScreen from '../screens/client/Settings'
 import ImageScreen from '../screens/client/Image'
-import PointsScreen from '../screens/client/Points'
 
 const homeSettingStack = createStackNavigator()
 
@@ -36,7 +35,6 @@ function homeSettingStackScreen({navigation}) {
 				}}
 			/>
 			<homeSettingStack.Screen name='SettingScreen' options={{title: 'Settings', headerTitleAlign: 'center'}} component={SettingScreen} />
-			<homeSettingStack.Screen name='GoatPoint' mode='modal' screenOptions={{mode: 'modal'}} component={PointsScreen} />
 		</homeSettingStack.Navigator>
 	)
 }

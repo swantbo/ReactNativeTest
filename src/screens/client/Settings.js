@@ -74,8 +74,8 @@ function Settings(props) {
 	}, [props])
 
 	return (
-		<ScrollView style={styles.settingsContainer}>
-			<Card containerStyle={styles.pointsCard}>
+		<ScrollView style={styles.container}>
+			<Card containerStyle={styles.card}>
 				<Avatar containerStyle={styles.avatarBackground} rounded size='large' title={changeName?.[0]} source={{uri: changeProfilePicture}} onPress={() => pickImage()} />
 				<ListItem.Subtitle style={styles.settingsText}>Change Profile Picture</ListItem.Subtitle>
 				<View style={styles.settingsView}>

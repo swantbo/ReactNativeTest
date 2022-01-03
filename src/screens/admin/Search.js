@@ -79,7 +79,7 @@ const Search = ({navigation}) => {
 	}, [])
 
 	return (
-		<View style={styles.settingsContainer}>
+		<View style={styles.container}>
 			<InputField
 				inputStyle={{fontSize: 14}}
 				containerStyle={styles.inputField}
@@ -97,7 +97,7 @@ const Search = ({navigation}) => {
 							<ListItem.Swipeable
 								key={onekey.id}
 								bottomDivider
-								containerStyle={styles.searchContainer}
+								containerStyle={styles.listItemContainer}
 								rightContent={
 									<Button
 										title='Delete'
@@ -144,7 +144,7 @@ const Search = ({navigation}) => {
 											</View>
 										)}
 										<View style={styles.rowStart}>
-											<ListItem.Title style={styles.listItemTitle}>{onekey.name} </ListItem.Title>
+											<ListItem.Title style={styles.goldTitle}>{onekey.name} </ListItem.Title>
 										</View>
 										<View style={styles.rowEnd}>
 											<ListItem.Title

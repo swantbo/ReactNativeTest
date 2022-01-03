@@ -158,10 +158,10 @@ function Home(props) {
 			<SafeAreaView style={styles.cardHeader}>
 				<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={userData.name?.[0]} source={{uri: userData.profilePicture}} onPress={() => pickImage()} />
 			</SafeAreaView>
-			<View style={styles.container}>
+			<View style={styles.goldContainer}>
 				<ScrollView style={styles.scrollView}>
 					<Card containerStyle={styles.cardBio}>
-						<Card.Title style={styles.cardTitle} onPress={() => props.navigation.navigate('SettingScreen')}>
+						<Card.Title style={styles.accountTitle} onPress={() => props.navigation.navigate('SettingScreen')}>
 							{userData.name}
 						</Card.Title>
 						<Card.Title
@@ -175,12 +175,12 @@ function Home(props) {
 							}>
 							{userData.points}
 						</Card.Title>
-						<Card.Title style={styles.listItemSubTitle}>Goat Points</Card.Title>
+						<Card.Title style={styles.subtitle}>Goat Points</Card.Title>
 					</Card>
 					<View>
 						<ListItem bottomDivider containerStyle={styles.listItemContainer}>
 							<ListItem.Content>
-								<ListItem.Title style={styles.listItemTitle}>Upcoming Appointments</ListItem.Title>
+								<ListItem.Title style={styles.goldTitle}>Upcoming Appointments</ListItem.Title>
 							</ListItem.Content>
 						</ListItem>
 						{Object.keys(upcomingAppointments).length > 0 ? (
@@ -227,7 +227,7 @@ function Home(props) {
 																	}
 																])
 															}>
-															<ListItem.Title style={styles.listItemSubTitle}>
+															<ListItem.Title style={styles.subtitle}>
 																{moment(onekey[1].id.split(' ')[0]).format('ddd, MMM Do YYYY')}, {onekey[1].time.toString().toLowerCase()}
 															</ListItem.Title>
 														</TouchableOpacity>
@@ -235,21 +235,21 @@ function Home(props) {
 													<View style={styles.rowEnd}>
 														{onekey[1].points ? (
 															<>
-																<ListItem.Title style={styles.listItemSubTitle}>
+																<ListItem.Title style={styles.subtitle}>
 																	{onekey[1].points != ''
 																		? '$' + subtractDiscount(onekey[1]?.haircutType, onekey[1]?.haircutType === 'kids' ? barberData?.kidsHaircut : barberData?.price, onekey[1].points)
 																		: '$' + barberData.price}
 																</ListItem.Title>
 															</>
 														) : (
-															<ListItem.Title style={styles.listItemSubTitle}>{barberData.price != '' && onekey[1]?.haircutType === 'kids' ? barberData?.kidsHaircut : barberData?.price}</ListItem.Title>
+															<ListItem.Title style={styles.subtitle}>{barberData.price != '' && onekey[1]?.haircutType === 'kids' ? barberData?.kidsHaircut : barberData?.price}</ListItem.Title>
 														)}
 													</View>
 												</View>
 												<View style={styles.row}>
 													<View style={styles.rowStart}>
 														<ListItem.Subtitle
-															style={styles.listItemSubTitle}
+															style={styles.subtitle}
 															onPress={() =>
 																Linking.openURL(`sms:${barberData?.phone}`).catch(() => {
 																	Linking.openURL(`sms:${barberData?.phone}`)
@@ -259,13 +259,13 @@ function Home(props) {
 														</ListItem.Subtitle>
 													</View>
 													<View style={styles.rowEnd}>
-														<Text style={styles.listItemSubTitle}>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </Text>
+														<Text style={styles.subtitle}>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </Text>
 													</View>
 												</View>
 												<View style={styles.row}>
 													<View style={styles.rowStart}>
 														<ListItem.Subtitle
-															style={styles.listItemSubTitle}
+															style={styles.subtitle}
 															onPress={() =>
 																Linking.openURL('maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647').catch(() => {
 																	Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
@@ -278,7 +278,7 @@ function Home(props) {
 												<View style={styles.row}>
 													{onekey[1]?.friend && (
 														<View style={styles.rowStart}>
-															<ListItem.Subtitle style={styles.listItemSubTitle}>Friend: {onekey[1]?.friend}</ListItem.Subtitle>
+															<ListItem.Subtitle style={styles.subtitle}>Friend: {onekey[1]?.friend}</ListItem.Subtitle>
 														</View>
 													)}
 												</View>
@@ -289,11 +289,11 @@ function Home(props) {
 							</>
 						) : (
 							<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-								<ListItem.Title style={styles.listItemNoAppointments}>No Upcoming Appointments</ListItem.Title>
+								<ListItem.Title style={styles.titleCenter}>No Upcoming Appointments</ListItem.Title>
 							</ListItem>
 						)}
 						<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-							<ListItem.Title style={styles.listItemTitle}>Previous Appointments</ListItem.Title>
+							<ListItem.Title style={styles.goldTitle}>Previous Appointments</ListItem.Title>
 						</ListItem>
 						{Object.keys(previousAppointments).length > 0 ? (
 							<>
@@ -303,26 +303,26 @@ function Home(props) {
 											<ListItem.Content>
 												<View style={styles.row}>
 													<View style={styles.rowStart}>
-														<ListItem.Title style={styles.listItemSubTitle}>
+														<ListItem.Title style={styles.subtitle}>
 															{moment(onekey[1].id.split(' ')[0]).format('ddd, MMM Do YYYY')}, {onekey[1].time.toString().toLowerCase()}
 														</ListItem.Title>
 													</View>
 													<View style={styles.rowEnd}>
 														{onekey[1].points ? (
-															<ListItem.Title style={styles.listItemSubTitle}>{onekey[1].points != '' ? '$' + subtractDiscount(onekey[1]?.haircutType, barberData.price, onekey[1].points) : ''}</ListItem.Title>
+															<ListItem.Title style={styles.subtitle}>{onekey[1].points != '' ? '$' + subtractDiscount(onekey[1]?.haircutType, barberData.price, onekey[1].points) : ''}</ListItem.Title>
 														) : (
-															<ListItem.Title style={styles.listItemSubTitle}>{barberData.price != '' ? barberData.price : ''}</ListItem.Title>
+															<ListItem.Title style={styles.subtitle}>{barberData.price != '' ? barberData.price : ''}</ListItem.Title>
 														)}
 													</View>
 												</View>
 												<View style={styles.row}>
 													<View style={styles.rowEnd}>
-														{onekey[1].points ? <ListItem.Subtitle style={styles.listItemSubTitle}>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </ListItem.Subtitle> : null}
+														{onekey[1].points ? <ListItem.Subtitle style={styles.subtitle}>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </ListItem.Subtitle> : null}
 													</View>
 												</View>
 												<View style={styles.row}>
 													<View style={styles.rowStart}>
-														<ListItem.Subtitle style={styles.listItemSubTitle}>{onekey[1]?.friend && 'Friend: ' + onekey[1]?.friend}</ListItem.Subtitle>
+														<ListItem.Subtitle style={styles.subtitle}>{onekey[1]?.friend && 'Friend: ' + onekey[1]?.friend}</ListItem.Subtitle>
 													</View>
 												</View>
 											</ListItem.Content>
@@ -332,7 +332,7 @@ function Home(props) {
 							</>
 						) : (
 							<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-								<ListItem.Title style={styles.listItemNoAppointments}>No Previous Appointments</ListItem.Title>
+								<ListItem.Title style={styles.titleCenter}>No Previous Appointments</ListItem.Title>
 							</ListItem>
 						)}
 					</View>

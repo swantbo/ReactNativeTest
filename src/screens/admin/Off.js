@@ -199,7 +199,7 @@ function Off(props) {
 	}
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.settingsContainer}>
+		<KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
 			<ScrollView>
 				<ListItem bottomDivider containerStyle={styles.listItemContainer}>
 					<Avatar source={require('../../assets/123_1.jpeg')} rounded size='large' />
@@ -211,7 +211,7 @@ function Off(props) {
 									Linking.openURL(`sms:${barberInfo?.phone}`)
 								})
 							}>
-							<ListItem.Subtitle style={styles.listItemSubTitle}>{barberInfo.phone != '' ? formatPhoneNumber(barberInfo.phone) : ''}</ListItem.Subtitle>
+							<ListItem.Subtitle style={styles.subtitle}>{barberInfo.phone != '' ? formatPhoneNumber(barberInfo.phone) : ''}</ListItem.Subtitle>
 						</TouchableOpacity>
 						<TouchableOpacity
 							onPress={() =>
@@ -219,14 +219,14 @@ function Off(props) {
 									Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
 								})
 							}>
-							<ListItem.Subtitle style={styles.listItemSubTitle}>{barberInfo.location != '' ? barberInfo.location : ''}</ListItem.Subtitle>
+							<ListItem.Subtitle style={styles.subtitle}>{barberInfo.location != '' ? barberInfo.location : ''}</ListItem.Subtitle>
 						</TouchableOpacity>
 					</ListItem.Content>
 				</ListItem>
 
-				<Card containerStyle={styles.pointsCard}>
+				<Card containerStyle={styles.card}>
 					<ListItem.Content>
-						<ListItem.Title style={styles.listItemTitle}>Time Off</ListItem.Title>
+						<ListItem.Title style={styles.goldTitle}>Time Off</ListItem.Title>
 						<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={{color: '#fff'}} title='Mutiple-Days' checked={timeOffType === 'multiple' ? true : false} onPress={() => selectedTimeOffType('multiple')} />
 						<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={{color: '#fff'}} title='Full-Day' checked={timeOffType === 'full' ? true : false} onPress={() => selectedTimeOffType('full')} />
 
@@ -234,27 +234,27 @@ function Off(props) {
 					</ListItem.Content>
 				</Card>
 
-				<Card containerStyle={styles.pointsCard}>
-					<ListItem.Title style={styles.listItemTitle}>Day & Time</ListItem.Title>
+				<Card containerStyle={styles.card}>
+					<ListItem.Title style={styles.goldTitle}>Day & Time</ListItem.Title>
 					<View style={styles.pickedDateContainer}>
 						{timeOffType === 'multiple' ? (
 							<>
-								<View style={styles.alignContent}>
-									<Text style={styles.alignText}>Start Date</Text>
+								<View style={styles.alignContentLeft}>
+									<Text style={styles.alignTextCenter}>Start Date</Text>
 									<Text style={[isStartDatePickerShow === true ? styles.pickedDatePressed : styles.pickedDate]} onPress={showStartDatePicker}>
 										{moment(startDate).format('YYYY-MM-DD')}
 									</Text>
 								</View>
-								<View style={styles.alignContent}>
-									<Text style={styles.alignText}>End Date</Text>
+								<View style={styles.alignContentLeft}>
+									<Text style={styles.alignTextCenter}>End Date</Text>
 									<Text style={[isEndDatePickerShow === true ? styles.pickedDatePressed : styles.pickedDate]} onPress={showEndDatePicker}>
 										{moment(endDate).format('YYYY-MM-DD')}
 									</Text>
 								</View>
 							</>
 						) : (
-							<View style={styles.alignContent}>
-								<Text style={styles.alignText}>Date</Text>
+							<View style={styles.alignContentLeft}>
+								<Text style={styles.alignTextCenter}>Date</Text>
 								<Text style={[isStartDatePickerShow === true ? styles.pickedDatePressed : styles.pickedDate]} onPress={showStartDatePicker}>
 									{moment(startDate).format('YYYY-MM-DD')}
 								</Text>
@@ -271,14 +271,14 @@ function Off(props) {
 					<View style={styles.pickedDateContainer}>
 						{timeOffType === 'half' && (
 							<>
-								<View style={styles.alignContent}>
-									<Text style={styles.alignText}>Start Time</Text>
+								<View style={styles.alignContentLeft}>
+									<Text style={styles.alignTextCenter}>Start Time</Text>
 									<Text style={[isStartPickerShow === true ? styles.pickedDatePressed : styles.pickedDate]} onPress={showStartPicker}>
 										{moment(startTime).format('hh:mm A')}
 									</Text>
 								</View>
-								<View style={styles.alignContent}>
-									<Text style={styles.alignText}>End Time</Text>
+								<View style={styles.alignContentLeft}>
+									<Text style={styles.alignTextCenter}>End Time</Text>
 									<Text style={[isEndPickerShow === true ? styles.pickedDatePressed : styles.pickedDate]} onPress={showEndPicker}>
 										{moment(endTime).format('hh:mm A')}
 									</Text>
@@ -292,7 +292,7 @@ function Off(props) {
 					)}
 
 					{isEndPickerShow && <DateTimePicker textColor='#fff' value={endTime} mode='time' display={Platform.OS === 'ios' ? 'spinner' : 'default'} onChange={onEndTimeChange} is24Hour={true} minuteInterval={30} />}
-					<ListItem.Title style={styles.listItemTitle}>Comment</ListItem.Title>
+					<ListItem.Title style={styles.goldTitle}>Comment</ListItem.Title>
 
 					<InputField containerStyle={styles.inputField} leftIcon='comment' placeholder='Comment (optional)' autoCapitalize='sentences' value={text} onChangeText={(text) => onChangeText(text)} />
 

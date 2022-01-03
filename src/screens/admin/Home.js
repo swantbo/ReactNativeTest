@@ -67,14 +67,13 @@ function Home(props) {
 			<SafeAreaView style={styles.cardHeader}>
 				<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={'N'} source={{uri: image}} onPress={() => pickImage('Profile')} />
 			</SafeAreaView>
-
-			<View style={styles.container}>
+			<View style={styles.goldContainer}>
 				<ScrollView style={styles.scrollView}>
 					<Card containerStyle={styles.cardBio}>
-						<Card.Title style={styles.cardTitle} onPress={() => props.navigation.navigate('EditProfile')}>
+						<ListItem.Title style={styles.accountTitle} onPress={() => props.navigation.navigate('EditProfile')}>
 							{barber.name}
-						</Card.Title>
-						<Card.Title style={styles.listItemSubTitle}>{barber.bio}</Card.Title>
+						</ListItem.Title>
+						<Card.Title style={styles.subtitle}>{barber.bio}</Card.Title>
 					</Card>
 
 					<View style={styles.barberSocialIcons}>
@@ -122,26 +121,26 @@ function Home(props) {
 							<ListItem.Content>
 								<View style={styles.row}>
 									<View style={styles.rowStart}>
-										<ListItem.Title style={styles.listItemSubTitle}>Men's Haircut</ListItem.Title>
+										<ListItem.Title style={styles.subtitle}>Men's Haircut</ListItem.Title>
 									</View>
 									<View style={styles.rowEnd}>
-										<ListItem.Title style={styles.listItemSubTitle}>{barber.price}</ListItem.Title>
+										<ListItem.Title style={styles.subtitle}>{barber.price}</ListItem.Title>
 									</View>
 								</View>
-								<ListItem.Subtitle style={styles.listItemSubTitle}>Full Haircut, Eyebrows, and Beard Trim</ListItem.Subtitle>
+								<ListItem.Subtitle style={styles.subtitle}>Full Haircut, Eyebrows, and Beard Trim</ListItem.Subtitle>
 							</ListItem.Content>
 						</ListItem>
 						<ListItem bottomDivider containerStyle={styles.listItemContainer}>
 							<ListItem.Content>
 								<View style={styles.row}>
 									<View style={styles.rowStart}>
-										<ListItem.Title style={styles.listItemSubTitle}>Kid's Haircut</ListItem.Title>
+										<ListItem.Title style={styles.subtitle}>Kid's Haircut</ListItem.Title>
 									</View>
 									<View style={styles.rowEnd}>
-										<ListItem.Title style={styles.listItemSubTitle}>{barber.kidsHaircut}</ListItem.Title>
+										<ListItem.Title style={styles.subtitle}>{barber.kidsHaircut}</ListItem.Title>
 									</View>
 								</View>
-								<ListItem.Subtitle style={styles.listItemSubTitle}>Full Haircut, for Kid's</ListItem.Subtitle>
+								<ListItem.Subtitle style={styles.subtitle}>Full Haircut, for Kid's</ListItem.Subtitle>
 							</ListItem.Content>
 						</ListItem>
 					</Card>
@@ -150,35 +149,35 @@ function Home(props) {
 						<Card.Title style={styles.barberInfoTitles}>ADDRESS & HOURS</Card.Title>
 						<View style={styles.row}>
 							<View style={styles.rowStart}>
-								<Text style={styles.addressText}>{barber.location}</Text>
+								<Text style={styles.text}>{barber.location}</Text>
 								<TouchableOpacity
 									onPress={() =>
 										Linking.openURL(`sms:${barber?.phone}`).catch(() => {
 											Linking.openURL(`sms:${barber?.phone}`)
 										})
 									}>
-									<Text style={styles.addressText}>{barber.phone != '' ? formatPhoneNumber(barber.phone) : ''}</Text>
+									<Text style={styles.text}>{barber.phone != '' ? formatPhoneNumber(barber.phone) : ''}</Text>
 								</TouchableOpacity>
 								<Text></Text>
 								<View style={styles.row}>
-									<Text style={styles.addressTitle}>Tuesday</Text>
-									<Text style={styles.addressText}>{' ' + barber.Tuesday}</Text>
+									<Text style={styles.title}>Tuesday</Text>
+									<Text style={styles.text}>{' ' + barber.Tuesday}</Text>
 								</View>
 								<View style={styles.row}>
-									<Text style={styles.addressTitle}>Wednesday</Text>
-									<Text style={styles.addressText}>{' ' + barber.Wednesday}</Text>
+									<Text style={styles.title}>Wednesday</Text>
+									<Text style={styles.text}>{' ' + barber.Wednesday}</Text>
 								</View>
 								<View style={styles.row}>
-									<Text style={styles.addressTitle}>Thursday</Text>
-									<Text style={styles.addressText}>{' ' + barber.Thursday}</Text>
+									<Text style={styles.title}>Thursday</Text>
+									<Text style={styles.text}>{' ' + barber.Thursday}</Text>
 								</View>
 								<View style={styles.row}>
-									<Text style={styles.addressTitle}>Friday</Text>
-									<Text style={styles.addressText}>{' ' + barber.Friday}</Text>
+									<Text style={styles.title}>Friday</Text>
+									<Text style={styles.text}>{' ' + barber.Friday}</Text>
 								</View>
 								<View style={styles.row}>
-									<Text style={styles.addressTitle}>Saturday</Text>
-									<Text style={styles.addressText}>{' ' + barber.Saturday}</Text>
+									<Text style={styles.title}>Saturday</Text>
+									<Text style={styles.text}>{' ' + barber.Saturday}</Text>
 								</View>
 							</View>
 							<View style={styles.rowEnd}>

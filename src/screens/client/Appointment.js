@@ -1,6 +1,6 @@
 import moment from 'moment'
 import React, {useEffect, useState, useContext} from 'react'
-import {View, SafeAreaView, ScrollView, ActivityIndicator, Alert, TouchableOpacity, Linking, KeyboardAvoidingView} from 'react-native'
+import {View, SafeAreaView, ScrollView, ActivityIndicator, Alert, TouchableOpacity, RefreshControl, KeyboardAvoidingView} from 'react-native'
 import CalendarStrip from 'react-native-calendar-strip'
 import {ListItem, Avatar} from 'react-native-elements'
 import {insertDecimal, subtractDiscount, formatPhoneNumber, subtractPrice} from '../../utils/DataFormatting'
@@ -9,10 +9,11 @@ import createStyles from '../../styles/base'
 import {InputField} from '../../components'
 
 import {connect} from 'react-redux'
-
+import { reload } from '../../redux/actions'
 import * as firebase from 'firebase'
 import Firebase from '../../config/firebase'
 import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
+import { bindActionCreators } from 'redux'
 
 function Appointment(props) {
 	const {user} = useContext(AuthenticatedUserContext)
@@ -27,6 +28,7 @@ function Appointment(props) {
 	const [newTimes, setNewTimes] = useState({})
 	const [haircutType, setHaircutType] = useState('mens')
 	const [discount, setDiscount] = useState(false)
+	const [refreshing, setRefreshing] = useState(false)
 
 	const removeMonSun = () => {
 		let dateArray = []
@@ -178,26 +180,37 @@ function Appointment(props) {
 								{selectedTime ? '@ ' + selectedTime : 'Select Time'}
 							</ListItem.Title>
 							<ListItem.Title style={styles.text}>{haircutType === 'mens' ? "Men's Haircut " : "Kid's Haircut "}</ListItem.Title>
-							<TouchableOpacity style={styles.goldButton} onPress={() => (discount === false && userData.points != 0 ? setDiscount(true) : setDiscount(false))}>
-								<ListItem.Title style={styles.buttonTitle}>Goat Points: {userData.points}</ListItem.Title>
+							<TouchableOpacity style={styles.goldButton} onPress={() => (discount === false && userData?.points != 0 ? setDiscount(true) : setDiscount(false))}>
+								<ListItem.Title style={styles.buttonTitle}>Goat Points: {userData?.points}</ListItem.Title>
 							</TouchableOpacity>
 						</View>
 						<View style={styles.rowEnd}>
-							<ListItem.Title style={styles.text}>{haircutType === 'mens' ? barberInfo.price : barberInfo.kidsHaircut}</ListItem.Title>
+							<ListItem.Title style={styles.text}>{haircutType === 'mens' ? barberInfo?.price : barberInfo?.kidsHaircut}</ListItem.Title>
 							<ListItem.Title style={styles.text}>
-								<ListItem.Title style={styles.text}>{discount != false ? '-$' + insertDecimal(userData.points) : ' '}</ListItem.Title>
+								<ListItem.Title style={styles.text}>{discount != false ? '-$' + insertDecimal(userData?.points) : ' '}</ListItem.Title>
 							</ListItem.Title>
 							<TouchableOpacity style={styles.goldButton} onPress={() => scheduleAppointment(selectedDate, selectedTime)}>
 								<ListItem.Title style={styles.buttonTitle}>
 									Book{' '}
-									{discount != false ? '$' + subtractDiscount(haircutType, haircutType === 'kids' ? barberInfo.kidsHaircut : barberInfo.price, userData.points) : haircutType === 'mens' ? barberInfo.price : barberInfo.kidsHaircut}
+									{discount != false ? '$' + subtractDiscount(haircutType, haircutType === 'kids' ? barberInfo?.kidsHaircut : barberInfo?.price, userData?.points) : haircutType === 'mens' ? barberInfo?.price : barberInfo?.kidsHaircut}
 								</ListItem.Title>
 							</TouchableOpacity>
 						</View>
 					</View>
 				</ListItem.Content>
 			</ListItem>
-			<ScrollView>
+			<ScrollView refreshControl={
+					<RefreshControl
+					color={'#E8BD70'}
+					tintColor={'#E8BD70'}
+						refreshing={refreshing}
+						onRefresh={() => {
+							setRefreshing(true)
+							props.reload()
+							setRefreshing(false)
+						}}
+					/>
+				}>
 				<View>
 					<ListItem containerStyle={styles.listItemContainerBlack}>
 						<ListItem.Content>
@@ -282,4 +295,6 @@ const mapStateToProps = (store) => ({
 	barber: store.userState.barber
 })
 
-export default connect(mapStateToProps, null)(Appointment)
+const mapDispatchProps = (dispatch) => bindActionCreators({reload}, dispatch)
+
+export default connect(mapStateToProps, mapDispatchProps)(Appointment)

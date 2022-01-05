@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react'
-import {View, StyleSheet, TextInput, Alert, TouchableOpacity, ScrollView} from 'react-native'
+import {View, StyleSheet, TextInput, Alert, TouchableOpacity, ScrollView, SafeAreaView} from 'react-native'
 import {ListItem, Avatar, Card} from 'react-native-elements'
 import {formatPhoneNumber} from '../../utils/DataFormatting'
 import createStyles from '../../styles/base'
@@ -74,6 +74,7 @@ function Settings(props) {
 	}, [props])
 
 	return (
+		<SafeAreaView style={styles.container}>
 		<ScrollView style={styles.container}>
 			<Card containerStyle={styles.card}>
 				<Avatar containerStyle={styles.avatarBackground} rounded size='large' title={changeName?.[0]} source={{uri: changeProfilePicture}} onPress={() => pickImage()} />
@@ -100,6 +101,7 @@ function Settings(props) {
 				</ListItem>
 			</Card>
 		</ScrollView>
+		</SafeAreaView>
 	)
 }
 
@@ -108,5 +110,7 @@ const styles = createStyles()
 const mapStateToProps = (store) => ({
 	currentUser: store.userState.currentUser
 })
+
+
 
 export default connect(mapStateToProps, null)(Settings)

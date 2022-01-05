@@ -1,10 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {View, Text, Alert, Linking, TouchableOpacity, SafeAreaView, Image} from 'react-native'
+import {View, Text, Alert, Linking, TouchableOpacity, SafeAreaView, RefreshControl, ScrollView} from 'react-native'
 import {Card, ListItem, Button, Avatar, PricingCard} from 'react-native-elements'
-import {ScrollView} from 'react-native-gesture-handler'
+import { useToken, Box, useTheme } from 'native-base'
 import createStyles from '../../styles/base'
 
 import * as FileSystem from 'expo-file-system'
+import { reload } from '../../redux/actions'
 import {connect} from 'react-redux'
 import moment from 'moment'
 import * as ImagePicker from 'expo-image-picker'
@@ -13,17 +14,23 @@ import {subtractDiscount, formatPhoneNumber, convertTime12to24} from '../../util
 
 import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
 import Firebase from '../../config/firebase'
+import { bindActionCreators } from 'redux'
 
 function Home(props) {
 	const {user} = useContext(AuthenticatedUserContext)
 	const [userData, setTestUser] = useState({})
+	const [refreshing, setRefreshing] = useState(false)
+
 	const [barberData, setTestBarber] = useState({})
 	const [upcomingAppointments, setUpcomingAppointments] = useState({})
 	const [previousAppointments, setPreviousAppointments] = useState({})
 
+	const { colors } = useTheme();
+
 	function formatAppointments(data) {
 		let [upcomingData, previousData, removeDates] = [{}, {}, []]
-		Object.entries(data).map((onekey, i) => {
+		if (data) {
+			Object.entries(data).map((onekey, i) => {
 			if (onekey[1].id > moment().format('YYYY-MM-DD')) {
 				upcomingData = {
 					...upcomingData,
@@ -44,6 +51,8 @@ function Home(props) {
 		}
 		setUpcomingAppointments(upcomingData)
 		setPreviousAppointments(previousData)
+		}
+		
 	}
 
 	const pickImage = async () => {
@@ -136,7 +145,8 @@ function Home(props) {
 		const {currentUser, barber, appointments} = props
 		setTestUser(currentUser)
 		setTestBarber(barber)
-		formatAppointments(appointments),
+		formatAppointments(appointments)
+		,
 			(async () => {
 				const {status} = await Calendar.requestCalendarPermissionsAsync()
 				if (status === 'granted') {
@@ -156,13 +166,25 @@ function Home(props) {
 	return (
 		<>
 			<SafeAreaView style={styles.cardHeader}>
-				<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={userData.name?.[0]} source={{uri: userData.profilePicture}} onPress={() => pickImage()} />
+				<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={userData?.name?.[0]} source={{uri: userData?.profilePicture}} onPress={() => pickImage()} />
 			</SafeAreaView>
-			<View style={styles.goldContainer}>
-				<ScrollView style={styles.scrollView}>
+			<Box bg={colors['primary']} p="3"></Box>
+			<SafeAreaView style={styles.goldContainer}>
+				<ScrollView style={styles.scrollView} refreshControl={
+					<RefreshControl
+					color={'#E8BD70'}
+					tintColor={'#E8BD70'}
+						refreshing={refreshing}
+						onRefresh={() => {
+							setRefreshing(true)
+							props.reload()
+							setRefreshing(false)
+						}}
+					/>
+				}>
 					<Card containerStyle={styles.cardBio}>
 						<Card.Title style={styles.accountTitle} onPress={() => props.navigation.navigate('SettingScreen')}>
-							{userData.name}
+							{userData?.name}
 						</Card.Title>
 						<Card.Title
 							style={styles.title}
@@ -173,7 +195,7 @@ function Home(props) {
 									}
 								])
 							}>
-							{userData.points}
+							{userData?.points}
 						</Card.Title>
 						<Card.Title style={styles.subtitle}>Goat Points</Card.Title>
 					</Card>
@@ -223,7 +245,7 @@ function Home(props) {
 																	},
 																	{
 																		text: 'Add Appointment',
-																		onPress: () => createCalendar(onekey[0], onekey[1].time.toString(), barberData.location, barberData.phone)
+																		onPress: () => createCalendar(onekey[0], onekey[1].time.toString(), barberData?.location, barberData?.phone)
 																	}
 																])
 															}>
@@ -238,11 +260,11 @@ function Home(props) {
 																<ListItem.Title style={styles.subtitle}>
 																	{onekey[1].points != ''
 																		? '$' + subtractDiscount(onekey[1]?.haircutType, onekey[1]?.haircutType === 'kids' ? barberData?.kidsHaircut : barberData?.price, onekey[1].points)
-																		: '$' + barberData.price}
+																		: '$' + barberData?.price}
 																</ListItem.Title>
 															</>
 														) : (
-															<ListItem.Title style={styles.subtitle}>{barberData.price != '' && onekey[1]?.haircutType === 'kids' ? barberData?.kidsHaircut : barberData?.price}</ListItem.Title>
+															<ListItem.Title style={styles.subtitle}>{barberData?.price != '' && onekey[1]?.haircutType === 'kids' ? barberData?.kidsHaircut : barberData?.price}</ListItem.Title>
 														)}
 													</View>
 												</View>
@@ -255,7 +277,7 @@ function Home(props) {
 																	Linking.openURL(`sms:${barberData?.phone}`)
 																})
 															}>
-															{barberData.phone != '' ? formatPhoneNumber(barberData.phone) : ''}{' '}
+															{barberData?.phone != '' ? formatPhoneNumber(barberData?.phone) : ''}{' '}
 														</ListItem.Subtitle>
 													</View>
 													<View style={styles.rowEnd}>
@@ -271,7 +293,7 @@ function Home(props) {
 																	Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
 																})
 															}>
-															{barberData.location != '' ? barberData.location : ''}
+															{barberData?.location != '' ? barberData?.location : ''}
 														</ListItem.Subtitle>
 													</View>
 												</View>
@@ -309,9 +331,9 @@ function Home(props) {
 													</View>
 													<View style={styles.rowEnd}>
 														{onekey[1].points ? (
-															<ListItem.Title style={styles.subtitle}>{onekey[1].points != '' ? '$' + subtractDiscount(onekey[1]?.haircutType, barberData.price, onekey[1].points) : ''}</ListItem.Title>
+															<ListItem.Title style={styles.subtitle}>{onekey[1].points != '' ? '$' + subtractDiscount(onekey[1]?.haircutType, barberData?.price, onekey[1].points) : ''}</ListItem.Title>
 														) : (
-															<ListItem.Title style={styles.subtitle}>{barberData.price != '' ? barberData.price : ''}</ListItem.Title>
+															<ListItem.Title style={styles.subtitle}>{barberData?.price != '' ? barberData?.price : ''}</ListItem.Title>
 														)}
 													</View>
 												</View>
@@ -337,7 +359,7 @@ function Home(props) {
 						)}
 					</View>
 				</ScrollView>
-			</View>
+			</SafeAreaView>
 		</>
 	)
 }
@@ -350,4 +372,6 @@ const mapStateToProps = (store) => ({
 	barber: store.userState.barber
 })
 
-export default connect(mapStateToProps, null)(Home)
+const mapDispatchProps = (dispatch) => bindActionCreators({reload}, dispatch)
+
+export default connect(mapStateToProps, mapDispatchProps)(Home)

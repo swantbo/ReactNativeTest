@@ -1,10 +1,12 @@
 import React, {useEffect, useState, useContext} from 'react'
-import {View, Text, ScrollView, Linking, ActivityIndicator, SafeAreaView, ImageBackground, TouchableOpacity, SectionList, Item} from 'react-native'
+import {View, Text, ScrollView, Linking, ActivityIndicator, SafeAreaView, ImageBackground, TouchableOpacity, RefreshControl} from 'react-native'
 import {Card, SocialIcon, Avatar, Image, PricingCard, ListItem} from 'react-native-elements'
 import MapView from 'react-native-maps'
 import createStyles from '../../styles/base'
 
+import { reload } from '../../redux/actions'
 import {connect} from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 import {formatPhoneNumber} from '../../utils/DataFormatting'
 import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
@@ -16,6 +18,7 @@ function Barber(props) {
 	const [barber, setBarber] = useState({})
 	const [image, setImage] = useState(null)
 	const [haircutImages, setHaircutImages] = useState([])
+	const [refreshing, setRefreshing] = useState(false)
 
 	useEffect(() => {
 		const {barber} = props
@@ -42,11 +45,22 @@ function Barber(props) {
 			<SafeAreaView style={styles.cardHeader}>
 				<Avatar containerStyle={styles.avatarBackground} rounded size='xlarge' title={'N'} source={{uri: image}} />
 			</SafeAreaView>
-			<View style={styles.goldContainer}>
-				<ScrollView style={styles.scrollView}>
+			<SafeAreaView style={styles.goldContainer}>
+				<ScrollView style={styles.scrollView} refreshControl={
+					<RefreshControl
+					color={'#E8BD70'}
+					tintColor={'#E8BD70'}
+						refreshing={refreshing}
+						onRefresh={() => {
+							setRefreshing(true)
+							props.reload()
+							setRefreshing(false)
+						}}
+					/>
+				}>
 					<Card containerStyle={styles.cardBio}>
-						<Card.Title style={styles.accountTitle}>{barber.name}</Card.Title>
-						<Card.Title style={styles.subtitle}>{barber.bio}</Card.Title>
+						<Card.Title style={styles.accountTitle}>{barber?.name}</Card.Title>
+						<Card.Title style={styles.subtitle}>{barber?.bio}</Card.Title>
 					</Card>
 
 					<View style={styles.barberSocialIcons}>
@@ -70,8 +84,8 @@ function Barber(props) {
 						/>
 						<SocialIcon
 							onPress={() =>
-								Linking.openURL(`instagram://user?username=${barber.instagram}`).catch(() => {
-									Linking.openURL(`https://www.instagram.com/${barber.instagram}`)
+								Linking.openURL(`instagram://user?username=${barber?.instagram}`).catch(() => {
+									Linking.openURL(`https://www.instagram.com/${barber?.instagram}`)
 								})
 							}
 							style={styles.socialIcons}
@@ -79,8 +93,8 @@ function Barber(props) {
 						/>
 						<SocialIcon
 							onPress={() =>
-								Linking.openURL(`${barber.website}`).catch(() => {
-									Linking.openURL(`https://${barber.website}`)
+								Linking.openURL(`${barber?.website}`).catch(() => {
+									Linking.openURL(`https://${barber?.website}`)
 								})
 							}
 							style={styles.socialIcons}
@@ -97,7 +111,7 @@ function Barber(props) {
 										<ListItem.Title style={styles.subtitle}>Men's Haircut</ListItem.Title>
 									</View>
 									<View style={styles.rowEnd}>
-										<ListItem.Title style={styles.subtitle}>{barber.price}</ListItem.Title>
+										<ListItem.Title style={styles.subtitle}>{barber?.price}</ListItem.Title>
 									</View>
 								</View>
 								<ListItem.Subtitle style={styles.subtitle}>Full Haircut, Eyebrows, and Beard Trim</ListItem.Subtitle>
@@ -110,7 +124,7 @@ function Barber(props) {
 										<ListItem.Title style={styles.subtitle}>Kid's Haircut</ListItem.Title>
 									</View>
 									<View style={styles.rowEnd}>
-										<ListItem.Title style={styles.subtitle}>{barber.kidsHaircut}</ListItem.Title>
+										<ListItem.Title style={styles.subtitle}>{barber?.kidsHaircut}</ListItem.Title>
 									</View>
 								</View>
 								<ListItem.Subtitle style={styles.subtitle}>Full Haircut, for Kid's</ListItem.Subtitle>
@@ -122,35 +136,35 @@ function Barber(props) {
 						<Card.Title style={styles.barberInfoTitles}>ADDRESS & HOURS</Card.Title>
 						<View style={styles.row}>
 							<View style={styles.rowStart}>
-								<Text style={styles.title}>{barber.location}</Text>
+								<Text style={styles.title}>{barber?.location}</Text>
 								<TouchableOpacity
 									onPress={() =>
 										Linking.openURL(`sms:${barber?.phone}`).catch(() => {
 											Linking.openURL(`sms:${barber?.phone}`)
 										})
 									}>
-									<Text style={styles.title}>{barber.phone != '' ? formatPhoneNumber(barber.phone) : ''}</Text>
+									<Text style={styles.title}>{barber?.phone != '' ? formatPhoneNumber(barber?.phone) : ''}</Text>
 								</TouchableOpacity>
 								<Text></Text>
 								<View style={styles.row}>
 									<Text style={styles.title}>Tuesday</Text>
-									<Text style={styles.text}>{' ' + barber.Tuesday}</Text>
+									<Text style={styles.text}>{' ' + barber?.Tuesday}</Text>
 								</View>
 								<View style={styles.row}>
 									<Text style={styles.title}>Wednesday</Text>
-									<Text style={styles.text}>{' ' + barber.Wednesday}</Text>
+									<Text style={styles.text}>{' ' + barber?.Wednesday}</Text>
 								</View>
 								<View style={styles.row}>
 									<Text style={styles.title}>Thursday</Text>
-									<Text style={styles.text}>{' ' + barber.Thursday}</Text>
+									<Text style={styles.text}>{' ' + barber?.Thursday}</Text>
 								</View>
 								<View style={styles.row}>
 									<Text style={styles.title}>Friday</Text>
-									<Text style={styles.text}>{' ' + barber.Friday}</Text>
+									<Text style={styles.text}>{' ' + barber?.Friday}</Text>
 								</View>
 								<View style={styles.row}>
 									<Text style={styles.title}>Saturday</Text>
-									<Text style={styles.text}>{' ' + barber.Saturday}</Text>
+									<Text style={styles.text}>{' ' + barber?.Saturday}</Text>
 								</View>
 							</View>
 							<View style={styles.rowEnd}>
@@ -233,7 +247,7 @@ function Barber(props) {
 						</View>
 					</Card>
 				</ScrollView>
-			</View>
+			</SafeAreaView>
 		</>
 	)
 }
@@ -246,4 +260,6 @@ const mapStateToProps = (store) => ({
 	barber: store.userState.barber
 })
 
-export default connect(mapStateToProps, null)(Barber)
+const mapDispatchProps = (dispatch) => bindActionCreators({reload}, dispatch)
+
+export default connect(mapStateToProps, mapDispatchProps)(Barber)

@@ -15,6 +15,15 @@ export function clearData() {
 	}
 }
 
+export function reload() {
+	return (dispatch) => {
+		dispatch(clearData())
+		dispatch(fetchUser())
+		dispatch(fetchUserAppointments())
+		dispatch(fetchBarber())
+	}
+}
+
 export function fetchUser() {
 	return async (dispatch) => {
 		await Firebase.firestore()

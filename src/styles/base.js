@@ -305,7 +305,6 @@ const baseStyles = {
 		color: '#E8BD70',
 		textAlign: 'center',
 		padding: 10,
-		fontSize: 25
 	}
 }
 

@@ -1,11 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {View, Alert, Linking, SafeAreaView, TouchableOpacity, RefreshControl, ScrollView} from 'react-native'
-import {Card, ListItem, Button, PricingCard} from 'react-native-elements'
-import {Avatar, Center, VStack, Heading, HStack, FlatList, Box, Text} from 'native-base'
+import {Alert, Linking} from 'react-native'
+import {Avatar, Center, View, VStack, Heading, HStack, FlatList, Box, Text, Spacer} from 'native-base'
 import createStyles from '../../styles/base'
 
 import * as FileSystem from 'expo-file-system'
-import { reload } from '../../redux/actions'
+import {reload} from '../../redux/actions'
 import {connect} from 'react-redux'
 import moment from 'moment'
 import * as ImagePicker from 'expo-image-picker'
@@ -14,13 +13,11 @@ import {subtractDiscount, formatPhoneNumber, convertTime12to24} from '../../util
 
 import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
 import Firebase from '../../config/firebase'
-import { bindActionCreators } from 'redux'
+import {bindActionCreators} from 'redux'
 
 function Home(props) {
 	const {user} = useContext(AuthenticatedUserContext)
 	const [userData, setTestUser] = useState({})
-	const [refreshing, setRefreshing] = useState(false)
-
 	const [barberData, setTestBarber] = useState({})
 	const [upcomingAppointments, setUpcomingAppointments] = useState([])
 	const [previousAppointments, setPreviousAppointments] = useState([])
@@ -29,22 +26,21 @@ function Home(props) {
 		let [upcomingData, previousData, removeDates] = [[], [], []]
 		if (data) {
 			Object.entries(data).map((onekey, i) => {
-			if (onekey[1].id > moment().format('YYYY-MM-DD')) {
-				upcomingData.push(onekey[1]) 
-			} else {
-				previousData.push(onekey[1])
-				removeDates.push(onekey[1].id.split(' ')[0])
+				if (onekey[1].id > moment().format('YYYY-MM-DD')) {
+					upcomingData.push(onekey[1])
+				} else {
+					previousData.push(onekey[1])
+					removeDates.push(onekey[1].id.split(' ')[0])
+				}
+			})
+			if (Object.keys(previousData).length > 2) {
+				removeDates.splice(removeDates.length - 2, 2)
+				const docRef = Firebase.firestore().collection('users').doc(user.uid).collection('Haircuts')
+				removeDates.map((date) => docRef.doc(date).delete())
 			}
-		})
-		if (Object.keys(previousData).length > 2) {
-			removeDates.splice(removeDates.length - 2, 2)
-			const docRef = Firebase.firestore().collection('users').doc(user.uid).collection('Haircuts')
-			removeDates.map((date) => docRef.doc(date).delete())
+			setUpcomingAppointments(upcomingData)
+			setPreviousAppointments(previousData)
 		}
-		setUpcomingAppointments(upcomingData)
-		setPreviousAppointments(previousData)
-		}
-		
 	}
 
 	const pickImage = async () => {
@@ -137,8 +133,7 @@ function Home(props) {
 		const {currentUser, barber, appointments} = props
 		setTestUser(currentUser)
 		setTestBarber(barber)
-		formatAppointments(appointments)
-		,
+		formatAppointments(appointments),
 			(async () => {
 				const {status} = await Calendar.requestCalendarPermissionsAsync()
 				if (status === 'granted') {
@@ -156,17 +151,16 @@ function Home(props) {
 	}, [props])
 
 	return (
-		<>
-			<HStack space={5} alignItems="center" bg="#000" safeArea>
-				<Avatar size='xl' source={{uri: userData?.profilePicture}} onPress={() => pickImage()} >
-					{userData?.name?.[0]}
-				</Avatar>	
-				<VStack space={4} alignItems="center">
-					<Heading size='xl' color="#E8BD70" onPress={() => props.navigation.navigate('SettingScreen')}>
+		<View flex={1} bgColor={'#000'}>
+			<HStack space={5} alignItems='center' bg='#000' p={'5'} safeArea>
+				<Avatar size='xl' onPress={pickImage()} source={{uri: userData?.profilePicture}}></Avatar>
+
+				<VStack space={2} pl={'10'} alignItems='center'>
+					<Heading size='lg' color='#E8BD70' onPress={() => props.navigation.navigate('SettingScreen')}>
 						{userData?.name}
 					</Heading>
 					<Heading
-						size='lg'
+						size='md'
 						onPress={() =>
 							Alert.alert('Goat Points', `Goat Points are a currency that can be used for discounts on Haircuts. 100 Goat Points is equal to $1. Talk to your Barber about how to earn Goat Points.`, [
 								{
@@ -176,208 +170,155 @@ function Home(props) {
 						}>
 						{userData?.points}
 					</Heading>
-					<Heading size='md'>Goat Points</Heading>
+					<Heading size='sm'>Goat Points</Heading>
 				</VStack>
 			</HStack>
-			<FlatList data={previousAppointments}
-				renderItem={({ item }) => (
-					<Box
-						borderBottomWidth="1"
-						bg='#121212'
-						borderColor="#121212"
-					>
-						<HStack bg='#121212' >
-							<VStack>
-								<Heading bg='#121212' size='sm'>{item.id}</Heading>
-								<Text bg='#121212' size='sm'>{barberData.location}</Text>
-								<Text bg='#121212' size='sm'>{barberData.phone}</Text>
-							</VStack>
-							
-							<VStack>
-								<Text bg='#121212' size='sm'>{barberData.price}</Text>
-								<Text bg='#121212' size='sm'>{barberData.price}</Text>
-							</VStack>
-							
-						</HStack>
-					</Box>
-				)} keyExtractor={(item) => item.id} />
-			<ScrollView style={styles.scrollView} refreshControl={
-				<RefreshControl
-				color={'#E8BD70'}
-				tintColor={'#E8BD70'}
-					refreshing={refreshing}
-					onRefresh={() => {
-						setRefreshing(true)
-						props.reload()
-						setRefreshing(false)
-					}}
-				/>
-			}>
-				<View>
-					<ListItem bottomDivider >
-						<ListItem.Content>
-							<ListItem.Title style={styles.goldTitle}>Upcoming Appointments</ListItem.Title>
-						</ListItem.Content>
-					</ListItem>{console.log('upcomingAppointments', upcomingAppointments)}
-					{/* {Object.keys(upcomingAppointments).length > 0 ? (
-						<>
-							{Object.entries(upcomingAppointments)
-								.map((onekey, i) => (
-									<ListItem.Swipeable
-										bottomDivider
-										containerStyle={styles.listItemContainer}
-										key={i}
-										rightContent={
-											<Button
-												title='Delete'
-												icon={{
-													name: 'delete',
-													color: 'white'
-												}}
-												buttonStyle={styles.listItemButton}
-												onPress={() =>
-													Alert.alert('Delete Appointment', `Are you sure you want to delete this ${'\n'}Appointment on ${onekey[0]} ${'\n'} at ${onekey[1].time}`, [
+			<View bgColor={'#000'}>
+				<Box borderBottomWidth='1' borderColor='#fff'>
+					<Heading bg='#121212' color={'#E8BD70'} borderBottomWidth='1' size='sm' p='4' pl='3' pb='3'>
+						Upcoming Appointments
+					</Heading>
+				</Box>
+				{previousAppointments.length > 0 ? (
+					<FlatList
+						data={previousAppointments}
+						renderItem={({item}) => (
+							<Box
+								borderBottomWidth='1'
+								_dark={{
+									borderColor: '#fff'
+								}}
+								borderColor='#fff'
+								pl='4'
+								pr='4'
+								py='2'
+								bgColor='#121212'
+								onPress={() =>
+									Alert.alert('Delete Appointment', `Would you like to delete this Appointment on ${moment(item.id.split(' ')[0]).format('ddd, MMM Do YYYY')} at ${item.time.toString().toLowerCase()}`, [
+										{
+											text: 'Cancel'
+										},
+										{
+											text: 'Delete Appointment',
+											onPress: () => deleteAppointment(moment(item.id.split(' ')[0]).format('ddd, MMM Do YYYY'), item.time)
+										}
+									])
+								}>
+								<HStack space={2} justifyContent='space-between'>
+									<VStack>
+										<Text
+											color='#fff'
+											bold
+											onPress={() =>
+												Alert.alert(
+													'Add Haircut To Calendar',
+													`Would you like to add your Appointment on ${moment(item.id.split(' ')[0]).format('ddd, MMM Do YYYY')} at ${item.time.toString().toLowerCase()} to your calendar?`,
+													[
 														{
 															text: 'Cancel'
 														},
 														{
-															text: 'Delete Appointment',
-															onPress: () => deleteAppointment(onekey[0], onekey[1].time)
+															text: 'Add Appointment',
+															onPress: () => createCalendar(onekey[0], onekey[1].time.toString(), barberData?.location, barberData?.phone)
 														}
-													])
-												}
-											/>
-										}>
-										<ListItem.Content>
-											<View style={styles.row}>
-												<View style={styles.rowStart}>
-													<TouchableOpacity
-														onPress={() =>
-															Alert.alert('Add Haircut To Calendar', `Would you like to add your Appointment on ${onekey[0]} at ${onekey[1].time} to your calendar?`, [
-																{
-																	text: 'Cancel'
-																},
-																{
-																	text: 'Add Appointment',
-																	onPress: () => createCalendar(onekey[0], onekey[1].time.toString(), barberData?.location, barberData?.phone)
-																}
-															])
-														}>
-														<ListItem.Title style={styles.subtitle}>
-															{moment(onekey[1].id.split(' ')[0]).format('ddd, MMM Do YYYY')}, {onekey[1].time.toString().toLowerCase()}
-														</ListItem.Title>
-													</TouchableOpacity>
-												</View>
-												<View style={styles.rowEnd}>
-													{onekey[1].points ? (
-														<>
-															<ListItem.Title style={styles.subtitle}>
-																{onekey[1].points != ''
-																	? '$' + subtractDiscount(onekey[1]?.haircutType, onekey[1]?.haircutType === 'kids' ? barberData?.kidsHaircut : barberData?.price, onekey[1].points)
-																	: '$' + barberData?.price}
-															</ListItem.Title>
-														</>
-													) : (
-														<ListItem.Title style={styles.subtitle}>{barberData?.price != '' && onekey[1]?.haircutType === 'kids' ? barberData?.kidsHaircut : barberData?.price}</ListItem.Title>
-													)}
-												</View>
-											</View>
-											<View style={styles.row}>
-												<View style={styles.rowStart}>
-													<ListItem.Subtitle
-														style={styles.subtitle}
-														onPress={() =>
-															Linking.openURL(`sms:${barberData?.phone}`).catch(() => {
-																Linking.openURL(`sms:${barberData?.phone}`)
-															})
-														}>
-														{barberData?.phone != '' ? formatPhoneNumber(barberData?.phone) : ''}{' '}
-													</ListItem.Subtitle>
-												</View>
-												<View style={styles.rowEnd}>
-													<Text style={styles.subtitle}>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </Text>
-												</View>
-											</View>
-											<View style={styles.row}>
-												<View style={styles.rowStart}>
-													<ListItem.Subtitle
-														style={styles.subtitle}
-														onPress={() =>
-															Linking.openURL('maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647').catch(() => {
-																Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
-															})
-														}>
-														{barberData?.location != '' ? barberData?.location : ''}
-													</ListItem.Subtitle>
-												</View>
-											</View>
-											<View style={styles.row}>
-												{onekey[1]?.friend && (
-													<View style={styles.rowStart}>
-														<ListItem.Subtitle style={styles.subtitle}>Friend: {onekey[1]?.friend}</ListItem.Subtitle>
-													</View>
-												)}
-											</View>
-										</ListItem.Content>
-									</ListItem.Swipeable>
-								))
-								.reverse()}
-						</>
-					) : (
-						<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-							<ListItem.Title style={styles.titleCenter}>No Upcoming Appointments</ListItem.Title>
-						</ListItem>
-					)}
-					<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-						<ListItem.Title style={styles.goldTitle}>Previous Appointments</ListItem.Title>
-					</ListItem>
-					{Object.keys(previousAppointments).length > 0 ? (
-						<>
-							{Object.entries(previousAppointments)
-								.map((onekey, i) => (
-									<ListItem bottomDivider key={i} containerStyle={styles.listItemContainer}>
-										<ListItem.Content>
-											<View style={styles.row}>
-												<View style={styles.rowStart}>
-													<ListItem.Title style={styles.subtitle}>
-														{moment(onekey[1].id.split(' ')[0]).format('ddd, MMM Do YYYY')}, {onekey[1].time.toString().toLowerCase()}
-													</ListItem.Title>
-												</View>
-												<View style={styles.rowEnd}>
-													{onekey[1].points ? (
-														<ListItem.Title style={styles.subtitle}>{onekey[1].points != '' ? '$' + subtractDiscount(onekey[1]?.haircutType, barberData?.price, onekey[1].points) : ''}</ListItem.Title>
-													) : (
-														<ListItem.Title style={styles.subtitle}>{barberData?.price != '' ? barberData?.price : ''}</ListItem.Title>
-													)}
-												</View>
-											</View>
-											<View style={styles.row}>
-												<View style={styles.rowEnd}>
-													{onekey[1].points ? <ListItem.Subtitle style={styles.subtitle}>{onekey[1].points ? 'Goat Points: ' + onekey[1].points : 'Goat Points: 0'} </ListItem.Subtitle> : null}
-												</View>
-											</View>
-											<View style={styles.row}>
-												<View style={styles.rowStart}>
-													<ListItem.Subtitle style={styles.subtitle}>{onekey[1]?.friend && 'Friend: ' + onekey[1]?.friend}</ListItem.Subtitle>
-												</View>
-											</View>
-										</ListItem.Content>
-									</ListItem>
-								))
-								.reverse()}
-						</>
-					) : (
-						<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-							<ListItem.Title style={styles.titleCenter}>No Previous Appointments</ListItem.Title>
-						</ListItem>
-					)} */}
-				</View>
-			</ScrollView>
-		</>
+													]
+												)
+											}>
+											{moment(item.id.split(' ')[0]).format('ddd, MMM Do YYYY')}, {item.time.toString().toLowerCase()}
+										</Text>
+										<Text
+											color='coolGray.600'
+											_dark={{
+												color: 'warmGray.200'
+											}}
+											onPress={() =>
+												Linking.openURL('maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647').catch(() => {
+													Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
+												})
+											}>
+											{barberData.location}
+										</Text>
+										<Text
+											color='coolGray.600'
+											_dark={{
+												color: 'warmGray.200'
+											}}
+											onPress={() =>
+												Linking.openURL(`sms:${barberData?.phone}`).catch(() => {
+													Linking.openURL(`sms:${barberData?.phone}`)
+												})
+											}>
+											{formatPhoneNumber(barberData.phone)}
+										</Text>
+									</VStack>
+									<Spacer />
+									<VStack>
+										<Text color='#fff' alignSelf='flex-start' bold>
+											{item.points != '' ? subtractDiscount(item?.haircutType, item?.haircutType === 'kids' ? barberData?.kidsHaircut : barberData?.price, item.points) : barberData?.price}
+										</Text>
+										<Text color='#fff' alignSelf='flex-start'>
+											GP's: {item.points !== '' ? item.points : '0'}
+										</Text>
+									</VStack>
+								</HStack>
+							</Box>
+						)}
+						keyExtractor={(item) => item.id}
+					/>
+				) : (
+					<Box borderBottomWidth='1' borderColor='#fff' bg='#121212'>
+						<Center>
+							<Heading borderBottomWidth='1' size='sm' p='4'>
+								No Upcoming Appointments
+							</Heading>
+						</Center>
+					</Box>
+				)}
+				<Box borderBottomWidth='1' borderColor='#fff'>
+					<Heading bg='#121212' color={'#E8BD70'} borderBottomWidth='1' size='sm' p='4' pl='3' pb='3'>
+						Previous Appointments
+					</Heading>
+				</Box>
+				{previousAppointments.length > 0 ? (
+					<FlatList
+						data={previousAppointments}
+						renderItem={({item}) => (
+							<Box
+								borderBottomWidth='1'
+								_dark={{
+									borderColor: '#fff'
+								}}
+								borderColor='#fff'
+								pl='4'
+								pr='4'
+								py='4'
+								bgColor='#121212'>
+								<HStack space={2} justifyContent='space-between'>
+									<Text color='#fff' bold>
+										{moment(item.id.split(' ')[0]).format('ddd, MMM Do YYYY')}, {item.time.toString().toLowerCase()}
+									</Text>
+									<Spacer />
+									<Text color='#fff' alignSelf='flex-start' bold>
+										{item.points != '' ? subtractDiscount(item?.haircutType, item?.haircutType === 'kids' ? barberData?.kidsHaircut : barberData?.price, item.points) : barberData?.price}
+									</Text>
+								</HStack>
+							</Box>
+						)}
+						keyExtractor={(item) => item.id}
+					/>
+				) : (
+					<Box borderBottomWidth='1' borderColor='#fff' bg='#121212'>
+						<Center>
+							<Heading borderBottomWidth='1' size='sm' p='4'>
+								No Previous Appointments
+							</Heading>
+						</Center>
+					</Box>
+				)}
+			</View>
+		</View>
 	)
 }
-
-const styles = createStyles()
 
 const mapStateToProps = (store) => ({
 	currentUser: store.userState.currentUser,

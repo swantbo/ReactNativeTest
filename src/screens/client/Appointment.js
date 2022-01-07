@@ -1,19 +1,21 @@
 import moment from 'moment'
 import React, {useEffect, useState, useContext} from 'react'
-import {View, SafeAreaView, ScrollView, ActivityIndicator, Alert, TouchableOpacity, RefreshControl, KeyboardAvoidingView} from 'react-native'
+import {SafeAreaView, ScrollView, ActivityIndicator, Alert, TouchableOpacity, RefreshControl, KeyboardAvoidingView} from 'react-native'
 import CalendarStrip from 'react-native-calendar-strip'
-import {ListItem, Avatar} from 'react-native-elements'
+import {ListItem} from 'react-native-elements'
 import {insertDecimal, subtractDiscount, formatPhoneNumber, subtractPrice} from '../../utils/DataFormatting'
+
+import {Button, Center, Input, View, VStack, Heading, HStack, FlatList, Box, Text, Spacer} from 'native-base'
 
 import createStyles from '../../styles/base'
 import {InputField} from '../../components'
 
 import {connect} from 'react-redux'
-import { reload } from '../../redux/actions'
+import {reload} from '../../redux/actions'
 import * as firebase from 'firebase'
 import Firebase from '../../config/firebase'
 import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
-import { bindActionCreators } from 'redux'
+import {bindActionCreators} from 'redux'
 
 function Appointment(props) {
 	const {user} = useContext(AuthenticatedUserContext)
@@ -28,7 +30,6 @@ function Appointment(props) {
 	const [newTimes, setNewTimes] = useState({})
 	const [haircutType, setHaircutType] = useState('mens')
 	const [discount, setDiscount] = useState(false)
-	const [refreshing, setRefreshing] = useState(false)
 
 	const removeMonSun = () => {
 		let dateArray = []
@@ -46,10 +47,6 @@ function Appointment(props) {
 	const onDateSelected = (selectedDate) => {
 		setIsLoading(true)
 		setSelectedDate(selectedDate.format('YYYY-MM-DD'))
-		splitHours(selectedDate)
-	}
-
-	const splitHours = (selectedDate) => {
 		const weekDay = Promise.resolve(moment(selectedDate, 'YYYY-MM-DD HH:mm:ss').format('dddd').toString())
 		Promise.all([weekDay]).then((values) => {
 			createAvailableTimes(barberInfo[`${values}`], selectedDate)
@@ -91,19 +88,17 @@ function Appointment(props) {
 					data = {...data, ...newdata}
 				})
 				const tempTimes = {...newIntervals, ...data}
-				let newTime = {}
+				let tempTime = []
 				if (tempTimes) {
 					Object.entries(tempTimes).map((key, i) => {
-						let tempTime = {}
 						if (key[1] != 'Taken') {
-							tempTime = {[key[0]]: key[1]}
+							tempTime.push([key[0]])
 						}
-						newTime = {...newTime, ...tempTime}
 					})
 				} else {
-					newTime = {tempTime}
+					tempTime.push(tempTimes)
 				}
-				setNewTimes(newTime)
+				setNewTimes(tempTime)
 				setIsLoading(false)
 			})
 	}
@@ -170,120 +165,111 @@ function Appointment(props) {
 	}, [props])
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
-			<ListItem bottomDivider containerStyle={styles.avatarBackground}>
-				<ListItem.Content>
-					<View style={{flexDirection: 'row'}}>
-						<View style={styles.rowStart}>
-							<ListItem.Title style={styles.text}>
+		<View flex={1} bgColor={'#000'}>
+			<VStack bgColor={'#000'}>
+				<Box bgColor={'#121212'} pl='4' pr='4' py='2'>
+					<HStack space={2} justifyContent='space-between'>
+						<VStack alignItems={'flex-start'}>
+							<Heading size={'sm'}>
 								{selectedDate ? moment(selectedDate).format('ddd, MMM Do YYYY') + ' ' : 'Select Date & '}
 								{selectedTime ? '@ ' + selectedTime : 'Select Time'}
-							</ListItem.Title>
-							<ListItem.Title style={styles.text}>{haircutType === 'mens' ? "Men's Haircut " : "Kid's Haircut "}</ListItem.Title>
-							<TouchableOpacity style={styles.goldButton} onPress={() => (discount === false && userData?.points != 0 ? setDiscount(true) : setDiscount(false))}>
-								<ListItem.Title style={styles.buttonTitle}>Goat Points: {userData?.points}</ListItem.Title>
-							</TouchableOpacity>
-						</View>
-						<View style={styles.rowEnd}>
-							<ListItem.Title style={styles.text}>{haircutType === 'mens' ? barberInfo?.price : barberInfo?.kidsHaircut}</ListItem.Title>
-							<ListItem.Title style={styles.text}>
-								<ListItem.Title style={styles.text}>{discount != false ? '-$' + insertDecimal(userData?.points) : ' '}</ListItem.Title>
-							</ListItem.Title>
-							<TouchableOpacity style={styles.goldButton} onPress={() => scheduleAppointment(selectedDate, selectedTime)}>
-								<ListItem.Title style={styles.buttonTitle}>
+							</Heading>
+							<Text fontSize='md'>{haircutType === 'mens' ? "Men's Haircut " : "Kid's Haircut "}</Text>
+							<Button bgColor={'#E8BD70'} onPress={() => (discount === false && userData?.points != 0 ? setDiscount(true) : setDiscount(false))}>
+								<Text fontSize='md' color={'#000'} bold>
+									Goat Points: {userData?.points}
+								</Text>
+							</Button>
+						</VStack>
+						<VStack>
+							<Heading size={'sm'} alignSelf='flex-end'>
+								{haircutType === 'mens' ? barberInfo?.price : barberInfo?.kidsHaircut}
+							</Heading>
+							<Text fontSize='md' alignSelf='flex-end'>
+								{discount != false ? '-$' + insertDecimal(userData?.points) : ' '}
+							</Text>
+							<Button bgColor={'#E8BD70'} size={'sm'} onPress={() => scheduleAppointment(selectedDate, selectedTime)}>
+								<Text fontSize='md' color={'#000'} bold>
 									Book{' '}
-									{discount != false ? '$' + subtractDiscount(haircutType, haircutType === 'kids' ? barberInfo?.kidsHaircut : barberInfo?.price, userData?.points) : haircutType === 'mens' ? barberInfo?.price : barberInfo?.kidsHaircut}
-								</ListItem.Title>
-							</TouchableOpacity>
-						</View>
-					</View>
-				</ListItem.Content>
-			</ListItem>
-			<ScrollView refreshControl={
-					<RefreshControl
-					color={'#E8BD70'}
-					tintColor={'#E8BD70'}
-						refreshing={refreshing}
-						onRefresh={() => {
-							setRefreshing(true)
-							props.reload()
-							setRefreshing(false)
-						}}
+									{discount != false
+										? '$' + subtractDiscount(haircutType, haircutType === 'kids' ? barberInfo?.kidsHaircut : barberInfo?.price, userData?.points)
+										: haircutType === 'mens'
+										? barberInfo?.price
+										: barberInfo?.kidsHaircut}
+								</Text>
+							</Button>
+						</VStack>
+					</HStack>
+				</Box>
+				<CalendarStrip
+					scrollable
+					style={{
+						height: 100,
+						padding: 5
+					}}
+					calendarHeaderStyle={{color: '#E8BD70', fontSize: '18'}}
+					calendarColor={'#000'}
+					dateNumberStyle={{color: 'white'}}
+					dateNameStyle={{color: 'white'}}
+					iconContainer={{flex: 0.1}}
+					highlightDateNameStyle={{color: 'white'}}
+					highlightDateNumberStyle={{fontWeight: 'bold', color: 'white'}}
+					highlightDateContainerStyle={styles.socialIcons}
+					startingDate={moment()}
+					minDate={moment()}
+					maxDate={moment().add(30, 'days')}
+					selectedDate={selectedDate}
+					onDateSelected={onDateSelected}
+					datesBlacklist={calendarDatesRemoved}
+				/>
+				{!isLoading && newTimes.length !== 0 ? (
+					<FlatList
+						horizontal
+						data={newTimes}
+						renderItem={({item}) => (
+							<Box bgColor={'#E8BD70'} borderRadius={'10'} m={'5'}>
+								<Text onPress={() => selectedTimeChange(item)} color={'#000'} fontSize={'md'} p={'1'} bold>
+									{item}
+								</Text>
+							</Box>
+						)}
+						keyExtractor={(item) => item}
 					/>
-				}>
-				<View>
-					<ListItem containerStyle={styles.listItemContainerBlack}>
-						<ListItem.Content>
-							<ListItem.Title style={styles.goldTitle}>Appointment Type</ListItem.Title>
-							<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={{color: '#fff'}} title="Men's Haircut" checked={haircutType === 'mens' ? true : false} onPress={() => setHaircutType('mens')} />
-							<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={styles.text} title="Kid's Haircut" checked={haircutType === 'kids' ? true : false} onPress={() => setHaircutType('kids')} />
-						</ListItem.Content>
-					</ListItem>
-					<CalendarStrip
-						scrollable
-						style={{
-							height: 100,
-							padding: 5
-						}}
-						calendarHeaderStyle={styles.goldTitle}
-						calendarColor={'#121212'}
-						dateNumberStyle={{color: 'white'}}
-						dateNameStyle={{color: 'white'}}
-						iconContainer={{flex: 0.1}}
-						highlightDateNameStyle={{color: 'white'}}
-						highlightDateNumberStyle={{fontWeight: 'bold', color: 'white'}}
-						highlightDateContainerStyle={styles.socialIcons}
-						startingDate={moment()}
-						minDate={moment()}
-						maxDate={moment().add(30, 'days')}
-						selectedDate={selectedDate}
-						onDateSelected={onDateSelected}
-						datesBlacklist={calendarDatesRemoved}
-					/>
+				) : isLoading ? (
+					<Center>
+						<Box bgColor={'#E8BD70'} borderRadius={'10'} p={'1'}>
+							<ActivityIndicator color='#fff' size='large' />
+						</Box>
+					</Center>
+				) : (
+					newTimes.length == 0 && (
+						<Box bgColor={'#E8BD70'} borderRadius={'10'} m={'5'}>
+							<Text color={'#000'} fontSize={'md'} p={'1'} bold>
+								No Appointments Available
+							</Text>
+						</Box>
+					)
+				)}
+				<Box p={'5'}>
+					<Heading size={'sm'} color={'#E8BD70'}>
+						Appoinment Type
+					</Heading>
+					<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={{color: '#fff'}} title="Men's Haircut" checked={haircutType === 'mens' ? true : false} onPress={() => setHaircutType('mens')} />
+					<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={styles.text} title="Kid's Haircut" checked={haircutType === 'kids' ? true : false} onPress={() => setHaircutType('kids')} />
+				</Box>
 
-					{!isLoading && Object.keys(newTimes).length !== 0 ? (
-						<ScrollView horizontal={true} style={{}}>
-							{Object.entries(newTimes).map((onekey, i) => (
-								<ListItem bottomDivider containerStyle={styles.listItemContainerBlack} key={i} onPress={() => selectedTimeChange(onekey[0])}>
-									<ListItem.Content style={styles.listItemContent}>
-										<ListItem.Title style={{fontWeight: 'bold'}}>{onekey[1] ? null : onekey[0]}</ListItem.Title>
-									</ListItem.Content>
-								</ListItem>
-							))}
-						</ScrollView>
-					) : isLoading ? (
-						<ScrollView horizontal={true} style={styles.scrollViewAppointment}>
-							<ListItem bottomDivider containerStyle={styles.listItemContainerBlack}>
-								<ListItem.Content style={styles.listItemContent}>
-									<ActivityIndicator color='#fff' size='large' />
-								</ListItem.Content>
-							</ListItem>
-						</ScrollView>
-					) : (
-						Object.keys(newTimes).length == 0 && (
-							<ScrollView horizontal={true} style={styles.scrollViewAppointment}>
-								<ListItem bottomDivider containerStyle={styles.listItemContainerBlack}>
-									<ListItem.Content style={styles.listItemContent}>
-										<ListItem.Title style={styles.buttonTitle}>No Available Times</ListItem.Title>
-									</ListItem.Content>
-								</ListItem>
-							</ScrollView>
-						)
-					)}
-				</View>
-				<View>
-					<ListItem bottomDivider containerStyle={styles.listItemContainerBlack}>
-						<ListItem.Content>
-							<ListItem.Title style={styles.goldTitle}>For a Friend?</ListItem.Title>
-							<InputField containerStyle={styles.inputField} leftIcon='account-plus' placeholder='Friends Name' autoCapitalize='words' value={friend} onChangeText={(text) => setFriend(text)} />
-							<ListItem.Title style={styles.goldTitle}>Comments</ListItem.Title>
-							<InputField containerStyle={styles.inputField} leftIcon='comment' placeholder='Comment (optional)' autoCapitalize='sentences' value={comment} onChangeText={(text) => onChangeComment(text)} />
-						</ListItem.Content>
-					</ListItem>
-				</View>
-				<View></View>
-			</ScrollView>
-		</KeyboardAvoidingView>
+				<Box pl={'5'} pr={'5'}>
+					<Heading pb={'2'} size={'sm'} color={'#E8BD70'}>
+						For a Friend?
+					</Heading>
+					<Input placeholder="Friend's Name (Optional)" borderColor={'#fff'} placeholderTextColor={'#fff'} fontSize={'md'} p={'3'} value={friend} onChangeText={(text) => setFriend(text)} />
+					<Heading pb={'2'} pt={'2'} size={'sm'} color={'#E8BD70'}>
+						Comment?
+					</Heading>
+					<Input placeholder='Comment (Optional)' borderColor={'#fff'} placeholderTextColor={'#fff'} fontSize={'md'} p={'3'} value={comment} onChangeText={(text) => onChangeComment(text)} />
+				</Box>
+			</VStack>
+		</View>
 	)
 }
 

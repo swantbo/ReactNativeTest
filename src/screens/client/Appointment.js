@@ -113,7 +113,7 @@ function Appointment(props) {
 			haircutType: haircutType,
 			friend: friend,
 			comment: comment,
-			time: selectedTime,
+			time: selectedTime[0],
 			phone: userData.phone,
 			goatPoints: discount != false ? userData.points : '',
 			strikes: userData.strikes,
@@ -128,14 +128,15 @@ function Appointment(props) {
 			haircuts: increment
 		})
 
+		console.log('time', selectedDate, selectedTime)
 		await Firebase.firestore()
 			.collection('Calendar')
 			.doc(moment(selectedDate).format('MMM YY'))
 			.collection(moment(selectedDate).format('YYYY-MM-DD'))
-			.doc(selectedTime)
+			.doc(selectedTime[0])
 			.set(userAppointmentInfo, {merge: false})
 			.then(() => {
-				addAppointmentDataBase(selectedDate, selectedTime)
+				addAppointmentDataBase(selectedDate, selectedTime[0])
 				Alert.alert('Appointment Scheduled', `Thanks ${userData.name}, your appointment has been scheduled`, [
 					{
 						text: 'Okay'
@@ -148,6 +149,7 @@ function Appointment(props) {
 	}
 
 	const addAppointmentDataBase = async (selectedDate, selectedTime) => {
+		console.log('does this work')
 		const appointmentData = {
 			time: selectedTime,
 			points: discount != false ? userData.points : '',
@@ -168,7 +170,7 @@ function Appointment(props) {
 		<View flex={1} bgColor={'#000'}>
 			<VStack bgColor={'#000'}>
 				<Box bgColor={'#121212'} pl='4' pr='4' py='2'>
-					<HStack space={2} justifyContent='space-between'>
+					<HStack>
 						<VStack alignItems={'flex-start'}>
 							<Heading size={'sm'}>
 								{selectedDate ? moment(selectedDate).format('ddd, MMM Do YYYY') + ' ' : 'Select Date & '}
@@ -181,13 +183,9 @@ function Appointment(props) {
 								</Text>
 							</Button>
 						</VStack>
-						<VStack>
-							<Heading size={'sm'} alignSelf='flex-end'>
-								{haircutType === 'mens' ? barberInfo?.price : barberInfo?.kidsHaircut}
-							</Heading>
-							<Text fontSize='md' alignSelf='flex-end'>
-								{discount != false ? '-$' + insertDecimal(userData?.points) : ' '}
-							</Text>
+						<VStack alignItems={'flex-end'}>
+							<Heading size={'sm'}>{haircutType === 'mens' ? barberInfo?.price : barberInfo?.kidsHaircut}</Heading>
+							<Text fontSize='md'>{discount != false ? '-$' + insertDecimal(userData?.points) : ' '}</Text>
 							<Button bgColor={'#E8BD70'} size={'sm'} onPress={() => scheduleAppointment(selectedDate, selectedTime)}>
 								<Text fontSize='md' color={'#000'} bold>
 									Book{' '}
@@ -250,7 +248,7 @@ function Appointment(props) {
 						</Box>
 					)
 				)}
-				<Box p={'5'}>
+				<Box m={'2'} p={'3'} borderRadius={'20'} bgColor={'#121212'}>
 					<Heading size={'sm'} color={'#E8BD70'}>
 						Appoinment Type
 					</Heading>
@@ -258,15 +256,15 @@ function Appointment(props) {
 					<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={styles.text} title="Kid's Haircut" checked={haircutType === 'kids' ? true : false} onPress={() => setHaircutType('kids')} />
 				</Box>
 
-				<Box pl={'5'} pr={'5'}>
+				<Box m={'2'} p={'3'} borderRadius={'20'} bgColor={'#121212'}>
 					<Heading pb={'2'} size={'sm'} color={'#E8BD70'}>
 						For a Friend?
 					</Heading>
-					<Input placeholder="Friend's Name (Optional)" borderColor={'#fff'} placeholderTextColor={'#fff'} fontSize={'md'} p={'3'} value={friend} onChangeText={(text) => setFriend(text)} />
+					<Input placeholder="Friend's Name (Optional)" borderColor={'#fff'} placeholderTextColor={'#fff'} size={'md'} p={'3'} value={friend} onChangeText={(text) => setFriend(text)} />
 					<Heading pb={'2'} pt={'2'} size={'sm'} color={'#E8BD70'}>
 						Comment?
 					</Heading>
-					<Input placeholder='Comment (Optional)' borderColor={'#fff'} placeholderTextColor={'#fff'} fontSize={'md'} p={'3'} value={comment} onChangeText={(text) => onChangeComment(text)} />
+					<Input placeholder='Comment (Optional)' borderColor={'#fff'} placeholderTextColor={'#fff'} size={'md'} p={'3'} value={comment} onChangeText={(text) => onChangeComment(text)} />
 				</Box>
 			</VStack>
 		</View>

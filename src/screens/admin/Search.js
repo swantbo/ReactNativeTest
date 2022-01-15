@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react'
-import {View, StyleSheet, Alert, TouchableOpacity, Linking} from 'react-native'
-import {ListItem, Button} from 'react-native-elements'
+import {Alert, Linking} from 'react-native'
+import {VStack, Heading, Text, Input, HStack, Button} from 'native-base'
+import {ListItem} from 'react-native-elements'
 import {ScrollView} from 'react-native-gesture-handler'
 import {formatPhoneNumber} from '../../utils/DataFormatting'
-import {InputField} from '../../components'
 import createStyles from '../../styles/base'
 
 import Firebase from '../../config/firebase'
@@ -79,17 +79,8 @@ const Search = ({navigation}) => {
 	}, [])
 
 	return (
-		<View style={styles.container}>
-			<InputField
-				inputStyle={{fontSize: 14}}
-				containerStyle={styles.inputField}
-				leftIcon='account-search'
-				placeholder='Search Name, Number, or Email'
-				autoCapitalize='none'
-				autoCorrect={false}
-				value={search}
-				onChangeText={(text) => searchAccounts(text)}
-			/>
+		<VStack flex={1} bgColor={'#000'}>
+			<Input placeholder='Search Name, Number, or Email' w={'100%'} h={'40px'} p={'5'} value={search} onChangeText={(text) => searchAccounts(text)} />
 			<ScrollView>
 				{userInfo &&
 					(search !== '' ? searchResults : userInfo).map((onekey, i) => (
@@ -100,15 +91,9 @@ const Search = ({navigation}) => {
 								containerStyle={styles.listItemContainer}
 								rightContent={
 									<Button
-										title='Delete'
-										icon={{
-											name: 'delete',
-											color: 'white'
-										}}
-										buttonStyle={{
-											minHeight: '100%',
-											backgroundColor: 'red'
-										}}
+										h={'100%'}
+										width={'100%'}
+										bgColor={'#FF0000'}
 										onPress={() =>
 											Alert.alert('Delete', `Are you sure you want to delete ${'\n'}Account Name: ${onekey.name ? onekey.name : 'N/A'} ${'\n'}Account Id: ${onekey.id ? onekey.id : 'N/A'}`, [
 												{
@@ -119,36 +104,57 @@ const Search = ({navigation}) => {
 													onPress: () => deleteUser(onekey.id)
 												}
 											])
-										}
-									/>
+										}>
+										Delete
+									</Button>
 								}
 								leftContent={
 									<Button
-										title='Add Points'
-										icon={{name: 'add-circle', color: 'white'}}
-										buttonStyle={{minHeight: '100%', backgroundColor: 'green'}}
+										h={'100%'}
+										width={'100%'}
 										onPress={() =>
 											navigation.navigate('PointsScreen', {
 												name: onekey.name,
 												userId: onekey.id,
 												goatPoints: onekey.points
 											})
-										}
-									/>
+										}>
+										Add Points
+									</Button>
 								}>
 								<ListItem.Content>
-									<View style={styles.row}>
-										{onekey?.created && moment(onekey?.created).toDate() < moment().add(3, 'days') && (
-											<View style={{}}>
-												<ListItem.Title style={styles.swipableButton}>New</ListItem.Title>
-											</View>
-										)}
-										<View style={styles.rowStart}>
-											<ListItem.Title style={styles.goldTitle}>{onekey.name} </ListItem.Title>
-										</View>
-										<View style={styles.rowEnd}>
-											<ListItem.Title
-												style={styles.swipableButton}
+									<HStack>
+										<VStack justifyContent={'flex-start'} width={'65%'}>
+											<HStack>
+												<Heading fontSize={'lg'} pb={2} color={'#E8BD70'}>
+													{onekey.name}
+												</Heading>
+												{onekey?.created && moment(onekey?.created).toDate() < moment().add(3, 'days') && (
+													<Heading fontSize={'lg'} pb={2}>
+														New
+													</Heading>
+												)}
+											</HStack>
+											<Text
+												lineHeight={0}
+												fontSize={'md'}
+												onPress={() =>
+													Linking.openURL(`sms:${onekey?.phone}`).catch(() => {
+														Linking.openURL(`sms:${onekey?.phone}`)
+													})
+												}>
+												{formatPhoneNumber(onekey.phone) ? formatPhoneNumber(onekey.phone) : onekey.phone}
+											</Text>
+											<Text lineHeight={0} fontSize={'md'} lineHeight={0}>
+												{onekey.email ? onekey.email : 'N/A'}
+											</Text>
+										</VStack>
+										<VStack alignItems={'flex-end'} width={'35%'}>
+											<Heading
+												lineHeight={0}
+												fontSize={'lg'}
+												pb={2}
+												color={'#FF0000'}
 												onPress={() =>
 													Alert.alert('Strikes', `Would you like to add or remove strikes from ${'\n'}Account Name: ${onekey.name ? onekey.name : 'N/A'} ${'\n'}Account Id: ${onekey.id ? onekey.id : 'N/A'}`, [
 														{
@@ -165,44 +171,27 @@ const Search = ({navigation}) => {
 													])
 												}>
 												Strikes: {onekey.strikes ? onekey.strikes : 'N/A'}
-											</ListItem.Title>
-										</View>
-									</View>
-									<View style={styles.row}>
-										<View style={styles.rowStart}>
-											<TouchableOpacity
-												onPress={() =>
-													Linking.openURL(`sms:${onekey?.phone}`).catch(() => {
-														Linking.openURL(`sms:${onekey?.phone}`)
-													})
-												}>
-												<ListItem.Subtitle style={styles.text}>{formatPhoneNumber(onekey.phone) ? formatPhoneNumber(onekey.phone) : onekey.phone}</ListItem.Subtitle>
-											</TouchableOpacity>
-										</View>
-										<View style={styles.rowEnd}>
-											<ListItem.Subtitle style={styles.text} onPress={() => searchAccounts(onekey.referral)}>
+											</Heading>
+											<Text lineHeight={0} fontSize={'md'} onPress={() => searchAccounts(onekey.referral)}>
 												{onekey.referral ? 'Ref: ' + onekey.referral : 'No Referral'}
-											</ListItem.Subtitle>
-										</View>
-									</View>
-									<View style={styles.row}>
-										<View style={styles.rowStart}>
-											<ListItem.Subtitle style={styles.text}>{onekey.email ? onekey.email : 'N/A'}</ListItem.Subtitle>
-										</View>
-										<View style={styles.rowEnd}>
-											<ListItem.Subtitle style={styles.text}>Points: {onekey.points}</ListItem.Subtitle>
-										</View>
-									</View>
-
-									<ListItem.Subtitle style={styles.text}>DOB: {onekey.dob ? onekey.dob : 'N/A'}</ListItem.Subtitle>
-
-									<ListItem.Subtitle style={{color: 'lightgrey'}}>{onekey.id ? onekey.id : 'N/A'}</ListItem.Subtitle>
+											</Text>
+											<Text lineHeight={0} fontSize={'md'}>
+												Points: {onekey.points}
+											</Text>
+										</VStack>
+									</HStack>
+									<Text fontSize={'md'} lineHeight={0}>
+										DOB: {onekey.dob ? onekey.dob : 'N/A'}
+									</Text>
+									<Text fontSize={'md'} lineHeight={0} color={'lightgrey'}>
+										{onekey.id ? onekey.id : 'N/A'}
+									</Text>
 								</ListItem.Content>
 							</ListItem.Swipeable>
 						</>
 					))}
 			</ScrollView>
-		</View>
+		</VStack>
 	)
 }
 

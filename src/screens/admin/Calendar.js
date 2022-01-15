@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import {View, StyleSheet, ScrollView, ActivityIndicator, Alert, Linking, TouchableOpacity, Text} from 'react-native'
+import {StyleSheet, ActivityIndicator, Alert, Linking, TouchableOpacity} from 'react-native'
+import {Center, VStack, Heading, HStack, Box, Text, ScrollView, View} from 'native-base'
 import CalendarStrip from 'react-native-calendar-strip'
 import {ListItem, Button} from 'react-native-elements'
 
@@ -133,7 +134,7 @@ function Calendar(props) {
 	}, [props])
 
 	return (
-		<View style={styles.container}>
+		<VStack flex={'1'} bgColor={'#000'}>
 			<CalendarStrip
 				scrollable
 				style={{height: 100, paddingTop: 10, paddingBottom: 10}}
@@ -152,15 +153,15 @@ function Calendar(props) {
 				onDateSelected={onDateSelected}
 			/>
 
-			<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-				<ListItem.Content>
-					<ListItem.Title style={styles.selectedDate}> {formattedDate ? formattedDate : 'Choose a date'} </ListItem.Title>
-				</ListItem.Content>
-			</ListItem>
+			<Center bgColor={'#121212'} borderWidth={'1px'} borderTopColor={'#fff'} borderBottomColor={'#fff'}>
+				<Text m={'10px'} fontSize={'lg'}>
+					{formattedDate ? formattedDate : 'Choose a date'}
+				</Text>
+			</Center>
 			{isLoading ? (
 				<ActivityIndicator size='large' color='#0000ff' />
 			) : calendarData.length !== 0 ? (
-				<ScrollView style={styles.scrollView}>
+				<ScrollView flex={'1'} bgColor={'#000'}>
 					{calendarData.map((key, index) => (
 						<ListItem.Swipeable
 							key={`${key.name}_${key.phone}_${key.time}_${key.comment}`}
@@ -294,7 +295,7 @@ function Calendar(props) {
 					</ListItem>
 				</ScrollView>
 			)}
-		</View>
+		</VStack>
 	)
 }
 

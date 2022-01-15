@@ -1,10 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import {View, Button, StyleSheet, TouchableOpacity, Text} from 'react-native'
+import {Center, VStack, Box, Text, Button, Input} from 'native-base'
 import CalendarStrip from 'react-native-calendar-strip'
-import {ListItem} from 'react-native-elements'
-
-import {InputField} from '../../components'
-import createStyles from '../../styles/base'
 
 import moment from 'moment'
 import Firebase from '../../config/firebase'
@@ -17,13 +13,6 @@ const Add = ({route}) => {
 	const [comment, onChangeComment] = useState('')
 	const [selectedDate, setSelectedDate] = useState(moment())
 	const [formattedDate, setFormattedDate] = useState()
-
-	useEffect(() => {
-		setSelectedDate(moment())
-		const {formattedDate, time} = route.params ? route.params : ''
-		formattedDate ? setFormattedDate(formattedDate) : ''
-		time ? onChangeTime(time[0]) : ''
-	}, [])
 
 	const onDateSelected = (selectedDate) => {
 		setSelectedDate(selectedDate)
@@ -63,8 +52,15 @@ const Add = ({route}) => {
 		})
 	}
 
+	useEffect(() => {
+		setSelectedDate(moment())
+		const {formattedDate, time} = route.params ? route.params : ''
+		formattedDate ? setFormattedDate(formattedDate) : ''
+		time ? onChangeTime(time[0]) : ''
+	}, [])
+
 	return (
-		<View style={styles.container}>
+		<VStack flex={1} bgColor={'#000'}>
 			<CalendarStrip
 				scrollable
 				style={{height: 100, paddingTop: 10, paddingBottom: 10}}
@@ -83,78 +79,27 @@ const Add = ({route}) => {
 				onDateSelected={onDateSelected}
 			/>
 
-			<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-				<ListItem.Content>
-					<ListItem.Title style={styles.selectedDate}>{formattedDate ? formattedDate : 'Choose a date'}</ListItem.Title>
-				</ListItem.Content>
-			</ListItem>
+			<Center bgColor={'#121212'} borderWidth={'1px'} borderTopColor={'#fff'} borderBottomColor={'#fff'}>
+				<Text m={'10px'} fontSize={'lg'}>
+					{formattedDate ? formattedDate : 'Choose a date'}
+				</Text>
+			</Center>
 			{formattedDate && (
-				<View style={styles.addView}>
-					<InputField
-						inputStyle={{
-							fontSize: 14
-						}}
-						containerStyle={styles.inputField}
-						leftIcon='clock-time-eight'
-						placeholder='Appointment Time'
-						value={time}
-						onChangeText={(text) => onChangeTime(text)}
-					/>
+				<Box bgColor={'#121212'} m={'3'}>
+					<Input placeholder='Time' h={'40px'} p={4} m={4} mb={1} value={time} onChangeText={(text) => onChangeTime(text)} />
+					<Input placeholder='Name' h={'40px'} p={4} m={4} mb={1} value={name} onChangeText={(text) => onChangeName(text)} />
+					<Input placeholder='Phone Number' h={'40px'} p={4} m={4} mb={1} value={number} onChangeText={(text) => onChangeNumber(text)} />
+					<Input placeholder='comment' h={'40px'} p={4} m={4} mb={1} value={comment} onChangeText={(text) => onChangeComment(text)} />
 
-					<InputField
-						inputStyle={{
-							fontSize: 14
-						}}
-						containerStyle={styles.inputField}
-						leftIcon='account'
-						placeholder='Name'
-						autoCapitalize='none'
-						value={name}
-						onChangeText={(text) => onChangeName(text)}
-					/>
-
-					<InputField
-						inputStyle={{
-							fontSize: 14
-						}}
-						containerStyle={styles.inputField}
-						leftIcon='phone'
-						placeholder='Phone Number'
-						autoCapitalize='none'
-						keyboardType='phone-pad'
-						value={number}
-						onChangeText={(text) => onChangeNumber(text)}
-					/>
-
-					<InputField
-						inputStyle={{
-							fontSize: 14
-						}}
-						containerStyle={styles.inputField}
-						leftIcon='comment'
-						placeholder='Comment'
-						autoCapitalize='none'
-						value={comment}
-						onChangeText={(text) => onChangeComment(text)}
-					/>
-
-					<TouchableOpacity style={styles.goldButton} onPress={() => scheduleAppoint()}>
-						<Text
-							style={{
-								color: '#000',
-								padding: 5,
-								alignSelf: 'center',
-								fontSize: 20
-							}}>
+					<Button bgColor='#E8BD70' m={3} onPress={() => scheduleAppoint()}>
+						<Text bold color='#000' fontSize={'lg'}>
 							Add Appointment
 						</Text>
-					</TouchableOpacity>
-				</View>
+					</Button>
+				</Box>
 			)}
-		</View>
+		</VStack>
 	)
 }
-
-const styles = createStyles()
 
 export default Add

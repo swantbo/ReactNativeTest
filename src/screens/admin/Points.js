@@ -1,8 +1,6 @@
 import React, {useContext, useState} from 'react'
-import {View, Alert} from 'react-native'
-import {Card} from 'react-native-elements'
-import {Button, InputField} from '../../components'
-import createStyles from '../../styles/base'
+import {Alert} from 'react-native'
+import {Center, VStack, Heading, Box, Text, Button, Input} from 'native-base'
 
 import Firebase from '../../config/firebase'
 import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
@@ -30,18 +28,23 @@ const Points = ({route}) => {
 	}
 
 	return (
-		<View style={styles.container}>
-			<Card containerStyle={styles.card}>
-				<Card.Title style={styles.goldTitle}>{name}</Card.Title>
-				<Card.Divider />
-				<Card.Title style={styles.text}>Current Goat Points: {goatPoints}</Card.Title>
-				<InputField containerStyle={styles.inputField} keyboardType='phone-pad' placeholder='Add Goat Points' value={points} onChangeText={(text) => onChangePoints(text)} />
-				<Button containerStyle={styles.goldButton} titleSize={20} onPress={() => addPointsToUser()} title='Add Points' />
-			</Card>
-		</View>
+		<VStack flex={1} bgColor={'#000'}>
+			<Box borderRadius={10} bgColor={'#121212'} m={3} p={3}>
+				<Center>
+					<Heading color={'#E8BD70'} m={2}>
+						{name}
+					</Heading>
+					<Text fontSize={'lg'}>Current Goat Points: {goatPoints}</Text>
+					<Input placeholder='Add Goat Points' w={'100%'} h={'40px'} m={2} value={points} onChangeText={(text) => onChangePoints(text)} />
+					<Button bgColor={'#E8BD70'} w={'100%'} m={2} onPress={() => addPointsToUser()}>
+						<Text fontSize={'lg'} color='#000' bold>
+							Add Points
+						</Text>
+					</Button>
+				</Center>
+			</Box>
+		</VStack>
 	)
 }
-
-const styles = createStyles()
 
 export default Points

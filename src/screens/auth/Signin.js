@@ -40,11 +40,13 @@ export default function Signin({navigation}) {
 
 	const onLogin = async (email, password) => {
 		try {
+			console.log('email', email, password)
 			if (email !== '' && password !== '') {
 				await auth.signInWithEmailAndPassword(email, password)
 			}
 		} catch (error) {
 			setLoginError('Email or Password are incorrect')
+			console.log('error', error)
 		}
 	}
 

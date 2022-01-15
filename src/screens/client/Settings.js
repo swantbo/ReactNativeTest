@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useContext} from 'react'
-import {View, StyleSheet, TextInput, Alert, TouchableOpacity, ScrollView, SafeAreaView} from 'react-native'
-import {ListItem, Avatar, Card} from 'react-native-elements'
+import {View, StyleSheet, TextInput, Alert, TouchableOpacity, SafeAreaView} from 'react-native'
+import {ListItem, Card} from 'react-native-elements'
+import {Avatar, Center, ScrollView, VStack, Heading, HStack, FlatList, Box, Text, Button} from 'native-base'
 import {formatPhoneNumber} from '../../utils/DataFormatting'
 import createStyles from '../../styles/base'
 
@@ -74,34 +75,41 @@ function Settings(props) {
 	}, [props])
 
 	return (
-		<SafeAreaView style={styles.container}>
-		<ScrollView style={styles.container}>
-			<Card containerStyle={styles.card}>
-				<Avatar containerStyle={styles.avatarBackground} rounded size='large' title={changeName?.[0]} source={{uri: changeProfilePicture}} onPress={() => pickImage()} />
-				<ListItem.Subtitle style={styles.settingsText}>Change Profile Picture</ListItem.Subtitle>
-				<View style={styles.settingsView}>
-					<ListItem.Title style={styles.settingsText}>Name: </ListItem.Title>
+		<ScrollView bgColor={'#000'}>
+			<Box bgColor={'#121212'} m={'20px'} p={'5px'}>
+				<Center>
+					<Avatar size='xl' source={{uri: changeProfilePicture}}></Avatar>
+					<Text p={'5px'}>Change Profile Picture</Text>
+				</Center>
+				<HStack m={'5px'}>
+					<Text bold alignSelf={'center'}>
+						Name:{' '}
+					</Text>
 					<TextInput placeholder={changeName} placeholderTextColor={'#fff'} onChangeText={setChangeName} value={changeName} style={styles.settingsTextInput} />
-				</View>
+				</HStack>
 
-				<View style={styles.settingsView}>
-					<ListItem.Title style={styles.settingsText}>Phone: </ListItem.Title>
+				<HStack m={'5px'}>
+					<Text bold alignSelf={'center'}>
+						Phone:{' '}
+					</Text>
 					<TextInput placeholder={changePhone} placeholderTextColor={'#fff'} onChangeText={setChangePhone} value={changePhone} style={styles.settingsTextInput} />
-				</View>
-				<View style={{margin: 15}}>
-					<TouchableOpacity style={styles.goldButton} onPress={() => setUserData()}>
-						<ListItem.Title style={styles.buttonTitle}>Save Changes</ListItem.Title>
-					</TouchableOpacity>
-				</View>
-
-				<ListItem bottomDivider topDivider containerStyle={styles.signOutButton} onPress={() => handleSignOut()}>
-					<ListItem.Content>
-						<ListItem.Title style={styles.signOut}>Sign Out</ListItem.Title>
-					</ListItem.Content>
-				</ListItem>
-			</Card>
+				</HStack>
+				<Center m={'5px'}>
+					<Button bgColor={'#E8BD70'} w={'100%'} onPress={() => setUserData()}>
+						<Text bold alignSelf={'center'} color={'#000'}>
+							Save Changes
+						</Text>
+					</Button>
+				</Center>
+				<Center m={'5px'}>
+					<Button bgColor={'#E8BD70'} w={'100%'} onPress={() => handleSignOut()}>
+						<Text bold alignSelf={'center'} color={'#000'}>
+							Save Changes
+						</Text>
+					</Button>
+				</Center>
+			</Box>
 		</ScrollView>
-		</SafeAreaView>
 	)
 }
 
@@ -110,7 +118,5 @@ const styles = createStyles()
 const mapStateToProps = (store) => ({
 	currentUser: store.userState.currentUser
 })
-
-
 
 export default connect(mapStateToProps, null)(Settings)

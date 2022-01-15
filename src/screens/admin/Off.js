@@ -1,13 +1,13 @@
 import React, {useEffect, useState, useContext} from 'react'
-import {View, Text, StyleSheet, Alert, TouchableOpacity, Linking, KeyboardAvoidingView} from 'react-native'
+import {View, Alert, TouchableOpacity, Linking} from 'react-native'
+import {Avatar, ScrollView, Center, VStack, Heading, HStack, Box, Text, Spacer} from 'native-base'
 import moment from 'moment'
-import {Card, ListItem, Avatar} from 'react-native-elements'
+import {Card, ListItem} from 'react-native-elements'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import {formatPhoneNumber} from '../../utils/DataFormatting'
 
 import {InputField} from '../../components'
 import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
-import {ScrollView} from 'react-native-gesture-handler'
 
 import {connect} from 'react-redux'
 import createStyles from '../../styles/base'
@@ -199,122 +199,126 @@ function Off(props) {
 	}
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
-			<ScrollView>
-				<ListItem bottomDivider containerStyle={styles.listItemContainer}>
-					<Avatar source={require('../../assets/123_1.jpeg')} rounded size='large' />
-					<ListItem.Content>
-						<ListItem.Title style={{color: 'white'}}>{barberInfo.name}</ListItem.Title>
-						<TouchableOpacity
-							onPress={() =>
-								Linking.openURL(`sms:${barberInfo?.phone}`).catch(() => {
-									Linking.openURL(`sms:${barberInfo?.phone}`)
-								})
-							}>
-							<ListItem.Subtitle style={styles.subtitle}>{barberInfo.phone != '' ? formatPhoneNumber(barberInfo.phone) : ''}</ListItem.Subtitle>
-						</TouchableOpacity>
-						<TouchableOpacity
-							onPress={() =>
-								Linking.openURL('maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647').catch(() => {
-									Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
-								})
-							}>
-							<ListItem.Subtitle style={styles.subtitle}>{barberInfo.location != '' ? barberInfo.location : ''}</ListItem.Subtitle>
-						</TouchableOpacity>
-					</ListItem.Content>
-				</ListItem>
+		<ScrollView bgColor={'#000'}>
+			<HStack bgColor={'#121212'}>
+				<VStack p={2}>
+					<Avatar source={require('../../assets/123_1.jpeg')} size={'lg'}></Avatar>
+				</VStack>
+				<VStack m={2}>
+					<Text fontSize={'md'}>{barberInfo.name}</Text>
+					<Text
+						fontSize={'sm'}
+						onPress={() =>
+							Linking.openURL(`sms:${barberInfo?.phone}`).catch(() => {
+								Linking.openURL(`sms:${barberInfo?.phone}`)
+							})
+						}>
+						{barberInfo.phone != '' ? formatPhoneNumber(barberInfo.phone) : ''}
+					</Text>
+					<Text
+						fontSize={'sm'}
+						onPress={() =>
+							Linking.openURL('maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647').catch(() => {
+								Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
+							})
+						}>
+						{barberInfo.location != '' ? barberInfo.location : ''}
+					</Text>
+				</VStack>
+			</HStack>
 
-				<Card containerStyle={styles.card}>
-					<ListItem.Content>
-						<ListItem.Title style={styles.goldTitle}>Time Off</ListItem.Title>
-						<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={{color: '#fff'}} title='Mutiple-Days' checked={timeOffType === 'multiple' ? true : false} onPress={() => selectedTimeOffType('multiple')} />
-						<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={{color: '#fff'}} title='Full-Day' checked={timeOffType === 'full' ? true : false} onPress={() => selectedTimeOffType('full')} />
+			<Box bgColor={'#121212'} m={3} p={3} borderRadius={'10'}>
+				<Heading color={'#E8BD70'} fontSize={'lg'}>
+					Time Off
+				</Heading>
+				<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={{color: '#fff'}} title='Mutiple-Days' checked={timeOffType === 'multiple' ? true : false} onPress={() => selectedTimeOffType('multiple')} />
+				<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={{color: '#fff'}} title='Full-Day' checked={timeOffType === 'full' ? true : false} onPress={() => selectedTimeOffType('full')} />
 
-						<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={{color: '#fff'}} title='Half-Day' checked={timeOffType === 'half' ? true : false} onPress={() => selectedTimeOffType('half')} />
-					</ListItem.Content>
-				</Card>
+				<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={{color: '#fff'}} title='Half-Day' checked={timeOffType === 'half' ? true : false} onPress={() => selectedTimeOffType('half')} />
+			</Box>
 
-				<Card containerStyle={styles.card}>
-					<ListItem.Title style={styles.goldTitle}>Day & Time</ListItem.Title>
-					<View style={styles.pickedDateContainer}>
-						{timeOffType === 'multiple' ? (
-							<>
-								<View style={styles.alignContentLeft}>
-									<Text style={styles.alignTextCenter}>Start Date</Text>
-									<Text style={[isStartDatePickerShow === true ? styles.pickedDatePressed : styles.pickedDate]} onPress={showStartDatePicker}>
-										{moment(startDate).format('YYYY-MM-DD')}
-									</Text>
-								</View>
-								<View style={styles.alignContentLeft}>
-									<Text style={styles.alignTextCenter}>End Date</Text>
-									<Text style={[isEndDatePickerShow === true ? styles.pickedDatePressed : styles.pickedDate]} onPress={showEndDatePicker}>
-										{moment(endDate).format('YYYY-MM-DD')}
-									</Text>
-								</View>
-							</>
-						) : (
+			<Box bgColor={'#121212'} m={3} p={3} borderRadius={'10'}>
+				<Heading color={'#E8BD70'} fontSize={'lg'}>
+					Day & Time
+				</Heading>
+				<View style={styles.pickedDateContainer}>
+					{timeOffType === 'multiple' ? (
+						<>
 							<View style={styles.alignContentLeft}>
-								<Text style={styles.alignTextCenter}>Date</Text>
+								<Text style={styles.alignTextCenter}>Start Date</Text>
 								<Text style={[isStartDatePickerShow === true ? styles.pickedDatePressed : styles.pickedDate]} onPress={showStartDatePicker}>
 									{moment(startDate).format('YYYY-MM-DD')}
 								</Text>
 							</View>
-						)}
-					</View>
-
-					{isStartDatePickerShow && (
-						<DateTimePicker style={{backgroundColor: '#121212'}} textColor='#fff' value={startDate} mode='date' display={Platform.OS === 'ios' ? 'spinner' : 'default'} onChange={onStartDateChange} minuteInterval={30} />
+							<View style={styles.alignContentLeft}>
+								<Text style={styles.alignTextCenter}>End Date</Text>
+								<Text style={[isEndDatePickerShow === true ? styles.pickedDatePressed : styles.pickedDate]} onPress={showEndDatePicker}>
+									{moment(endDate).format('YYYY-MM-DD')}
+								</Text>
+							</View>
+						</>
+					) : (
+						<View style={styles.alignContentLeft}>
+							<Text style={styles.alignTextCenter}>Date</Text>
+							<Text style={[isStartDatePickerShow === true ? styles.pickedDatePressed : styles.pickedDate]} onPress={showStartDatePicker}>
+								{moment(startDate).format('YYYY-MM-DD')}
+							</Text>
+						</View>
 					)}
+				</View>
 
-					{isEndDatePickerShow && <DateTimePicker style={{backgroundColor: 'white'}} textColor='#fff' value={endDate} mode='date' display={Platform.OS === 'ios' ? 'spinner' : 'default'} onChange={onEndDateChange} minuteInterval={30} />}
+				{isStartDatePickerShow && <DateTimePicker style={{backgroundColor: '#121212'}} textColor='#fff' value={startDate} mode='date' display={Platform.OS === 'ios' ? 'spinner' : 'default'} onChange={onStartDateChange} minuteInterval={30} />}
 
-					<View style={styles.pickedDateContainer}>
-						{timeOffType === 'half' && (
-							<>
-								<View style={styles.alignContentLeft}>
-									<Text style={styles.alignTextCenter}>Start Time</Text>
-									<Text style={[isStartPickerShow === true ? styles.pickedDatePressed : styles.pickedDate]} onPress={showStartPicker}>
-										{moment(startTime).format('hh:mm A')}
-									</Text>
-								</View>
-								<View style={styles.alignContentLeft}>
-									<Text style={styles.alignTextCenter}>End Time</Text>
-									<Text style={[isEndPickerShow === true ? styles.pickedDatePressed : styles.pickedDate]} onPress={showEndPicker}>
-										{moment(endTime).format('hh:mm A')}
-									</Text>
-								</View>
-							</>
-						)}
-					</View>
+				{isEndDatePickerShow && <DateTimePicker style={{backgroundColor: 'white'}} textColor='#fff' value={endDate} mode='date' display={Platform.OS === 'ios' ? 'spinner' : 'default'} onChange={onEndDateChange} minuteInterval={30} />}
 
-					{isStartPickerShow && (
-						<DateTimePicker style={{backgroundColor: 'white'}} textColor='#fff' value={startTime} mode='time' display={Platform.OS === 'ios' ? 'spinner' : 'default'} onChange={onStartTimeChange} is24Hour={true} minuteInterval={30} />
+				<View style={styles.pickedDateContainer}>
+					{timeOffType === 'half' && (
+						<>
+							<View style={styles.alignContentLeft}>
+								<Text style={styles.alignTextCenter}>Start Time</Text>
+								<Text style={[isStartPickerShow === true ? styles.pickedDatePressed : styles.pickedDate]} onPress={showStartPicker}>
+									{moment(startTime).format('hh:mm A')}
+								</Text>
+							</View>
+							<View style={styles.alignContentLeft}>
+								<Text style={styles.alignTextCenter}>End Time</Text>
+								<Text style={[isEndPickerShow === true ? styles.pickedDatePressed : styles.pickedDate]} onPress={showEndPicker}>
+									{moment(endTime).format('hh:mm A')}
+								</Text>
+							</View>
+						</>
 					)}
+				</View>
 
-					{isEndPickerShow && <DateTimePicker textColor='#fff' value={endTime} mode='time' display={Platform.OS === 'ios' ? 'spinner' : 'default'} onChange={onEndTimeChange} is24Hour={true} minuteInterval={30} />}
-					<ListItem.Title style={styles.goldTitle}>Comment</ListItem.Title>
+				{isStartPickerShow && (
+					<DateTimePicker style={{backgroundColor: 'white'}} textColor='#fff' value={startTime} mode='time' display={Platform.OS === 'ios' ? 'spinner' : 'default'} onChange={onStartTimeChange} is24Hour={true} minuteInterval={30} />
+				)}
 
-					<InputField containerStyle={styles.inputField} leftIcon='comment' placeholder='Comment (optional)' autoCapitalize='sentences' value={text} onChangeText={(text) => onChangeText(text)} />
+				{isEndPickerShow && <DateTimePicker textColor='#fff' value={endTime} mode='time' display={Platform.OS === 'ios' ? 'spinner' : 'default'} onChange={onEndTimeChange} is24Hour={true} minuteInterval={30} />}
+				<Heading color={'#E8BD70'} fontSize={'lg'}>
+					Comment
+				</Heading>
 
-					<TouchableOpacity
+				<InputField containerStyle={styles.inputField} leftIcon='comment' placeholder='Comment (optional)' autoCapitalize='sentences' value={text} onChangeText={(text) => onChangeText(text)} />
+
+				<TouchableOpacity
+					style={{
+						backgroundColor: '#E8BD70',
+						borderRadius: 5,
+						padding: 10
+					}}
+					onPress={() => createAvailableTimes(startTime, endTime)}>
+					<ListItem.Title
 						style={{
-							backgroundColor: '#E8BD70',
-							borderRadius: 5,
-							padding: 10
-						}}
-						onPress={() => createAvailableTimes(startTime, endTime)}>
-						<ListItem.Title
-							style={{
-								color: '#000',
-								alignSelf: 'center',
-								fontWeight: 'bold'
-							}}>
-							Schedule Time Off
-						</ListItem.Title>
-					</TouchableOpacity>
-				</Card>
-			</ScrollView>
-		</KeyboardAvoidingView>
+							color: '#000',
+							alignSelf: 'center',
+							fontWeight: 'bold'
+						}}>
+						Schedule Time Off
+					</ListItem.Title>
+				</TouchableOpacity>
+			</Box>
+		</ScrollView>
 	)
 }
 

@@ -114,6 +114,4 @@ export default function Signin({navigation}) {
 	)
 }
 
-
-
 const styles = createStyles()

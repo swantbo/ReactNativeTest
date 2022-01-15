@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, Alert, Dimensions, ScrollView } from 'react-native'
 import { BarChart } from 'react-native-chart-kit'
 import Firebase from '../../config/firebase'
-import createStyles from '../../styles/base'
 import { subtractRevenueDiscount } from '../../utils/DataFormatting'
 
 
@@ -109,6 +108,5 @@ const OverView = () => {
 	)
 }
 
-const styles = createStyles()
 
 export default OverView

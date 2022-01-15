@@ -1,13 +1,12 @@
-import React, {useEffect, useState} from 'react'
-import {View, Text, Dimensions, ScrollView, ActivityIndicator, Alert} from 'react-native'
-import {Card, ListItem} from 'react-native-elements'
-import {BarChart} from 'react-native-chart-kit'
-import createStyles from '../../styles/base'
 import moment from 'moment'
-
-import {subtractRevenueDiscount} from '../../utils/DataFormatting'
+import { Box, Center, Heading, Text, VStack } from 'native-base'
+import React, { useEffect, useState } from 'react'
+import { ActivityIndicator, Alert, Dimensions, ScrollView } from 'react-native'
+import { BarChart } from 'react-native-chart-kit'
 import Firebase from '../../config/firebase'
-import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvider'
+import createStyles from '../../styles/base'
+import { subtractRevenueDiscount } from '../../utils/DataFormatting'
+
 
 const OverView = () => {
 	const [currentMonthData, setCurrentMonthData] = useState({
@@ -59,7 +58,7 @@ const OverView = () => {
 	}, [])
 
 	return (
-		<View style={styles.container}>
+		<VStack bgColor={"#000"} flex={1}>
 			{!isLoading ? (
 				<>
 					<BarChart
@@ -71,37 +70,42 @@ const OverView = () => {
 							backgroundGradientFrom: '#121212',
 							backgroundGradientTo: '#121212',
 							decimalPlaces: 0,
-							color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+							color: (opacity = 1) => `rgba(238, 238, 238, ${opacity})`,
 							style: {
 								borderRadius: 16
 							}
 						}}
 					/>
 
-					<ScrollView>
-						<Card containerStyle={styles.barberPhotoContainer}>
-							<ListItem.Title style={styles.overViewTitle}>Total Haircuts</ListItem.Title>
-							<ListItem.Title style={styles.overViewSubtitle}>{currentMonthData.haircuts}</ListItem.Title>
-							<Text style={styles.revenueText}>Total Haicuts for {moment().format('MMM YYYY')}</Text>
-						</Card>
-						<Card containerStyle={styles.barberPhotoContainer}>
-							<ListItem.Title style={styles.overViewTitle}>Total Used Goat Points</ListItem.Title>
-							<ListItem.Title style={styles.overViewSubtitle}>{currentMonthData.goatPoints ? currentMonthData.goatPoints : '0'}</ListItem.Title>
-
-							<Text style={styles.revenueText}>Used Goat Points for {moment().format('MMM YYYY')}</Text>
-						</Card>
-						<Card containerStyle={styles.barberPhotoContainer}>
-							<ListItem.Title style={styles.overViewTitle}>Approximate Revenue</ListItem.Title>
-							<ListItem.Title style={styles.overViewSubtitle}>${subtractRevenueDiscount(revenue, currentMonthData.goatPoints)}</ListItem.Title>
-							<Text style={styles.revenueText}>Revenue: ${revenue}</Text>
-							<Text style={styles.revenueText}>Used GoatPoints: ${Number((currentMonthData.goatPoints / 100).toFixed(2))}</Text>
-						</Card>
+					<ScrollView flex={1}>
+						<Box bgColor={"#121212"} m={"14px"} borderRadius={14} p={5}>
+							<Center>
+							<Heading color={"#E8BD70"}>Total Haircuts</Heading>
+								<Heading>{currentMonthData.haircuts}</Heading>
+								<Text color={"#EEEEEE"}>Total Haicuts for {moment().format('MMM YYYY')}</Text>
+							</Center>
+						</Box>
+						<Box bgColor={"#121212"} m={"14px"} borderRadius={14} p={5}>
+							<Center>
+								<Heading color={"#E8BD70"}>Total Used Goat Points</Heading>
+								<Heading>{currentMonthData.goatPoints ? currentMonthData.goatPoints : '0'}</Heading>
+								<Text color={"#EEEEEE"}>Used Goat Points for {moment().format('MMM YYYY')}</Text>
+							</Center>
+						</Box>
+						<Box bgColor={"#121212"} m={"14px"} borderRadius={14} p={5}>
+							<Center>
+								<Heading color={"#E8BD70"}>Approximate Revenue</Heading>
+								<Heading>${subtractRevenueDiscount(revenue, currentMonthData.goatPoints)}</Heading>
+								<Text color={"#EEEEEE"}>Revenue: ${revenue}</Text>
+								<Text color={"#EEEEEE"}>Used GoatPoints: ${Number((currentMonthData.goatPoints / 100).toFixed(2))}</Text>
+							</Center>
+						</Box>
 					</ScrollView>
 				</>
 			) : (
 				<ActivityIndicator size='large' />
 			)}
-		</View>
+		</VStack>
 	)
 }
 

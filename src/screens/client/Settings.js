@@ -1,9 +1,6 @@
 import React, {useEffect, useState, useContext} from 'react'
-import {View, StyleSheet, TextInput, Alert, TouchableOpacity, SafeAreaView} from 'react-native'
-import {ListItem, Card} from 'react-native-elements'
-import {Avatar, Center, ScrollView, VStack, Heading, HStack, FlatList, Box, Text, Button} from 'native-base'
-import {formatPhoneNumber} from '../../utils/DataFormatting'
-import createStyles from '../../styles/base'
+import {Alert} from 'react-native'
+import {Avatar, Center, ScrollView, VStack, Pressable, Box, Text, Button, Input} from 'native-base'
 
 import * as ImagePicker from 'expo-image-picker'
 import * as FileSystem from 'expo-file-system'
@@ -14,11 +11,27 @@ import {AuthenticatedUserContext} from '../../navigation/AuthenticatedUserProvid
 import Firebase from '../../config/firebase'
 const auth = Firebase.auth()
 
+import {useFormik} from 'formik'
+import * as Yup from 'yup'
+
+const LoginSchema = Yup.object().shape({
+	name: Yup.string().required('Required'),
+	phone: Yup.string()
+		.matches(/^[0-9]+$/, 'Must be only digits')
+		.min(10, 'Must be exactly 10 digits')
+		.max(10, 'Must be exactly 10 digits')
+})
+
 function Settings(props) {
 	const {user} = useContext(AuthenticatedUserContext)
-	const [changeName, setChangeName] = useState('')
-	const [changePhone, setChangePhone] = useState('')
+	const [currentUser, setCurrentUser] = useState({})
 	const [changeProfilePicture, setChangeProfilePicture] = useState('')
+
+	const {handleChange, handleBlur, handleSubmit, values, errors, touched} = useFormik({
+		validationSchema: LoginSchema,
+		initialValues: {name: '', phone: ''},
+		onSubmit: (values) => onChangeData(values.name, values.phone)
+	})
 
 	const pickImage = async () => {
 		let result = await ImagePicker.launchImageLibraryAsync({
@@ -46,14 +59,21 @@ function Settings(props) {
 		}
 	}
 
-	const setUserData = () => {
-		const updateUserData = {
-			name: changePhone,
-			phone: changePhone
+	const onChangeData = (name, phone) => {
+		let updateUserData
+		if (name !== '' && name !== currentUser.name) {
+			updateUserData = {
+				name: name
+			}
+		}
+		if (phone !== '' && phone !== currentUser.phone) {
+			updateUserData = {
+				phone: phone
+			}
 		}
 		try {
 			Firebase.firestore().collection('users').doc(user.uid).update(updateUserData)
-			Alert.alert('Success', `Your name & phone number have been changed to ${changeName} & ${changePhone}`)
+			Alert.alert('Success', `Your information has been changed to ${name !== '' ? name : phone}`)
 		} catch (error) {
 			Alert.alert('There is an error.', err.message)
 		}
@@ -69,51 +89,66 @@ function Settings(props) {
 
 	useEffect(() => {
 		const {currentUser} = props
-		setChangeName(currentUser.name)
-		setChangePhone(currentUser.phone)
+		setCurrentUser(currentUser)
 		setChangeProfilePicture(currentUser.profilePicture)
 	}, [props])
 
 	return (
 		<ScrollView bgColor={'#000'}>
-			<Box bgColor={'#121212'} m={'20px'} p={'5px'}>
-				<Center>
-					<Avatar size='xl' source={{uri: changeProfilePicture}}></Avatar>
-					<Text p={'5px'}>Change Profile Picture</Text>
-				</Center>
-				<HStack m={'5px'}>
-					<Text bold alignSelf={'center'}>
-						Name:{' '}
-					</Text>
-					<TextInput placeholder={changeName} placeholderTextColor={'#fff'} onChangeText={setChangeName} value={changeName} style={styles.settingsTextInput} />
-				</HStack>
-
-				<HStack m={'5px'}>
-					<Text bold alignSelf={'center'}>
-						Phone:{' '}
-					</Text>
-					<TextInput placeholder={changePhone} placeholderTextColor={'#fff'} onChangeText={setChangePhone} value={changePhone} style={styles.settingsTextInput} />
-				</HStack>
-				<Center m={'5px'}>
-					<Button bgColor={'#E8BD70'} w={'100%'} onPress={() => setUserData()}>
-						<Text bold alignSelf={'center'} color={'#000'}>
-							Save Changes
+			<Box bgColor={'#121212'} borderRadius={20} m={1} ml={3} mr={3} p={2} pl={10} pr={10}>
+				<Pressable onPress={() => pickImage()}>
+					<Center>
+						<Avatar size='xl' source={{uri: changeProfilePicture}}></Avatar>
+						<Text p={'1'} fontSize={'md'}>
+							Change Profile Picture
 						</Text>
-					</Button>
-				</Center>
-				<Center m={'5px'}>
-					<Button bgColor={'#E8BD70'} w={'100%'} onPress={() => handleSignOut()}>
-						<Text bold alignSelf={'center'} color={'#000'}>
-							Save Changes
-						</Text>
-					</Button>
-				</Center>
+					</Center>
+				</Pressable>
 			</Box>
+			<VStack bgColor={'#121212'} borderRadius={20} m={1} ml={3} mr={3} p={2} pl={10} pr={10}>
+				<Text fontSize={'md'}>Name</Text>
+				{!!errors.name && touched.name && <Text style={{color: 'red'}}>{errors.name}</Text>}
+				<Input width={'100%'} size={'md'} placeholder='Name' defaultValue={currentUser.name} onChangeText={handleChange('name')} onBlur={handleBlur('name')} error={errors.name} touched={touched.name} onSubmitEditing={() => handleSubmit()} />
+
+				{touched.name && values?.name && (
+					<Button alignSelf={'flex-end'} mt={2} size={'xs'} bgColor={'#E8BD70'} onPress={() => handleSubmit()}>
+						<Text bold color={'#000'}>
+							Save
+						</Text>
+					</Button>
+				)}
+			</VStack>
+			<VStack bgColor={'#121212'} borderRadius={20} m={1} ml={3} mr={3} p={2} pl={10} pr={10}>
+				<Text fontSize={'md'}>Phone</Text>
+				{!!errors.phone && touched.phone && <Text style={{color: 'red'}}>{errors.phone}</Text>}
+				<Input
+					width={'100%'}
+					size={'md'}
+					placeholder='Phone'
+					defaultValue={currentUser.phone}
+					onChangeText={handleChange('phone')}
+					onBlur={handleBlur('phone')}
+					error={errors.phone}
+					touched={touched.phone}
+					onSubmitEditing={() => handleSubmit()}
+				/>
+
+				{touched.phone && values?.phone && (
+					<Button alignSelf={'flex-end'} mt={2} size={'xs'} bgColor={'#E8BD70'} onPress={() => handleSubmit()}>
+						<Text bold color={'#000'}>
+							Save
+						</Text>
+					</Button>
+				)}
+			</VStack>
+			<Button bgColor={'#121212'} borderRadius={20} m={3} p={2} pl={10} pr={10} onPress={() => handleSignOut()}>
+				<Text bold fontSize={'lg'} alignSelf={'center'} color={'#E8BD70'}>
+					Sign Out
+				</Text>
+			</Button>
 		</ScrollView>
 	)
 }
-
-const styles = createStyles()
 
 const mapStateToProps = (store) => ({
 	currentUser: store.userState.currentUser

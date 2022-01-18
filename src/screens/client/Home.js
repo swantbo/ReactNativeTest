@@ -183,78 +183,75 @@ function Home(props) {
 					</Heading>
 
 					{upcomingAppointments.length > 0 ? (
-						<FlatList
-							data={upcomingAppointments}
-							renderItem={({item}) => (
-								<Box
-									pl='5'
-									pr='5'
-									py='2'
-									ml='5'
-									mr='5'
-									mt='2'
-									borderRadius='20'
-									bgColor='#121212'
+						upcomingAppointments.map((upcomingApp, index) => (
+							<Box
+								p={3}
+								ml='5'
+								mr='5'
+								mt='2'
+								borderRadius='20'
+								bgColor='#121212'
+								onPress={() =>
+									Alert.alert('Delete Appointment', `Would you like to delete this Appointment on ${moment(upcomingApp.id.split(' ')[0]).format('ddd, MMM Do YYYY')} at ${upcomingApp.time.toString().toLowerCase()}`, [
+										{
+											text: 'Cancel'
+										},
+										{
+											text: 'Delete Appointment',
+											onPress: () => deleteAppointment(moment(upcomingApp.id.split(' ')[0]).format('ddd, MMM Do YYYY'), upcomingApp.time)
+										}
+									])
+								}
+								key={index}>
+								<Center>
+									<Heading
+										size={'md'}
+										p={'2'}
+										onPress={() =>
+											Alert.alert(
+												'Add Haircut To Calendar',
+												`Would you like to add your Appointment on ${moment(upcomingApp.id.split(' ')[0]).format('ddd, MMM Do YYYY')} at ${upcomingApp.time.toString().toLowerCase()} to your calendar?`,
+												[
+													{
+														text: 'Cancel'
+													},
+													{
+														text: 'Add Appointment',
+														onPress: () => createCalendar(onekey[0], onekey[1].time.toString(), barberData?.location, barberData?.phone)
+													}
+												]
+											)
+										}>
+										{moment(upcomingApp.id.split(' ')[0]).format('ddd, MMM Do YYYY')}, {upcomingApp.time.toString().toLowerCase()}
+									</Heading>
+									<Heading size='sm'>
+										{upcomingApp.points != '' ? subtractDiscount(upcomingApp?.haircutType, upcomingApp?.haircutType === 'kids' ? barberData?.kidsHaircut : barberData?.price, upcomingApp.points) : barberData?.price}
+									</Heading>
+									{upcomingApp.points !== '' && <Text color='#fff'>GP's: {upcomingApp.points}</Text>}
+								</Center>
+								<Text
+									color='warmGray.200'
+									pt={'3'}
 									onPress={() =>
-										Alert.alert('Delete Appointment', `Would you like to delete this Appointment on ${moment(item.id.split(' ')[0]).format('ddd, MMM Do YYYY')} at ${item.time.toString().toLowerCase()}`, [
-											{
-												text: 'Cancel'
-											},
-											{
-												text: 'Delete Appointment',
-												onPress: () => deleteAppointment(moment(item.id.split(' ')[0]).format('ddd, MMM Do YYYY'), item.time)
-											}
-										])
+										Linking.openURL(`sms:${barberData?.phone}`).catch(() => {
+											Linking.openURL(`sms:${barberData?.phone}`)
+										})
 									}>
-									<Center>
-										<Heading
-											size={'md'}
-											p={'2'}
-											onPress={() =>
-												Alert.alert(
-													'Add Haircut To Calendar',
-													`Would you like to add your Appointment on ${moment(item.id.split(' ')[0]).format('ddd, MMM Do YYYY')} at ${item.time.toString().toLowerCase()} to your calendar?`,
-													[
-														{
-															text: 'Cancel'
-														},
-														{
-															text: 'Add Appointment',
-															onPress: () => createCalendar(onekey[0], onekey[1].time.toString(), barberData?.location, barberData?.phone)
-														}
-													]
-												)
-											}>
-											{moment(item.id.split(' ')[0]).format('ddd, MMM Do YYYY')}, {item.time.toString().toLowerCase()}
-										</Heading>
-										<Heading size='sm'>{item.points != '' ? subtractDiscount(item?.haircutType, item?.haircutType === 'kids' ? barberData?.kidsHaircut : barberData?.price, item.points) : barberData?.price}</Heading>
-										{item.points !== '' && <Text color='#fff'>GP's: {item.points}</Text>}
-									</Center>
-									<Text
-										color='warmGray.200'
-										pt={'3'}
-										onPress={() =>
-											Linking.openURL(`sms:${barberData?.phone}`).catch(() => {
-												Linking.openURL(`sms:${barberData?.phone}`)
-											})
-										}>
-										{formatPhoneNumber(barberData.phone)}
-									</Text>
-									<Text
-										color='warmGray.200'
-										onPress={() =>
-											Linking.openURL('maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647').catch(() => {
-												Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
-											})
-										}>
-										{barberData?.location}
-									</Text>
-								</Box>
-							)}
-							keyExtractor={(item) => item.id}
-						/>
+									{formatPhoneNumber(barberData.phone)}
+								</Text>
+								<Text
+									color='warmGray.200'
+									onPress={() =>
+										Linking.openURL('maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647').catch(() => {
+											Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
+										})
+									}>
+									{barberData?.location}
+								</Text>
+							</Box>
+						))
 					) : (
-						<Box pl='4' pr='4' py='2' ml='5' mr='5' mt='2' borderRadius='20' bgColor='#121212'>
+						<Box p={3} ml='5' mr='5' mt='2' borderRadius='20' bgColor='#121212'>
 							<Center>
 								<Heading size={'sm'} p={'2'}>
 									No Upcoming Appointments
@@ -266,23 +263,19 @@ function Home(props) {
 						Previous Appoinments
 					</Heading>
 					{previousAppointments.length > 0 ? (
-						<FlatList
-							data={previousAppointments}
-							renderItem={({item}) => (
-								<Box pl='5' pr='5' py='2' ml='5' mr='5' mt='2' borderRadius='20' bgColor='#121212'>
-									<Center>
-										<Heading size={'md'} p={'2'}>
-											{moment(item.id.split(' ')[0]).format('ddd, MMM Do YYYY')}, {item.time.toString().toLowerCase()}
-										</Heading>
-										<Heading size='sm'>{item.points != '' ? subtractDiscount(item?.haircutType, item?.haircutType === 'kids' ? barberData?.kidsHaircut : barberData?.price, item.points) : barberData?.price}</Heading>
-										{item.points !== '' && <Text color='#fff'>GP's: {item.points}</Text>}
-									</Center>
-								</Box>
-							)}
-							keyExtractor={(item) => item.id}
-						/>
+						previousAppointments.map((prevApp, index) => (
+							<Box p={3} ml='5' mr='5' mt='2' borderRadius='20' bgColor='#121212' key={index}>
+								<Center>
+									<Heading size={'md'} p={'2'}>
+										{moment(prevApp.id.split(' ')[0]).format('ddd, MMM Do YYYY')}, {prevApp.time.toString().toLowerCase()}
+									</Heading>
+									<Heading size='sm'>{prevApp.points != '' ? subtractDiscount(prevApp?.haircutType, prevApp?.haircutType === 'kids' ? barberData?.kidsHaircut : barberData?.price, prevApp.points) : barberData?.price}</Heading>
+									{prevApp.points !== '' && <Text color='#fff'>GP's: {prevApp.points}</Text>}
+								</Center>
+							</Box>
+						))
 					) : (
-						<Box pl='4' pr='4' py='2' ml='5' mr='5' mt='2' borderRadius='20' bgColor='#121212'>
+						<Box p={3} ml='5' mr='5' mt='2' borderRadius='20' bgColor='#121212'>
 							<Center>
 								<Heading size={'sm'} p={'2'}>
 									No Previous Appointments

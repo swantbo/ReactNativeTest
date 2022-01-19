@@ -1,9 +1,27 @@
 import React, {useEffect, useState, useContext} from 'react'
-import {ScrollView, Linking, ActivityIndicator, View, Image, ImageBackground, TouchableOpacity, RefreshControl} from 'react-native'
+import {
+	ScrollView,
+	Linking,
+	ActivityIndicator,
+	View,
+	Image,
+	ImageBackground,
+	TouchableOpacity,
+	RefreshControl
+} from 'react-native'
 import {Card, SocialIcon, PricingCard, ListItem} from 'react-native-elements'
 import MapView from 'react-native-maps'
 import createStyles from '../../styles/base'
-import {Avatar, Center, VStack, Heading, HStack, Box, Text, Spacer} from 'native-base'
+import {
+	Avatar,
+	Center,
+	VStack,
+	Heading,
+	HStack,
+	Box,
+	Text,
+	Spacer
+} from 'native-base'
 
 import {reload} from '../../redux/actions'
 import {connect} from 'react-redux'
@@ -32,8 +50,12 @@ function Barber(props) {
 				.then((ProfileImage) => {
 					setImage(ProfileImage)
 				})
-			const imageRefs = await Firebase.storage().ref('Barber/HaircutPictures/').listAll()
-			const urls = await Promise.all(imageRefs.items.map((ref) => ref.getDownloadURL()))
+			const imageRefs = await Firebase.storage()
+				.ref('Barber/HaircutPictures/')
+				.listAll()
+			const urls = await Promise.all(
+				imageRefs.items.map((ref) => ref.getDownloadURL())
+			)
 			//const urls = ['https://picsum.photos/200/300?random=1', 'https://picsum.photos/200/300?random=2', 'https://picsum.photos/200/300?random=3', 'https://picsum.photos/200/300?random=4']
 			setHaircutImages(urls)
 		}
@@ -42,13 +64,13 @@ function Barber(props) {
 	}, [props])
 
 	return (
-		<>
-			<VStack bgColor='#E8BD70' safeArea>
+		<VStack flex={1} bgColor={'#000'}>
+			<VStack bg='#121212' borderBottomRadius={'25'} safeArea>
 				<Center>
 					<Avatar size='2xl' source={{uri: image}}></Avatar>
 				</Center>
 			</VStack>
-			<ScrollView style={styles.scrollView}>
+			<ScrollView flex={1} bgColor={'#000'}>
 				<Box>
 					<Center m={'5'}>
 						<Heading size={'lg'} color={'#E8BD70'}>
@@ -59,7 +81,13 @@ function Barber(props) {
 						</Text>
 					</Center>
 				</Box>
-				<HStack bgColor={'#121212'} justifyContent={'space-between'} m={'2'} borderRadius={'10'}>
+				<HStack
+					justifyContent={'space-between'}
+					p={2}
+					mx={2}
+					my={2}
+					borderRadius='20'
+					bgColor='#121212'>
 					<SocialIcon
 						onPress={() => {
 							props.navigation.navigate('Appointment')
@@ -70,9 +98,11 @@ function Barber(props) {
 					/>
 					<SocialIcon
 						onPress={() =>
-							Linking.openURL(`sms:${barber?.phone}`).catch(() => {
-								Linking.openURL(`sms:${barber?.phone}`)
-							})
+							Linking.openURL(`sms:${barber?.phone}`).catch(
+								() => {
+									Linking.openURL(`sms:${barber?.phone}`)
+								}
+							)
 						}
 						style={styles.socialIcons}
 						iconType='MaterialCommunityIcons'
@@ -80,8 +110,12 @@ function Barber(props) {
 					/>
 					<SocialIcon
 						onPress={() =>
-							Linking.openURL(`instagram://user?username=${barber?.instagram}`).catch(() => {
-								Linking.openURL(`https://www.instagram.com/${barber?.instagram}`)
+							Linking.openURL(
+								`instagram://user?username=${barber?.instagram}`
+							).catch(() => {
+								Linking.openURL(
+									`https://www.instagram.com/${barber?.instagram}`
+								)
 							})
 						}
 						style={styles.socialIcons}
@@ -98,12 +132,18 @@ function Barber(props) {
 					/>
 				</HStack>
 
-				<VStack bgColor={'#121212'} m={'2'} p={'3'} borderRadius={'10'}>
+				<VStack p={2} mx={2} my={2} borderRadius='20' bgColor='#121212'>
 					<Heading pb={'2'} color={'#E8BD70'} size={'sm'}>
 						SERVICES & PRICING
 					</Heading>
-					<Box borderWidth={'1'} borderTopColor={'grey'} borderBottomColor={'grey'}>
-						<HStack ml={'2'} mr={'2'} justifyContent={'space-between'}>
+					<Box
+						borderWidth={'1'}
+						borderTopColor={'grey'}
+						borderBottomColor={'grey'}>
+						<HStack
+							ml={'2'}
+							mr={'2'}
+							justifyContent={'space-between'}>
 							<Text fontSize={'md'}>Men's Haircut</Text>
 							<Text fontSize={'md'}>{barber?.price}</Text>
 						</HStack>
@@ -112,7 +152,10 @@ function Barber(props) {
 						</Text>
 					</Box>
 					<Box borderWidth={'1'} borderBottomColor={'grey'}>
-						<HStack ml={'2'} mr={'2'} justifyContent={'space-between'}>
+						<HStack
+							ml={'2'}
+							mr={'2'}
+							justifyContent={'space-between'}>
 							<Text fontSize={'md'}>Kid's Haircut</Text>
 							<Text fontSize={'md'}>{barber?.kidsHaircut}</Text>
 						</HStack>
@@ -121,7 +164,7 @@ function Barber(props) {
 						</Text>
 					</Box>
 				</VStack>
-				<HStack bgColor={'#121212'} m={'2'} p={'3'} borderRadius={'10'}>
+				<HStack p={2} mx={2} my={2} borderRadius='20' bgColor='#121212'>
 					<VStack flex={'1'}>
 						<Heading pb={'2'} color={'#E8BD70'} size={'sm'}>
 							ADDRESS & HOURS
@@ -129,11 +172,17 @@ function Barber(props) {
 						<Text fontSize={'sm'}>{barber?.location}</Text>
 						<TouchableOpacity
 							onPress={() =>
-								Linking.openURL(`sms:${barber?.phone}`).catch(() => {
-									Linking.openURL(`sms:${barber?.phone}`)
-								})
+								Linking.openURL(`sms:${barber?.phone}`).catch(
+									() => {
+										Linking.openURL(`sms:${barber?.phone}`)
+									}
+								)
 							}>
-							<Text fontSize={'sm'}>{barber?.phone != '' ? formatPhoneNumber(barber?.phone) : ''}</Text>
+							<Text fontSize={'sm'}>
+								{barber?.phone != ''
+									? formatPhoneNumber(barber?.phone)
+									: ''}
+							</Text>
 						</TouchableOpacity>
 						<HStack>
 							<Text fontSize={'sm'} bold>
@@ -145,13 +194,17 @@ function Barber(props) {
 							<Text fontSize={'sm'} bold>
 								Wednesday
 							</Text>
-							<Text fontSize={'sm'}>{' ' + barber?.Wednesday}</Text>
+							<Text fontSize={'sm'}>
+								{' ' + barber?.Wednesday}
+							</Text>
 						</HStack>
 						<HStack>
 							<Text fontSize={'sm'} bold>
 								Thursday
 							</Text>
-							<Text fontSize={'sm'}>{' ' + barber?.Thursday}</Text>
+							<Text fontSize={'sm'}>
+								{' ' + barber?.Thursday}
+							</Text>
 						</HStack>
 						<HStack>
 							<Text fontSize={'sm'} bold>
@@ -163,7 +216,9 @@ function Barber(props) {
 							<Text fontSize={'sm'} bold>
 								Saturday
 							</Text>
-							<Text fontSize={'sm'}>{' ' + barber?.Saturday}</Text>
+							<Text fontSize={'sm'}>
+								{' ' + barber?.Saturday}
+							</Text>
 						</HStack>
 					</VStack>
 					<MapView
@@ -179,14 +234,23 @@ function Barber(props) {
 						scrollEnabled={false}
 						zoomEnabled={false}
 						onPress={() =>
-							Linking.openURL('maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647').catch(() => {
-								Linking.openURL('google.navigation:q=43.0218740049977+-87.9119389619647')
+							Linking.openURL(
+								'maps://app?saddr=&daddr=43.0218740049977+-87.9119389619647'
+							).catch(() => {
+								Linking.openURL(
+									'google.navigation:q=43.0218740049977+-87.9119389619647'
+								)
 							})
 						}>
-						<MapView.Marker coordinate={{latitude: 43.0218740049977, longitude: -87.9119389619647}} />
+						<MapView.Marker
+							coordinate={{
+								latitude: 43.0218740049977,
+								longitude: -87.9119389619647
+							}}
+						/>
 					</MapView>
 				</HStack>
-				<VStack bgColor={'#121212'} m={'2'} p={'3'} borderRadius={'10'}>
+				<VStack p={2} mx={2} my={2} borderRadius='20' bgColor='#121212'>
 					<Heading pb={'2'} color={'#E8BD70'} size={'sm'}>
 						Photos
 					</Heading>
@@ -244,7 +308,7 @@ function Barber(props) {
 					</View>
 				</VStack>
 			</ScrollView>
-		</>
+		</VStack>
 	)
 }
 

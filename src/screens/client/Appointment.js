@@ -1,11 +1,36 @@
 import moment from 'moment'
 import React, {useEffect, useState, useContext} from 'react'
-import {SafeAreaView, ScrollView, ActivityIndicator, Alert, TouchableOpacity, RefreshControl, KeyboardAvoidingView} from 'react-native'
+import {
+	SafeAreaView,
+	ScrollView,
+	ActivityIndicator,
+	Alert,
+	TouchableOpacity,
+	RefreshControl,
+	KeyboardAvoidingView
+} from 'react-native'
 import CalendarStrip from 'react-native-calendar-strip'
 import {ListItem} from 'react-native-elements'
-import {insertDecimal, subtractDiscount, formatPhoneNumber, subtractPrice} from '../../utils/DataFormatting'
+import {
+	insertDecimal,
+	subtractDiscount,
+	formatPhoneNumber,
+	subtractPrice
+} from '../../utils/DataFormatting'
 
-import {Button, Center, Input, View, VStack, Heading, HStack, FlatList, Box, Text, Spacer} from 'native-base'
+import {
+	Button,
+	Center,
+	Input,
+	View,
+	VStack,
+	Heading,
+	HStack,
+	FlatList,
+	Box,
+	Text,
+	Spacer
+} from 'native-base'
 
 import createStyles from '../../styles/base'
 import {InputField} from '../../components'
@@ -36,7 +61,10 @@ function Appointment(props) {
 		let currentDate = moment()
 		const stopDate = moment().add(30, 'days')
 		while (currentDate <= stopDate) {
-			if (moment(currentDate).format('dddd') == 'Sunday' || moment(currentDate).format('dddd') == 'Monday') {
+			if (
+				moment(currentDate).format('dddd') == 'Sunday' ||
+				moment(currentDate).format('dddd') == 'Monday'
+			) {
 				dateArray.push(moment(currentDate).format('YYYY-MM-DD'))
 			}
 			currentDate = moment(currentDate).add(1, 'days')
@@ -47,7 +75,11 @@ function Appointment(props) {
 	const onDateSelected = (selectedDate) => {
 		setIsLoading(true)
 		setSelectedDate(selectedDate.format('YYYY-MM-DD'))
-		const weekDay = Promise.resolve(moment(selectedDate, 'YYYY-MM-DD HH:mm:ss').format('dddd').toString())
+		const weekDay = Promise.resolve(
+			moment(selectedDate, 'YYYY-MM-DD HH:mm:ss')
+				.format('dddd')
+				.toString()
+		)
 		Promise.all([weekDay]).then((values) => {
 			createAvailableTimes(barberInfo[`${values}`], selectedDate)
 		})
@@ -120,11 +152,20 @@ function Appointment(props) {
 			userId: user.uid
 		}
 
-		const userRef = Firebase.firestore().collection('Calendar').doc(moment(selectedDate).format('MMM YY')).collection('OverView').doc('data')
+		const userRef = Firebase.firestore()
+			.collection('Calendar')
+			.doc(moment(selectedDate).format('MMM YY'))
+			.collection('OverView')
+			.doc('data')
 		const increment = firebase.firestore.FieldValue.increment(1)
 
 		userRef.update({
-			goatPoints: discount != false ? firebase.firestore.FieldValue.increment(Number(userData.points)) : firebase.firestore.FieldValue.increment(0),
+			goatPoints:
+				discount != false
+					? firebase.firestore.FieldValue.increment(
+							Number(userData.points)
+					  )
+					: firebase.firestore.FieldValue.increment(0),
 			haircuts: increment
 		})
 
@@ -137,11 +178,15 @@ function Appointment(props) {
 			.set(userAppointmentInfo, {merge: false})
 			.then(() => {
 				addAppointmentDataBase(selectedDate, selectedTime[0])
-				Alert.alert('Appointment Scheduled', `Thanks ${userData.name}, your appointment has been scheduled`, [
-					{
-						text: 'Okay'
-					}
-				])
+				Alert.alert(
+					'Appointment Scheduled',
+					`Thanks ${userData.name}, your appointment has been scheduled`,
+					[
+						{
+							text: 'Okay'
+						}
+					]
+				)
 			})
 			.catch((e) => {
 				alert('Something went wrong try again', e)
@@ -155,8 +200,18 @@ function Appointment(props) {
 			points: discount != false ? userData.points : '',
 			haircutType: haircutType
 		}
-		await Firebase.firestore().collection('users').doc(user.uid).collection('Haircuts').doc(`${selectedDate} ${selectedTime}`).set(appointmentData, {merge: true})
-		discount != false ? await Firebase.firestore().collection('users').doc(user.uid).set({points: '0'}, {merge: true}) : null
+		await Firebase.firestore()
+			.collection('users')
+			.doc(user.uid)
+			.collection('Haircuts')
+			.doc(`${selectedDate} ${selectedTime}`)
+			.set(appointmentData, {merge: true})
+		discount != false
+			? await Firebase.firestore()
+					.collection('users')
+					.doc(user.uid)
+					.set({points: '0'}, {merge: true})
+			: null
 	}
 
 	useEffect(() => {
@@ -169,36 +224,68 @@ function Appointment(props) {
 	return (
 		<View flex={1} bgColor={'#000'}>
 			<VStack bgColor={'#000'}>
-				<Box bgColor={'#121212'} pl='4' pr='4' py='2'>
-					<HStack>
-						<VStack alignItems={'flex-start'}>
-							<Heading size={'sm'}>
-								{selectedDate ? moment(selectedDate).format('ddd, MMM Do YYYY') + ' ' : 'Select Date & '}
-								{selectedTime ? '@ ' + selectedTime : 'Select Time'}
-							</Heading>
-							<Text fontSize='md'>{haircutType === 'mens' ? "Men's Haircut " : "Kid's Haircut "}</Text>
-							<Button bgColor={'#E8BD70'} onPress={() => (discount === false && userData?.points != 0 ? setDiscount(true) : setDiscount(false))}>
-								<Text fontSize='md' color={'#000'} bold>
-									Goat Points: {userData?.points}
-								</Text>
-							</Button>
-						</VStack>
-						<VStack alignItems={'flex-end'}>
-							<Heading size={'sm'}>{haircutType === 'mens' ? barberInfo?.price : barberInfo?.kidsHaircut}</Heading>
-							<Text fontSize='md'>{discount != false ? '-$' + insertDecimal(userData?.points) : ' '}</Text>
-							<Button bgColor={'#E8BD70'} size={'sm'} onPress={() => scheduleAppointment(selectedDate, selectedTime)}>
-								<Text fontSize='md' color={'#000'} bold>
-									Book{' '}
-									{discount != false
-										? '$' + subtractDiscount(haircutType, haircutType === 'kids' ? barberInfo?.kidsHaircut : barberInfo?.price, userData?.points)
-										: haircutType === 'mens'
-										? barberInfo?.price
-										: barberInfo?.kidsHaircut}
-								</Text>
-							</Button>
-						</VStack>
-					</HStack>
-				</Box>
+				<HStack bgColor={'#121212'} p={1}>
+					<VStack flex={2} alignItems={'flex-start'}>
+						<Heading size={'sm'}>
+							{selectedDate
+								? moment(selectedDate).format(
+										'ddd, MMM Do YYYY'
+								  ) + ' '
+								: 'Select Date & '}
+							{selectedTime ? '@ ' + selectedTime : 'Select Time'}
+						</Heading>
+						<Text fontSize='md'>
+							{haircutType === 'mens'
+								? "Men's Haircut "
+								: "Kid's Haircut "}
+						</Text>
+						<Button
+							bgColor={'#E8BD70'}
+							onPress={() =>
+								discount === false && userData?.points != 0
+									? setDiscount(true)
+									: setDiscount(false)
+							}>
+							<Text fontSize='md' color={'#000'} bold>
+								Goat Points: {userData?.points}
+							</Text>
+						</Button>
+					</VStack>
+					<VStack flex={1} alignItems={'flex-end'}>
+						<Heading size={'sm'}>
+							{haircutType === 'mens'
+								? barberInfo?.price
+								: barberInfo?.kidsHaircut}
+						</Heading>
+						<Text fontSize='md'>
+							{discount != false
+								? '-$' + insertDecimal(userData?.points)
+								: ' '}
+						</Text>
+						<Button
+							bgColor={'#E8BD70'}
+							size={'sm'}
+							onPress={() =>
+								scheduleAppointment(selectedDate, selectedTime)
+							}>
+							<Text fontSize='md' color={'#000'} bold>
+								Book{' '}
+								{discount != false
+									? '$' +
+									  subtractDiscount(
+											haircutType,
+											haircutType === 'kids'
+												? barberInfo?.kidsHaircut
+												: barberInfo?.price,
+											userData?.points
+									  )
+									: haircutType === 'mens'
+									? barberInfo?.price
+									: barberInfo?.kidsHaircut}
+							</Text>
+						</Button>
+					</VStack>
+				</HStack>
 				<CalendarStrip
 					scrollable
 					style={{
@@ -211,7 +298,10 @@ function Appointment(props) {
 					dateNameStyle={{color: 'white'}}
 					iconContainer={{flex: 0.1}}
 					highlightDateNameStyle={{color: 'white'}}
-					highlightDateNumberStyle={{fontWeight: 'bold', color: 'white'}}
+					highlightDateNumberStyle={{
+						fontWeight: 'bold',
+						color: 'white'
+					}}
 					highlightDateContainerStyle={styles.socialIcons}
 					startingDate={moment()}
 					minDate={moment()}
@@ -225,8 +315,16 @@ function Appointment(props) {
 						horizontal
 						data={newTimes}
 						renderItem={({item}) => (
-							<Box bgColor={'#E8BD70'} borderRadius={'10'} m={'5'}>
-								<Text onPress={() => selectedTimeChange(item)} color={'#000'} fontSize={'md'} p={'1'} bold>
+							<Box
+								bgColor={'#E8BD70'}
+								borderRadius={'10'}
+								m={'5'}>
+								<Text
+									onPress={() => selectedTimeChange(item)}
+									color={'#000'}
+									fontSize={'md'}
+									p={'1'}
+									bold>
 									{item}
 								</Text>
 							</Box>
@@ -252,19 +350,47 @@ function Appointment(props) {
 					<Heading size={'sm'} color={'#E8BD70'}>
 						Appoinment Type
 					</Heading>
-					<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={{color: '#fff'}} title="Men's Haircut" checked={haircutType === 'mens' ? true : false} onPress={() => setHaircutType('mens')} />
-					<ListItem.CheckBox containerStyle={styles.checkBox} textStyle={styles.text} title="Kid's Haircut" checked={haircutType === 'kids' ? true : false} onPress={() => setHaircutType('kids')} />
+					<ListItem.CheckBox
+						containerStyle={styles.checkBox}
+						textStyle={{color: '#fff'}}
+						title="Men's Haircut"
+						checked={haircutType === 'mens' ? true : false}
+						onPress={() => setHaircutType('mens')}
+					/>
+					<ListItem.CheckBox
+						containerStyle={styles.checkBox}
+						textStyle={styles.text}
+						title="Kid's Haircut"
+						checked={haircutType === 'kids' ? true : false}
+						onPress={() => setHaircutType('kids')}
+					/>
 				</Box>
 
 				<Box m={'2'} p={'3'} borderRadius={'20'} bgColor={'#121212'}>
 					<Heading pb={'2'} size={'sm'} color={'#E8BD70'}>
 						For a Friend?
 					</Heading>
-					<Input placeholder="Friend's Name (Optional)" borderColor={'#fff'} placeholderTextColor={'#fff'} size={'md'} p={'3'} value={friend} onChangeText={(text) => setFriend(text)} />
+					<Input
+						placeholder="Friend's Name (Optional)"
+						borderColor={'#fff'}
+						placeholderTextColor={'#fff'}
+						size={'md'}
+						p={'3'}
+						value={friend}
+						onChangeText={(text) => setFriend(text)}
+					/>
 					<Heading pb={'2'} pt={'2'} size={'sm'} color={'#E8BD70'}>
 						Comment?
 					</Heading>
-					<Input placeholder='Comment (Optional)' borderColor={'#fff'} placeholderTextColor={'#fff'} size={'md'} p={'3'} value={comment} onChangeText={(text) => onChangeComment(text)} />
+					<Input
+						placeholder='Comment (Optional)'
+						borderColor={'#fff'}
+						placeholderTextColor={'#fff'}
+						size={'md'}
+						p={'3'}
+						value={comment}
+						onChangeText={(text) => onChangeComment(text)}
+					/>
 				</Box>
 			</VStack>
 		</View>

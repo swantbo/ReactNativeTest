@@ -1,6 +1,17 @@
 import React, {useEffect, useState, useContext} from 'react'
 import {Alert} from 'react-native'
-import {Avatar, Center, ScrollView, VStack, Pressable, Box, Text, Button, Input} from 'native-base'
+import {
+	Avatar,
+	Center,
+	VStack,
+	Pressable,
+	Box,
+	Text,
+	Button,
+	Input,
+	HStack
+} from 'native-base'
+import {Entypo as Icon} from '@expo/vector-icons'
 
 import * as ImagePicker from 'expo-image-picker'
 import * as FileSystem from 'expo-file-system'
@@ -27,12 +38,18 @@ function Settings(props) {
 	const [currentUser, setCurrentUser] = useState({})
 	const [changeProfilePicture, setChangeProfilePicture] = useState('')
 
-	const {handleChange, handleBlur, handleSubmit, values, errors, touched} = useFormik({
-		validationSchema: LoginSchema,
-		initialValues: {name: '', phone: ''},
-		onSubmit: (values) => onChangeData(values.name, values.phone)
-	})
+	const {handleChange, handleBlur, handleSubmit, values, errors, touched} =
+		useFormik({
+			validationSchema: LoginSchema,
+			initialValues: {
+				name: `${currentUser.name}`,
+				phone: `${currentUser.phone}`
+			},
+			enableReinitialize: true,
+			onSubmit: (values) => onChangeData(values.name, values.phone)
+		})
 
+	console.log('values', values.name)
 	const pickImage = async () => {
 		let result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -46,36 +63,50 @@ function Settings(props) {
 			const fileName = result.uri.split('/').pop()
 			cameraImageUri = FileSystem.documentDirectory + fileName
 			try {
-				await FileSystem.moveAsync({from: result.uri, to: cameraImageUri})
+				await FileSystem.moveAsync({
+					from: result.uri,
+					to: cameraImageUri
+				})
 				const picture = {
 					profilePicture: cameraImageUri
 				}
-				await Firebase.firestore().collection('users').doc(user.uid).set(picture, {merge: true})
+				await Firebase.firestore()
+					.collection('users')
+					.doc(user.uid)
+					.set(picture, {merge: true})
 				setChangeProfilePicture(cameraImageUri)
-				Alert.alert('Success', `Your Profile Picture has been saved and changed.`)
+				Alert.alert(
+					'Success',
+					`Your Profile Picture has been saved and changed.`
+				)
 			} catch (err) {
-				Alert.alert('Error', `Unable to save and change Profile Picture. Try again.`)
+				Alert.alert(
+					'Error',
+					`Unable to save and change Profile Picture. Try again.`
+				)
 			}
 		}
 	}
 
 	const onChangeData = (name, phone) => {
-		let updateUserData
-		if (name !== '' && name !== currentUser.name) {
-			updateUserData = {
-				name: name
-			}
-		}
-		if (phone !== '' && phone !== currentUser.phone) {
-			updateUserData = {
-				phone: phone
-			}
+		const updateUserData = {
+			name: name,
+			phone: phone
 		}
 		try {
-			Firebase.firestore().collection('users').doc(user.uid).update(updateUserData)
-			Alert.alert('Success', `Your information has been changed to ${name !== '' ? name : phone}`)
+			Firebase.firestore()
+				.collection('users')
+				.doc(user.uid)
+				.update(updateUserData)
+			Alert.alert(
+				'Success',
+				`Your information has been changed to ${name}, ${phone}`
+			)
 		} catch (error) {
-			Alert.alert('There is an error.', err.message)
+			Alert.alert(
+				'Error',
+				'Unable to change information. Please try again'
+			)
 		}
 	}
 
@@ -94,59 +125,98 @@ function Settings(props) {
 	}, [props])
 
 	return (
-		<ScrollView bgColor={'#000'}>
-			<Box bgColor={'#121212'} borderRadius={20} m={1} ml={3} mr={3} p={2} pl={10} pr={10}>
-				<Pressable onPress={() => pickImage()}>
-					<Center>
-						<Avatar size='xl' source={{uri: changeProfilePicture}}></Avatar>
-						<Text p={'1'} fontSize={'md'}>
-							Change Profile Picture
+		<VStack bgColor={'#000'} flex={1}>
+			<VStack flex={3}>
+				<Box bgColor={'#121212'} borderRadius={20} mt={5} p={2}>
+					<Pressable onPress={() => pickImage()}>
+						<Center>
+							<Avatar
+								size='xl'
+								source={{uri: changeProfilePicture}}></Avatar>
+							<Text p={'1'} fontSize={'md'}>
+								Change Profile Picture
+							</Text>
+						</Center>
+					</Pressable>
+				</Box>
+				<Box bgColor={'#121212'} borderRadius={20} mt={5} p={2} px={10}>
+					<HStack alignItems={'center'}>
+						<Icon name={'user'} color={'#fff'} size={16} />
+						<Text pl={1} fontSize={'xl'}>
+							Name
 						</Text>
-					</Center>
-				</Pressable>
-			</Box>
-			<VStack bgColor={'#121212'} borderRadius={20} m={1} ml={3} mr={3} p={2} pl={10} pr={10}>
-				<Text fontSize={'md'}>Name</Text>
-				{!!errors.name && touched.name && <Text style={{color: 'red'}}>{errors.name}</Text>}
-				<Input width={'100%'} size={'md'} placeholder='Name' defaultValue={currentUser.name} onChangeText={handleChange('name')} onBlur={handleBlur('name')} error={errors.name} touched={touched.name} onSubmitEditing={() => handleSubmit()} />
-
-				{touched.name && values?.name && (
-					<Button alignSelf={'flex-end'} mt={2} size={'xs'} bgColor={'#E8BD70'} onPress={() => handleSubmit()}>
-						<Text bold color={'#000'}>
-							Save
+					</HStack>
+					{!!errors.name && touched.name && (
+						<Text style={{color: 'red'}}>{errors.name}</Text>
+					)}
+					<Input
+						variant='underlined'
+						width={'100%'}
+						size={'lg'}
+						placeholder='Name'
+						defaultValue={values.name}
+						onChangeText={handleChange('name')}
+						onBlur={handleBlur('name')}
+						error={errors.name}
+						touched={touched.name}
+					/>
+				</Box>
+				<Box bgColor={'#121212'} borderRadius={20} mt={5} p={2} px={10}>
+					<HStack alignItems={'center'}>
+						<Icon name={'phone'} color={'#fff'} size={16} />
+						<Text pl={1} fontSize={'xl'}>
+							Phone
+						</Text>
+					</HStack>
+					{!!errors.phone && touched.phone && (
+						<Text style={{color: 'red'}}>{errors.phone}</Text>
+					)}
+					<Input
+						variant='underlined'
+						width={'100%'}
+						size={'lg'}
+						placeholder='Phone'
+						defaultValue={values.phone}
+						onChangeText={handleChange('phone')}
+						onBlur={handleBlur('phone')}
+						error={errors.phone}
+						touched={touched.phone}
+					/>
+				</Box>
+				{touched.name || touched.phone ? (
+					<Button
+						bgColor={'#E8BD70'}
+						borderRadius={20}
+						mt={7}
+						p={2}
+						onPress={() => handleSubmit()}>
+						<Text
+							bold
+							fontSize={'lg'}
+							alignSelf={'center'}
+							color={'#000'}>
+							Save Changes
 						</Text>
 					</Button>
-				)}
+				) : null}
 			</VStack>
-			<VStack bgColor={'#121212'} borderRadius={20} m={1} ml={3} mr={3} p={2} pl={10} pr={10}>
-				<Text fontSize={'md'}>Phone</Text>
-				{!!errors.phone && touched.phone && <Text style={{color: 'red'}}>{errors.phone}</Text>}
-				<Input
-					width={'100%'}
-					size={'md'}
-					placeholder='Phone'
-					defaultValue={currentUser.phone}
-					onChangeText={handleChange('phone')}
-					onBlur={handleBlur('phone')}
-					error={errors.phone}
-					touched={touched.phone}
-					onSubmitEditing={() => handleSubmit()}
-				/>
-
-				{touched.phone && values?.phone && (
-					<Button alignSelf={'flex-end'} mt={2} size={'xs'} bgColor={'#E8BD70'} onPress={() => handleSubmit()}>
-						<Text bold color={'#000'}>
-							Save
-						</Text>
-					</Button>
-				)}
+			<VStack flex={1} justifyContent={'flex-end'}>
+				<Button
+					bgColor={'#121212'}
+					borderRadius={20}
+					mb={5}
+					p={2}
+					onPress={() => handleSignOut()}>
+					<Text
+						bold
+						fontSize={'xl'}
+						alignSelf={'center'}
+						color={'#E8BD70'}>
+						Sign Out
+					</Text>
+				</Button>
 			</VStack>
-			<Button bgColor={'#121212'} borderRadius={20} m={3} p={2} pl={10} pr={10} onPress={() => handleSignOut()}>
-				<Text bold fontSize={'lg'} alignSelf={'center'} color={'#E8BD70'}>
-					Sign Out
-				</Text>
-			</Button>
-		</ScrollView>
+		</VStack>
 	)
 }
 

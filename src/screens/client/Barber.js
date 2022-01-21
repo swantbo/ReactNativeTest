@@ -12,16 +12,7 @@ import {
 import {Card, SocialIcon, PricingCard, ListItem} from 'react-native-elements'
 import MapView from 'react-native-maps'
 import createStyles from '../../styles/base'
-import {
-	Avatar,
-	Center,
-	VStack,
-	Heading,
-	HStack,
-	Box,
-	Text,
-	Spacer
-} from 'native-base'
+import {Avatar, Center, VStack, Heading, HStack, Box, Text} from 'native-base'
 
 import {reload} from '../../redux/actions'
 import {connect} from 'react-redux'
@@ -131,38 +122,42 @@ function Barber(props) {
 						type='google'
 					/>
 				</HStack>
-
-				<VStack p={2} mx={2} my={2} borderRadius='20' bgColor='#121212'>
+				<VStack
+					flex={1}
+					p={2}
+					mx={2}
+					my={2}
+					borderRadius='20'
+					bgColor='#121212'>
 					<Heading pb={'2'} color={'#E8BD70'} size={'sm'}>
 						SERVICES & PRICING
 					</Heading>
-					<Box
-						borderWidth={'1'}
-						borderTopColor={'grey'}
-						borderBottomColor={'grey'}>
-						<HStack
-							ml={'2'}
-							mr={'2'}
-							justifyContent={'space-between'}>
-							<Text fontSize={'md'}>Men's Haircut</Text>
-							<Text fontSize={'md'}>{barber?.price}</Text>
-						</HStack>
-						<Text ml={'2'} mr={'2'} fontSize={'sm'}>
-							Full Haircut, Eyebrows, and Beard Trim
-						</Text>
-					</Box>
-					<Box borderWidth={'1'} borderBottomColor={'grey'}>
-						<HStack
-							ml={'2'}
-							mr={'2'}
-							justifyContent={'space-between'}>
-							<Text fontSize={'md'}>Kid's Haircut</Text>
-							<Text fontSize={'md'}>{barber?.kidsHaircut}</Text>
-						</HStack>
-						<Text ml={'2'} mr={'2'} fontSize={'sm'}>
-							Full Haircut, for Kid's
-						</Text>
-					</Box>
+					<HStack>
+						<VStack flex={1}>
+							<Box>
+								<Center>
+									<Text fontSize={'md'}>Men's Haircut</Text>
+									<Text fontSize={'md'}>{barber?.price}</Text>
+									<Text ml={'2'} mr={'2'} fontSize={'sm'}>
+										Full Haircut, Eyebrows, and Beard Trim
+									</Text>
+								</Center>
+							</Box>
+						</VStack>
+						<VStack flex={1}>
+							<Box>
+								<Center>
+									<Text fontSize={'md'}>Kid's Haircut</Text>
+									<Text fontSize={'md'}>
+										{barber?.kidsHaircut}
+									</Text>
+									<Text ml={'2'} mr={'2'} fontSize={'sm'}>
+										Full Haircut, for Kid's
+									</Text>
+								</Center>
+							</Box>
+						</VStack>
+					</HStack>
 				</VStack>
 				<HStack p={2} mx={2} my={2} borderRadius='20' bgColor='#121212'>
 					<VStack flex={'1'}>

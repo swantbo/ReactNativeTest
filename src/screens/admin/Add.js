@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Center, VStack, Box, Text, Button, Input} from 'native-base'
+import {Center, VStack, Box, Text, Button, Input, View} from 'native-base'
 import CalendarStrip from 'react-native-calendar-strip'
 
 import moment from 'moment'
@@ -38,13 +38,19 @@ const Add = ({route}) => {
 			)
 			.set(userAppointmentInfo, {merge: true})
 			.then(() => {
-				alert(`Thanks , Nate. Your appointment for ${name} has been scheduled`)
+				alert(
+					`Thanks , Nate. Your appointment for ${name} has been scheduled`
+				)
 			})
 			.catch((error) => {
 				alert('Something went wrong try again')
 			})
 
-		const userRef = Firebase.firestore().collection('Calendar').doc(moment(selectedDate).format('MMM YY')).collection('OverView').doc('data')
+		const userRef = Firebase.firestore()
+			.collection('Calendar')
+			.doc(moment(selectedDate).format('MMM YY'))
+			.collection('OverView')
+			.doc('data')
 		const increment = firebase.firestore.FieldValue.increment(1)
 
 		userRef.update({
@@ -60,7 +66,7 @@ const Add = ({route}) => {
 	}, [])
 
 	return (
-		<VStack flex={1} bgColor={'#000'}>
+		<VStack flex={1} bgColor={'#000'} safeArea>
 			<CalendarStrip
 				scrollable
 				style={{height: 100, paddingTop: 10, paddingBottom: 10}}
@@ -79,19 +85,58 @@ const Add = ({route}) => {
 				onDateSelected={onDateSelected}
 			/>
 
-			<Center bgColor={'#121212'} borderWidth={'1px'} borderTopColor={'#fff'} borderBottomColor={'#fff'}>
+			<Center
+				bgColor={'#121212'}
+				borderWidth={'1px'}
+				borderTopColor={'#fff'}
+				borderBottomColor={'#fff'}>
 				<Text m={'10px'} fontSize={'lg'}>
 					{formattedDate ? formattedDate : 'Choose a date'}
 				</Text>
 			</Center>
 			{formattedDate && (
 				<Box bgColor={'#121212'} m={'3'}>
-					<Input placeholder='Time' h={'40px'} p={4} m={4} mb={1} value={time} onChangeText={(text) => onChangeTime(text)} />
-					<Input placeholder='Name' h={'40px'} p={4} m={4} mb={1} value={name} onChangeText={(text) => onChangeName(text)} />
-					<Input placeholder='Phone Number' h={'40px'} p={4} m={4} mb={1} value={number} onChangeText={(text) => onChangeNumber(text)} />
-					<Input placeholder='comment' h={'40px'} p={4} m={4} mb={1} value={comment} onChangeText={(text) => onChangeComment(text)} />
+					<Input
+						placeholder='Time'
+						h={'40px'}
+						p={4}
+						m={4}
+						mb={1}
+						value={time}
+						onChangeText={(text) => onChangeTime(text)}
+					/>
+					<Input
+						placeholder='Name'
+						h={'40px'}
+						p={4}
+						m={4}
+						mb={1}
+						value={name}
+						onChangeText={(text) => onChangeName(text)}
+					/>
+					<Input
+						placeholder='Phone Number'
+						h={'40px'}
+						p={4}
+						m={4}
+						mb={1}
+						value={number}
+						onChangeText={(text) => onChangeNumber(text)}
+					/>
+					<Input
+						placeholder='comment'
+						h={'40px'}
+						p={4}
+						m={4}
+						mb={1}
+						value={comment}
+						onChangeText={(text) => onChangeComment(text)}
+					/>
 
-					<Button bgColor='#E8BD70' m={3} onPress={() => scheduleAppoint()}>
+					<Button
+						bgColor='#E8BD70'
+						m={3}
+						onPress={() => scheduleAppoint()}>
 						<Text bold color='#000' fontSize={'lg'}>
 							Add Appointment
 						</Text>

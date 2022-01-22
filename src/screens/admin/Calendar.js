@@ -1,6 +1,22 @@
 import React, {useEffect, useState} from 'react'
-import {StyleSheet, ActivityIndicator, Alert, Linking, TouchableOpacity} from 'react-native'
-import {Center, VStack, Heading, HStack, Box, Text, ScrollView, View} from 'native-base'
+import {
+	StyleSheet,
+	ActivityIndicator,
+	Alert,
+	Linking,
+	TouchableOpacity,
+	Pressable
+} from 'react-native'
+import {
+	Center,
+	VStack,
+	Heading,
+	HStack,
+	Box,
+	Text,
+	ScrollView,
+	View
+} from 'native-base'
 import CalendarStrip from 'react-native-calendar-strip'
 import {ListItem, Button} from 'react-native-elements'
 
@@ -28,7 +44,11 @@ function Calendar(props) {
 	}
 
 	const splitHours = async (selectedDate) => {
-		const weekDay = Promise.resolve(moment(selectedDate, 'YYYY-MM-DD HH:mm:ss').format('dddd').toString())
+		const weekDay = Promise.resolve(
+			moment(selectedDate, 'YYYY-MM-DD HH:mm:ss')
+				.format('dddd')
+				.toString()
+		)
 		Promise.all([weekDay]).then((values) => {
 			createAvailableTimes(barberData[`${values}`], selectedDate)
 		})
@@ -73,11 +93,19 @@ function Calendar(props) {
 					const tempData = doc.data()
 					data.push(tempData)
 				})
-				const calendarTimes = newIntervals.map((obj) => data.find((o) => o.time === obj.time) || obj)
-				let result = data.filter((o1) => !newIntervals.some((o2) => o1.time === o2.time))
+				const calendarTimes = newIntervals.map(
+					(obj) => data.find((o) => o.time === obj.time) || obj
+				)
+				let result = data.filter(
+					(o1) => !newIntervals.some((o2) => o1.time === o2.time)
+				)
 				if (result.length > 0) {
 					let testResults = [...calendarTimes, ...result]
-					testResults.sort((a, b) => moment(a.time, 'HH:mm a') - moment(b.time, 'HH:mm a'))
+					testResults.sort(
+						(a, b) =>
+							moment(a.time, 'HH:mm a') -
+							moment(b.time, 'HH:mm a')
+					)
 					setCalendarData(testResults)
 				}
 				if (result.length === 0) {
@@ -91,7 +119,11 @@ function Calendar(props) {
 	}
 
 	const deleteAppointment = (deleteTime) => {
-		const userRef = Firebase.firestore().collection('Calendar').doc(moment(date).format('MMM YY')).collection('OverView').doc('data')
+		const userRef = Firebase.firestore()
+			.collection('Calendar')
+			.doc(moment(date).format('MMM YY'))
+			.collection('OverView')
+			.doc('data')
 		const increment = Firebase.firestore.FieldValue.increment(-1)
 
 		userRef.update({
@@ -108,7 +140,10 @@ function Calendar(props) {
 				Alert.alert('Success', 'Appointment Deleted')
 			})
 			.catch((e) => {
-				Alert.alert('Error', `Unable to delete appointment. Try again. ${e}`)
+				Alert.alert(
+					'Error',
+					`Unable to delete appointment. Try again. ${e}`
+				)
 			})
 	}
 
@@ -135,11 +170,33 @@ function Calendar(props) {
 
 	return (
 		<VStack flex={'1'} bgColor={'#000'}>
+			<HStack bgColor={'#121212'}>
+				<Pressable
+					flex={1}
+					onPress={() => props.navigation.navigate('TimeOffScreen')}>
+					<Box>
+						<Text p={2} fontSize={'md'} bold textAlign={'center'}>
+							Time Off
+						</Text>
+					</Box>
+				</Pressable>
+				<Pressable
+					flex={1}
+					onPress={() =>
+						props.navigation.navigate('AddAppointmentScreen')
+					}>
+					<Box>
+						<Text p={2} fontSize={'md'} bold textAlign={'center'}>
+							Add Appointment
+						</Text>
+					</Box>
+				</Pressable>
+			</HStack>
 			<CalendarStrip
 				scrollable
 				style={{height: 100, paddingTop: 10, paddingBottom: 10}}
 				calendarHeaderStyle={{color: '#E8BD70', fontSize: 17}}
-				calendarColor={'#121212'}
+				calendarColor={'#000'}
 				dateNumberStyle={{color: 'white'}}
 				dateNameStyle={{color: 'white'}}
 				iconContainer={{flex: 0.1}}
@@ -153,7 +210,11 @@ function Calendar(props) {
 				onDateSelected={onDateSelected}
 			/>
 
-			<Center bgColor={'#121212'} borderWidth={'1px'} borderTopColor={'#fff'} borderBottomColor={'#fff'}>
+			<Center
+				bgColor={'#121212'}
+				borderWidth={'1px'}
+				borderTopColor={'#fff'}
+				borderBottomColor={'#fff'}>
 				<Text m={'10px'} fontSize={'lg'}>
 					{formattedDate ? formattedDate : 'Choose a date'}
 				</Text>
@@ -177,15 +238,41 @@ function Calendar(props) {
 									buttonStyle={styles.calendarButton}
 									onPress={() =>
 										key.name && key.name !== 'Off'
-											? Alert.alert('Delete Appointment', `Are you sure you want to delete this ${'\n'}Appointment Time ${key.time} ${'\n'} with Client: ${key.name}`, [
-													{text: 'Cancel'},
-													{text: 'Delete Appointment', onPress: () => deleteAppointment(key.time)}
-											  ])
+											? Alert.alert(
+													'Delete Appointment',
+													`Are you sure you want to delete this ${'\n'}Appointment Time ${
+														key.time
+													} ${'\n'} with Client: ${
+														key.name
+													}`,
+													[
+														{text: 'Cancel'},
+														{
+															text: 'Delete Appointment',
+															onPress: () =>
+																deleteAppointment(
+																	key.time
+																)
+														}
+													]
+											  )
 											: key.name === 'Off'
-											? Alert.alert('Delete Time Off', `Are you sure you want to remove ${'\n'} ${formattedDate} at ${key.time} from requested time off?`, [
-													{text: 'Cancel'},
-													{text: 'Delete Time Off', onPress: () => deleteAppointment(key.time)}
-											  ])
+											? Alert.alert(
+													'Delete Time Off',
+													`Are you sure you want to remove ${'\n'} ${formattedDate} at ${
+														key.time
+													} from requested time off?`,
+													[
+														{text: 'Cancel'},
+														{
+															text: 'Delete Time Off',
+															onPress: () =>
+																deleteAppointment(
+																	key.time
+																)
+														}
+													]
+											  )
 											: null
 									}
 								/>
@@ -193,17 +280,38 @@ function Calendar(props) {
 							leftContent={
 								key.name && key.name !== 'Off' ? (
 									<Button
-										title={key.strikes ? 'Strikes: ' + key.strikes : 'Add Strike'}
+										title={
+											key.strikes
+												? 'Strikes: ' + key.strikes
+												: 'Add Strike'
+										}
 										icon={{
 											name: 'add-circle',
 											color: 'white'
 										}}
 										buttonStyle={styles.calendarButton}
 										onPress={() =>
-											Alert.alert('No Call No Show', `Would you like to add a strike to Account Name: ${key.name ? key.name : 'N/A'} ${'\n'}Account Id: ${key.userId ? key.userId : 'N/A'}`, [
-												{text: 'Cancel'},
-												{text: 'Add Strike', onPress: () => addStrike(key.userId, key.strikes)}
-											])
+											Alert.alert(
+												'No Call No Show',
+												`Would you like to add a strike to Account Name: ${
+													key.name ? key.name : 'N/A'
+												} ${'\n'}Account Id: ${
+													key.userId
+														? key.userId
+														: 'N/A'
+												}`,
+												[
+													{text: 'Cancel'},
+													{
+														text: 'Add Strike',
+														onPress: () =>
+															addStrike(
+																key.userId,
+																key.strikes
+															)
+													}
+												]
+											)
 										}
 									/>
 								) : (
@@ -212,15 +320,34 @@ function Calendar(props) {
 							}
 							onPress={() =>
 								!key.name
-									? props.navigation.navigate('AddAppointmentScreen', {
-											formattedDate,
-											time: [`${key.time}`]
-									  })
+									? props.navigation.navigate(
+											'AddAppointmentScreen',
+											{
+												formattedDate,
+												time: [`${key.time}`]
+											}
+									  )
 									: key.name === 'Off'
-									? Alert.alert('Time Off', `Would you like to schedule an appointment during your time off on ${formattedDate} at ${key.time}?`, [
-											{text: 'Cancel'},
-											{text: 'Schedule Appointment', onPress: () => props.navigation.navigate('AddAppointmentScreen', {formattedDate, time: [`${key.time}`]})}
-									  ])
+									? Alert.alert(
+											'Time Off',
+											`Would you like to schedule an appointment during your time off on ${formattedDate} at ${key.time}?`,
+											[
+												{text: 'Cancel'},
+												{
+													text: 'Schedule Appointment',
+													onPress: () =>
+														props.navigation.navigate(
+															'AddAppointmentScreen',
+															{
+																formattedDate,
+																time: [
+																	`${key.time}`
+																]
+															}
+														)
+												}
+											]
+									  )
 									: null
 							}>
 							<ListItem.Content>
@@ -228,32 +355,86 @@ function Calendar(props) {
 									<>
 										<View style={styles.row}>
 											<View style={styles.calendarTitle}>
-												<ListItem.Subtitle style={styles.text}>{key.time}</ListItem.Subtitle>
+												<ListItem.Subtitle
+													style={styles.text}>
+													{key.time}
+												</ListItem.Subtitle>
 											</View>
-											<View style={styles.calendarRightTitle}></View>
+											<View
+												style={
+													styles.calendarRightTitle
+												}></View>
 											<View style={{flex: 2}}>
-												<ListItem.Title style={styles.goldTitle}>{key.name}</ListItem.Title>
-												{key.friend !== '' && undefined && <ListItem.Title style={styles.goldTitle}>'Friend: ' + key.friend</ListItem.Title>}
+												<ListItem.Title
+													style={styles.goldTitle}>
+													{key.name}
+												</ListItem.Title>
+												{key.friend !== '' &&
+													undefined && (
+														<ListItem.Title
+															style={
+																styles.goldTitle
+															}>
+															'Friend: ' +
+															key.friend
+														</ListItem.Title>
+													)}
 												<TouchableOpacity
 													onPress={() =>
-														Linking.openURL(`sms:${key?.phone}`).catch(() => {
-															Linking.openURL(`sms:${key?.phone}`)
+														Linking.openURL(
+															`sms:${key?.phone}`
+														).catch(() => {
+															Linking.openURL(
+																`sms:${key?.phone}`
+															)
 														})
 													}>
-													<ListItem.Subtitle style={styles.text}>{formatPhoneNumber(key?.phone) ? formatPhoneNumber(key?.phone) : key.phone}</ListItem.Subtitle>
+													<ListItem.Subtitle
+														style={styles.text}>
+														{formatPhoneNumber(
+															key?.phone
+														)
+															? formatPhoneNumber(
+																	key?.phone
+															  )
+															: key.phone}
+													</ListItem.Subtitle>
 												</TouchableOpacity>
 											</View>
 											<View style={{flex: 2}}>
-												<ListItem.Subtitle style={styles.calendarSubtitle}>{key?.haircutType === 'mens' ? "Men's Haircut" : key?.haircutType === 'kids' && "Kid's Haircut"}</ListItem.Subtitle>
-												<ListItem.Subtitle style={styles.calendarSubtitle}>{key.goatPoints ? `GP's: ` + key.goatPoints : `GP's: 0`}</ListItem.Subtitle>
+												<ListItem.Subtitle
+													style={
+														styles.calendarSubtitle
+													}>
+													{key?.haircutType === 'mens'
+														? "Men's Haircut"
+														: key?.haircutType ===
+																'kids' &&
+														  "Kid's Haircut"}
+												</ListItem.Subtitle>
+												<ListItem.Subtitle
+													style={
+														styles.calendarSubtitle
+													}>
+													{key.goatPoints
+														? `GP's: ` +
+														  key.goatPoints
+														: `GP's: 0`}
+												</ListItem.Subtitle>
 											</View>
 										</View>
 										{key?.comment !== '' && (
 											<View style={styles.row}>
 												<View style={{flex: 1}}></View>
-												<View style={styles.calendarRightTitle}></View>
+												<View
+													style={
+														styles.calendarRightTitle
+													}></View>
 												<View style={{flex: 4}}>
-													<ListItem.Subtitle style={styles.text}>Comment: key.comment</ListItem.Subtitle>
+													<ListItem.Subtitle
+														style={styles.text}>
+														Comment: key.comment
+													</ListItem.Subtitle>
 												</View>
 											</View>
 										)}
@@ -261,23 +442,49 @@ function Calendar(props) {
 								) : key.name === 'Off' ? (
 									<View style={styles.row}>
 										<View style={styles.calendarTitle}>
-											<ListItem.Subtitle style={styles.text}>{key.time}</ListItem.Subtitle>
+											<ListItem.Subtitle
+												style={styles.text}>
+												{key.time}
+											</ListItem.Subtitle>
 										</View>
-										<View style={styles.calendarRightTitle}></View>
+										<View
+											style={
+												styles.calendarRightTitle
+											}></View>
 										<View style={{flex: 4}}>
-											<ListItem.Title style={styles.calendarGoldTitleRight}>{key.name}</ListItem.Title>
+											<ListItem.Title
+												style={
+													styles.calendarGoldTitleRight
+												}>
+												{key.name}
+											</ListItem.Title>
 										</View>
-										<ListItem.Subtitle style={styles.text}>{key?.comment !== '' && undefined && 'Comment: ' + key.comment}</ListItem.Subtitle>
+										<ListItem.Subtitle style={styles.text}>
+											{key?.comment !== '' &&
+												undefined &&
+												'Comment: ' + key.comment}
+										</ListItem.Subtitle>
 									</View>
 								) : (
 									!key.name && (
 										<View style={styles.row}>
 											<View style={styles.calendarTitle}>
-												<ListItem.Subtitle style={styles.text}>{key.time}</ListItem.Subtitle>
+												<ListItem.Subtitle
+													style={styles.text}>
+													{key.time}
+												</ListItem.Subtitle>
 											</View>
-											<View style={styles.calendarRightTitle}></View>
+											<View
+												style={
+													styles.calendarRightTitle
+												}></View>
 											<View style={{flex: 4}}>
-												<ListItem.Title style={styles.calendarGoldTitleRight}>Avaliable</ListItem.Title>
+												<ListItem.Title
+													style={
+														styles.calendarGoldTitleRight
+													}>
+													Avaliable
+												</ListItem.Title>
 											</View>
 										</View>
 									)
@@ -288,9 +495,14 @@ function Calendar(props) {
 				</ScrollView>
 			) : (
 				<ScrollView style={styles.scrollView}>
-					<ListItem bottomDivider containerStyle={styles.listItemContainer}>
+					<ListItem
+						bottomDivider
+						containerStyle={styles.listItemContainer}>
 						<ListItem.Content>
-							<ListItem.Title style={styles.signOut}> No Appointments </ListItem.Title>
+							<ListItem.Title style={styles.signOut}>
+								{' '}
+								No Appointments{' '}
+							</ListItem.Title>
 						</ListItem.Content>
 					</ListItem>
 				</ScrollView>

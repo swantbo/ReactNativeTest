@@ -132,27 +132,48 @@ function Barber(props) {
 					<Heading pb={'2'} color={'#E8BD70'} size={'sm'}>
 						SERVICES & PRICING
 					</Heading>
-					<HStack>
+					<HStack space={2}>
 						<VStack flex={1}>
-							<Box>
+							<Box
+								p={1}
+								borderWidth={0.5}
+								borderColor={'grey'}
+								borderRadius='20'>
 								<Center>
-									<Text fontSize={'md'}>Men's Haircut</Text>
-									<Text fontSize={'md'}>{barber?.price}</Text>
-									<Text ml={'2'} mr={'2'} fontSize={'sm'}>
+									<Text fontSize={'md'} bold>
+										Men's Haircut
+									</Text>
+									<Text fontSize={'md'} bold>
+										{barber?.price}
+									</Text>
+									<Text
+										mx={'2'}
+										fontSize={'sm'}
+										textAlign={'center'}>
 										Full Haircut, Eyebrows, and Beard Trim
 									</Text>
 								</Center>
 							</Box>
 						</VStack>
 						<VStack flex={1}>
-							<Box>
+							<Box
+								p={1}
+								borderWidth={0.5}
+								borderColor={'grey'}
+								borderRadius='20'>
 								<Center>
-									<Text fontSize={'md'}>Kid's Haircut</Text>
-									<Text fontSize={'md'}>
+									<Text fontSize={'md'} bold>
+										Kid's Haircut
+									</Text>
+									<Text fontSize={'md'} bold>
 										{barber?.kidsHaircut}
 									</Text>
-									<Text ml={'2'} mr={'2'} fontSize={'sm'}>
-										Full Haircut, for Kid's
+									<Text
+										mx={'2'}
+										fontSize={'sm'}
+										textAlign={'center'}>
+										Full Haircut, for Kid's {'\n'}(13 and
+										under)
 									</Text>
 								</Center>
 							</Box>

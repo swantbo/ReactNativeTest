@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\redux",
+    "\\src\\redux\\constants",
+    "\\src\\redux\\reducers",
+    "\\src\\redux\\store",
+    "\\src\\screens",
+    "\\src\\screens\\admin",
+    "\\src\\screens\\auth",
+    "\\src\\screens\\client"
+  ],
+  "SelectedNode": "\\src\\screens\\auth\\Signup.js",
+  "PreviewInSolutionExplorer": false
+}

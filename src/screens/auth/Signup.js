@@ -1,25 +1,44 @@
 import {StatusBar} from 'expo-status-bar'
 import React, {useState, useRef} from 'react'
 
-import {ImageBackground, Text, View, Button as RNButton, SafeAreaView, TouchableOpacity} from 'react-native'
+import {ImageBackground, Text, View, Button as RNButton, SafeAreaView, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
 import {ListItem} from 'react-native-elements'
 import {useFormik} from 'formik'
 import * as Yup from 'yup'
+import moment from 'moment'
 
 import createStyles from '../../styles/base'
 import {InputField, ErrorMessage} from '../../components'
 import Firebase from '../../config/firebase'
 
 const auth = Firebase.auth()
+//#region validation regex rules
 
+const phoneRegExp = /^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$/i
+//honestly if you touch this....https://tinyurl.com/2p9dd985
+
+const passwordReqRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
+//	/^
+//	(?=.*\d)          // should contain at least one digit
+//(?=.* [a - z])       // should contain at least one lower case
+//	(?=.* [A - Z])       // should contain at least one upper case
+//[a - zA - Z0 - 9]{ 8,}   // should contain at least 8 from the mentioned characters
+//$ /
+
+//#endregion 
+//TODO figure out a way to display password requirements better 
 const LoginSchema = Yup.object().shape({
-	firstName: Yup.string().required('Required'),
-	lastName: Yup.string().required('Required'),
-	dob: Yup.string().required('Required'),
-	referral: Yup.string(),
-	phone: Yup.string().required('Required'),
-	email: Yup.string().required('Required'),
-	password: Yup.string().required('Required'),
+	firstName: Yup.string().max(100).required('Required'),
+	lastName: Yup.string().max(100).required('Required'),
+	dob: Yup.date()
+		.transform(value => {
+			return value ? moment(value).toDate() : value;
+		}).typeError("please follow the following format: MM/DD/YYYY")
+		.required("Required"),
+	referral: Yup.string().matches(phoneRegExp, 'Phone number is not valid').max(100),
+	phone: Yup.string().matches(phoneRegExp, 'Phone number is not valid').required('Required'),
+	email: Yup.string().max(225).email("email is not valid").required('Required'),
+	password: Yup.string().matches(passwordReqRegex, "Password must be stronger").required('Required'),
 	verfiyPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match')
 })
 
@@ -76,7 +95,6 @@ export default function Signup({navigation}) {
 	return (
 		<SafeAreaView style={styles.authContainer}>
 			<View style={{padding: 10}}>
-				<StatusBar style='dark-content' />
 				<Text style={styles.authTitle}>Register</Text>
 				<Text style={{color: 'red'}}>{!!errors.firstName && touched.firstName && errors.firstName}</Text>
 				<InputField
@@ -84,7 +102,6 @@ export default function Signup({navigation}) {
 					placeholder='First name'
 					autoCapitalize='none'
 					autoCompleteType='email'
-					keyboardType='normal'
 					keyboardAppearance='dark'
 					returnKeyType='next'
 					returnKeyLabel='next'
@@ -101,7 +118,6 @@ export default function Signup({navigation}) {
 					placeholder='Last name'
 					autoCapitalize='none'
 					autoCompleteType='email'
-					keyboardType='normal'
 					keyboardAppearance='dark'
 					returnKeyType='next'
 					returnKeyLabel='next'
@@ -118,7 +134,6 @@ export default function Signup({navigation}) {
 					placeholder='Phone number of refferal(optional)'
 					autoCapitalize='none'
 					autoCompleteType='email'
-					keyboardType='normal'
 					keyboardAppearance='dark'
 					returnKeyType='next'
 					returnKeyLabel='next'
@@ -135,7 +150,6 @@ export default function Signup({navigation}) {
 					placeholder='Enter your birthday'
 					autoCapitalize='none'
 					autoCompleteType='email'
-					keyboardType='normal'
 					keyboardAppearance='dark'
 					returnKeyType='next'
 					returnKeyLabel='next'
@@ -152,7 +166,6 @@ export default function Signup({navigation}) {
 					placeholder='Enter your phone'
 					autoCapitalize='none'
 					autoCompleteType='email'
-					keyboardType='number-pad'
 					keyboardAppearance='dark'
 					returnKeyType='next'
 					returnKeyLabel='next'

@@ -1,16 +1,16 @@
 {
   "ExpandedNodes": [
     "",
+    "\\.expo-shared",
     "\\src",
-    "\\src\\redux",
-    "\\src\\redux\\constants",
-    "\\src\\redux\\reducers",
-    "\\src\\redux\\store",
-    "\\src\\screens",
-    "\\src\\screens\\admin",
-    "\\src\\screens\\auth",
-    "\\src\\screens\\client"
+    "\\src\\assets",
+    "\\src\\components",
+    "\\src\\config",
+    "\\src\\constants",
+    "\\src\\navigation",
+    "\\src\\styles",
+    "\\src\\utils"
   ],
-  "SelectedNode": "\\src\\screens\\auth\\Signup.js",
+  "SelectedNode": "\\src\\screens\\admin\\Off.js",
   "PreviewInSolutionExplorer": false
 }

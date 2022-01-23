@@ -91,15 +91,12 @@ export default function Signup({navigation}) {
 			"Are your sure?",
 			"Are you sure you no longer want to create an account?",
 			[
-				// The "Yes" button
 				{
 					text: "Yes I'm sure",
 					onPress: () => {
 						navigation.navigate('Login');
 					},
 				},
-				// The "No" button
-				// Does nothing but dismiss the dialog when tapped
 				{
 					text: "No keep me on this page",
 				},
@@ -155,7 +152,7 @@ export default function Signup({navigation}) {
 						touched={touched.lastName}
 						onSubmitEditing={() => referral.current?.focus()}
 						/>
-{/*TODO: lets make this a modal on the next page for the first time a user logs in. I think we are asking too many questions for sign up. */}
+					{/*TODO: lets make this a modal on the next page for the first time a user logs in. I think we are asking too many questions for sign up. */}
 					{/*<Text style={{color: 'red'}}>{!!errors.referral && touched.referral && errors.referral}</Text>*/}
 					{/*<InputField*/}
 					{/*	ref={referral}*/}
@@ -294,7 +291,7 @@ export default function Signup({navigation}) {
 					</View>
 				</TouchableWithoutFeedback>
 				<ImageBackground source={require('../../assets/123_1.jpeg')} style={styles.authImage} resizeMode='cover'></ImageBackground>
-					</SafeAreaView>
+			</SafeAreaView>
 		</KeyboardAvoidingView>
 	)
 }

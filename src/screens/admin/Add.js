@@ -7,7 +7,8 @@ import {
 	Button,
 	Input,
 	Heading,
-	ScrollView
+	ScrollView,
+	KeyboardAvoidingView
 } from 'native-base'
 import CalendarStrip from 'react-native-calendar-strip'
 
@@ -141,7 +142,7 @@ const Add = ({route}) => {
 						: 'Choose a date'}
 				</Text>
 			</Center>
-			<ScrollView>
+			<KeyboardAvoidingView behavior='position'>
 				{selectedDate && (
 					<Box bgColor={'#121212'} borderRadius={20} my={5} p={4}>
 						<Center m={2}>
@@ -238,7 +239,7 @@ const Add = ({route}) => {
 						</Button>
 					</Box>
 				)}
-			</ScrollView>
+			</KeyboardAvoidingView>
 		</VStack>
 	)
 }

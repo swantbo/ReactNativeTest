@@ -1,13 +1,12 @@
 import {StatusBar} from 'expo-status-bar'
 import React, {useState, useRef} from 'react'
-
-import {ImageBackground, Text, View, Button as RNButton, SafeAreaView, TouchableOpacity} from 'react-native'
-import {ListItem} from 'react-native-elements'
+import {ImageBackground} from 'react-native'
+import {Text, Heading, Center, VStack, Pressable} from 'native-base'
 import {useFormik} from 'formik'
 import * as Yup from 'yup'
 
 import createStyles from '../../styles/base'
-import {InputField, ErrorMessage} from '../../components'
+import {InputField} from '../../components'
 import Firebase from '../../config/firebase'
 
 const auth = Firebase.auth()
@@ -22,11 +21,12 @@ export default function Signin({navigation}) {
 	const [rightIcon, setRightIcon] = useState('eye')
 	const [loginError, setLoginError] = useState('')
 
-	const {handleChange, handleBlur, handleSubmit, values, errors, touched} = useFormik({
-		validationSchema: LoginSchema,
-		initialValues: {email: '', password: ''},
-		onSubmit: (values) => onLogin(values.email, values.password)
-	})
+	const {handleChange, handleBlur, handleSubmit, values, errors, touched} =
+		useFormik({
+			validationSchema: LoginSchema,
+			initialValues: {email: '', password: ''},
+			onSubmit: (values) => onLogin(values.email, values.password)
+		})
 
 	const handlePasswordVisibility = () => {
 		if (rightIcon === 'eye') {
@@ -53,66 +53,83 @@ export default function Signin({navigation}) {
 	const password = useRef(null)
 
 	return (
-		<SafeAreaView style={styles.authContainer}>
-			<View style={{padding: 10}}>
-				<StatusBar style='dark-content' />
-				<Text style={styles.authTitle}>Login</Text>
-				<Text style={{color: 'red'}}>{!!errors.email && touched.email && errors.email}</Text>
-				<InputField
-					icon='mail'
-					placeholder='Enter your email'
-					autoCapitalize='none'
-					autoCompleteType='email'
-					keyboardType='email-address'
-					keyboardAppearance='dark'
-					returnKeyType='next'
-					returnKeyLabel='next'
-					onChangeText={handleChange('email')}
-					onBlur={handleBlur('email')}
-					error={errors.email}
-					touched={touched.email}
-					onSubmitEditing={() => password.current?.focus()}
-				/>
-				<Text style={{color: 'red'}}>{!!errors.password && touched.password && errors.password}</Text>
-				<InputField
-					ref={password}
-					icon='key'
-					placeholder='Enter your password'
-					secureTextEntry
-					autoCompleteType='password'
-					autoCapitalize='none'
-					keyboardAppearance='dark'
-					returnKeyType='go'
-					returnKeyLabel='go'
-					onChangeText={handleChange('password')}
-					onBlur={handleBlur('password')}
-					error={errors.password}
-					touched={touched.password}
-					onSubmitEditing={() => handleSubmit()}
-				/>
-				{loginError !== '' && <Text style={{color: 'red'}}>{loginError}</Text>}
-				<TouchableOpacity
-					style={{
-						backgroundColor: '#000',
-						borderRadius: 5,
-						padding: 10,
-						marginTop: 15
-					}}
-					onPress={() => onLogin()}>
-					<ListItem.Title
-						style={{
-							color: '#fff',
-							alignSelf: 'center',
-							fontWeight: 'bold'
-						}}>
-						Login
-					</ListItem.Title>
-				</TouchableOpacity>
-				<RNButton onPress={() => navigation.navigate('Signup')} title='Go to Signup' color='#000000' />
-				<RNButton onPress={() => navigation.navigate('ForgotPassword')} title='Forgot Password?' color='#000000' />
-			</View>
-			<ImageBackground source={require('../../assets/123_1.jpeg')} style={styles.authImage} resizeMode='cover'></ImageBackground>
-		</SafeAreaView>
+		<VStack flex={1} safeArea p={2}>
+			<StatusBar style='dark-content' />
+			<Center>
+				<Heading size={'xl'} color={'#000'}>
+					Login
+				</Heading>
+			</Center>
+			<Text style={{color: 'red'}}>
+				{!!errors.email && touched.email && errors.email}
+			</Text>
+			<InputField
+				icon='mail'
+				placeholder='Enter your email'
+				autoCapitalize='none'
+				autoCompleteType='email'
+				keyboardType='email-address'
+				keyboardAppearance='dark'
+				returnKeyType='next'
+				returnKeyLabel='next'
+				onChangeText={handleChange('email')}
+				onBlur={handleBlur('email')}
+				error={errors.email}
+				touched={touched.email}
+				onSubmitEditing={() => password.current?.focus()}
+			/>
+			<Text style={{color: 'red'}}>
+				{!!errors.password && touched.password && errors.password}
+			</Text>
+			<InputField
+				ref={password}
+				icon='key'
+				placeholder='Enter your password'
+				secureTextEntry
+				autoCompleteType='password'
+				autoCapitalize='none'
+				keyboardAppearance='dark'
+				returnKeyType='go'
+				returnKeyLabel='go'
+				onChangeText={handleChange('password')}
+				onBlur={handleBlur('password')}
+				error={errors.password}
+				touched={touched.password}
+				onSubmitEditing={() => handleSubmit()}
+			/>
+			{loginError !== '' && (
+				<Text style={{color: 'red'}}>{loginError}</Text>
+			)}
+			<Pressable
+				p={2}
+				my={4}
+				bgColor={'#000'}
+				borderRadius={5}
+				onPress={() => handleSubmit()}>
+				<Text color={'#fff'} fontSize={'lg'} alignSelf={'center'} bold>
+					Login
+				</Text>
+			</Pressable>
+			<Center my={2}>
+				<Pressable onPress={() => navigation.navigate('Signup')}>
+					<Text fontSize={'lg'} color={'#000'}>
+						Create Account
+					</Text>
+				</Pressable>
+			</Center>
+			<Center>
+				<Pressable
+					onPress={() => navigation.navigate('ForgotPassword')}>
+					<Text fontSize={'lg'} color={'#000'}>
+						Forgot Password?
+					</Text>
+				</Pressable>
+			</Center>
+			{/* <ImageBackground
+				source={require('../../assets/123_1.jpeg')}
+				style={styles.authImage}
+				resizeMode='cover'></ImageBackground> */}
+		</VStack>
 	)
 }
 

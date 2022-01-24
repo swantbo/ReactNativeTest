@@ -9,7 +9,8 @@ import {
 	Box,
 	Text,
 	Input,
-	Button
+	Button,
+	KeyboardAvoidingView
 } from 'native-base'
 import moment from 'moment'
 import {CalendarList} from 'react-native-calendars'
@@ -182,134 +183,145 @@ function Off() {
 
 	return (
 		<VStack flex={1} bgColor={'#000'}>
-			<ScrollView>
-				<CalendarList
-					horizontal={true}
-					pagingEnabled={true}
-					onDayPress={onDaySelect}
-					markedDates={markedDates}
-				/>
-				<Box bgColor={'#121212'} m={3} p={3} borderRadius={'10'}>
-					<Heading color={'#E8BD70'} fontSize={'lg'}>
-						Days
-					</Heading>
-					<HStack m={2}>
-						<VStack flex={1}>
-							<Center>
-								<Heading fontSize={'lg'}>Start Date</Heading>
-								<Text fontSize={'md'}>
-									{moment(startDate)?.format(
-										'ddd, MMM Do YYYY'
-									)}
-								</Text>
-							</Center>
-						</VStack>
-						<VStack flex={1}>
-							<Center>
-								<Heading fontSize={'lg'}>End Date</Heading>
-								<Text fontSize={'md'}>
-									{moment(endDate)?.format(
-										'ddd, MMM Do YYYY'
-									)}
-								</Text>
-							</Center>
-						</VStack>
-					</HStack>
-					{startDate === endDate && (
-						<>
-							<Heading color={'#E8BD70'} fontSize={'lg'}>
-								Time
-							</Heading>
-							<HStack m={2}>
-								<VStack flex={1}>
-									<Center>
-										<Heading fontSize={'lg'}>
-											Start Time
-										</Heading>
-										<Text
-											fontSize={'md'}
-											onPress={showStartPicker}>
-											{moment(startTime).format(
-												'hh:mm A'
-											)}
-										</Text>
-									</Center>
-								</VStack>
-								<VStack flex={1}>
-									<Center>
-										<Heading fontSize={'lg'}>
-											End Time
-										</Heading>
-										<Text
-											fontSize={'md'}
-											onPress={showEndPicker}>
-											{moment(endTime).format('hh:mm A')}
-										</Text>
-									</Center>
-								</VStack>
-							</HStack>
-						</>
-					)}
-					{isStartPickerShow && (
-						<DateTimePicker
-							style={{backgroundColor: 'white'}}
-							textColor='#fff'
-							value={startTime}
-							mode='time'
-							display={
-								Platform.OS === 'ios' ? 'spinner' : 'default'
-							}
-							onChange={onStartTimeChange}
-							is24Hour={true}
-							minuteInterval={30}
-						/>
-					)}
-
-					{isEndPickerShow && (
-						<DateTimePicker
-							textColor='#fff'
-							value={endTime}
-							mode='time'
-							display={
-								Platform.OS === 'ios' ? 'spinner' : 'default'
-							}
-							onChange={onEndTimeChange}
-							is24Hour={true}
-							minuteInterval={30}
-						/>
-					)}
-					<Heading color={'#E8BD70'} fontSize={'lg'}>
-						Comment
-					</Heading>
-					<Input
-						placeholder='Comment (Optional)'
-						borderColor={'#fff'}
-						placeholderTextColor={'#fff'}
-						size={'md'}
-						p={'3'}
-						mt={2}
-						value={comment}
-						onChangeText={(text) => onChangeComment(text)}
+			<KeyboardAvoidingView behavior='position'>
+				<ScrollView>
+					<CalendarList
+						horizontal={true}
+						pagingEnabled={true}
+						onDayPress={onDaySelect}
+						markedDates={markedDates}
 					/>
 
-					<Button
-						bgColor={'#E8BD70'}
-						borderRadius={20}
-						my={5}
-						p={2}
-						onPress={() =>
-							createAvailableTimes(startDate, endDate)
-						}>
-						<Text
-							bold
-							fontSize={'xl'}
-							alignSelf={'center'}
-							color={'#000'}>
-							Schedule
-						</Text>
-					</Button>
-				</Box>
-			</ScrollView>
+					<Box bgColor={'#121212'} m={3} p={3} borderRadius={'10'}>
+						<Heading color={'#E8BD70'} fontSize={'lg'}>
+							Days
+						</Heading>
+						<HStack m={2}>
+							<VStack flex={1}>
+								<Center>
+									<Heading fontSize={'lg'}>
+										Start Date
+									</Heading>
+									<Text fontSize={'md'}>
+										{moment(startDate)?.format(
+											'ddd, MMM Do YYYY'
+										)}
+									</Text>
+								</Center>
+							</VStack>
+							<VStack flex={1}>
+								<Center>
+									<Heading fontSize={'lg'}>End Date</Heading>
+									<Text fontSize={'md'}>
+										{moment(endDate)?.format(
+											'ddd, MMM Do YYYY'
+										)}
+									</Text>
+								</Center>
+							</VStack>
+						</HStack>
+						{startDate === endDate && (
+							<>
+								<Heading color={'#E8BD70'} fontSize={'lg'}>
+									Time
+								</Heading>
+								<HStack m={2}>
+									<VStack flex={1}>
+										<Center>
+											<Heading fontSize={'lg'}>
+												Start Time
+											</Heading>
+											<Text
+												fontSize={'md'}
+												onPress={showStartPicker}>
+												{moment(startTime).format(
+													'hh:mm A'
+												)}
+											</Text>
+										</Center>
+									</VStack>
+									<VStack flex={1}>
+										<Center>
+											<Heading fontSize={'lg'}>
+												End Time
+											</Heading>
+											<Text
+												fontSize={'md'}
+												onPress={showEndPicker}>
+												{moment(endTime).format(
+													'hh:mm A'
+												)}
+											</Text>
+										</Center>
+									</VStack>
+								</HStack>
+							</>
+						)}
+						{isStartPickerShow && (
+							<DateTimePicker
+								style={{backgroundColor: 'white'}}
+								textColor='#fff'
+								value={startTime}
+								mode='time'
+								display={
+									Platform.OS === 'ios'
+										? 'spinner'
+										: 'default'
+								}
+								onChange={onStartTimeChange}
+								is24Hour={true}
+								minuteInterval={30}
+							/>
+						)}
+
+						{isEndPickerShow && (
+							<DateTimePicker
+								textColor='#fff'
+								value={endTime}
+								mode='time'
+								display={
+									Platform.OS === 'ios'
+										? 'spinner'
+										: 'default'
+								}
+								onChange={onEndTimeChange}
+								is24Hour={true}
+								minuteInterval={30}
+							/>
+						)}
+						<Heading color={'#E8BD70'} fontSize={'lg'}>
+							Comment
+						</Heading>
+						<Input
+							placeholder='Comment (Optional)'
+							borderColor={'#fff'}
+							placeholderTextColor={'#fff'}
+							size={'md'}
+							p={'3'}
+							mt={2}
+							value={comment}
+							onChangeText={(text) => onChangeComment(text)}
+						/>
+
+						<Button
+							bgColor={'#E8BD70'}
+							borderRadius={20}
+							my={5}
+							p={2}
+							onPress={() =>
+								createAvailableTimes(startDate, endDate)
+							}>
+							<Text
+								bold
+								fontSize={'xl'}
+								alignSelf={'center'}
+								color={'#000'}>
+								Schedule
+							</Text>
+						</Button>
+					</Box>
+				</ScrollView>
+			</KeyboardAvoidingView>
 		</VStack>
 	)
 }

@@ -304,7 +304,7 @@ const baseStyles = {
 		fontWeight: 'bold',
 		color: '#E8BD70',
 		textAlign: 'center',
-		padding: 10,
+		padding: 10
 	}
 }
 

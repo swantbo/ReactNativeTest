@@ -181,7 +181,7 @@ function Off() {
 	useEffect(() => {}, [])
 
 	return (
-		<VStack flex={1} bgColor={'#000'} safeArea>
+		<VStack flex={1} bgColor={'#000'}>
 			<ScrollView>
 				<CalendarList
 					horizontal={true}

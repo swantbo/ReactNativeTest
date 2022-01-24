@@ -111,7 +111,7 @@ const Add = ({route}) => {
 	}, [])
 
 	return (
-		<VStack flex={1} bgColor={'#000'} safeArea>
+		<VStack flex={1} bgColor={'#000'}>
 			<CalendarStrip
 				scrollable
 				style={{height: 100, paddingTop: 10, paddingBottom: 10}}

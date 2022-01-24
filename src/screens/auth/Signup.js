@@ -152,23 +152,23 @@ export default function Signup({navigation}) {
 						touched={touched.lastName}
 						onSubmitEditing={() => referral.current?.focus()}
 						/>
-					{/*TODO: lets make this a modal on the next page for the first time a user logs in. I think we are asking too many questions for sign up. */}
-					{/*<Text style={{color: 'red'}}>{!!errors.referral && touched.referral && errors.referral}</Text>*/}
-					{/*<InputField*/}
-					{/*	ref={referral}*/}
-					{/*	icon='user'*/}
-					{/*	placeholder='Phone number of refferal(optional)'*/}
-					{/*	autoCapitalize='none'*/}
-					{/*	autoCompleteType='email'*/}
-					{/*	keyboardAppearance='dark'*/}
-					{/*	returnKeyType='next'*/}
-					{/*	returnKeyLabel='next'*/}
-					{/*	onChangeText={handleChange('referral')}*/}
-					{/*	onBlur={handleBlur('referral')}*/}
-					{/*	error={errors.referral}*/}
-					{/*	touched={touched.referral}*/}
-					{/*	onSubmitEditing={() => dob.current?.focus()}*/}
-					{/*/>*/}
+					{/*TODO: lets make this a modal on the next page for the first time a user logs in. I think we are asking too many questions for sign up.*/} 
+					<Text style={{color: 'red'}}>{!!errors.referral && touched.referral && errors.referral}</Text>
+					<InputField
+						ref={referral}
+						icon='user'
+						placeholder='Phone number of refferal(optional)'
+						autoCapitalize='none'
+						autoCompleteType='email'
+						keyboardAppearance='dark'
+						returnKeyType='next'
+						returnKeyLabel='next'
+						onChangeText={handleChange('referral')}
+						onBlur={handleBlur('referral')}
+						error={errors.referral}
+						touched={touched.referral}
+						onSubmitEditing={() => dob.current?.focus()}
+					/>
 					<Text style={{color: 'red'}}>{!!errors.dob && touched.dob && errors.dob}</Text>
 					<InputField
 						ref={dob}

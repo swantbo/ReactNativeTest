@@ -170,27 +170,41 @@ function Calendar(props) {
 
 	return (
 		<VStack flex={'1'} bgColor={'#000'}>
-			<HStack bgColor={'#121212'}>
-				<Pressable
-					flex={1}
-					onPress={() => props.navigation.navigate('TimeOffScreen')}>
-					<Box>
-						<Text p={2} fontSize={'md'} bold textAlign={'center'}>
-							Time Off
-						</Text>
-					</Box>
-				</Pressable>
-				<Pressable
-					flex={1}
-					onPress={() =>
-						props.navigation.navigate('AddAppointmentScreen')
-					}>
-					<Box>
-						<Text p={2} fontSize={'md'} bold textAlign={'center'}>
-							Add Appointment
-						</Text>
-					</Box>
-				</Pressable>
+			<HStack>
+				<VStack flex={1}>
+					<Pressable
+						onPress={() =>
+							props.navigation.navigate('TimeOffScreen')
+						}>
+						<Box bgColor={'#E8BD70'} m={2} borderRadius={20}>
+							<Text
+								p={2}
+								fontSize={'md'}
+								textAlign={'center'}
+								color={'#000'}
+								bold>
+								Time Off
+							</Text>
+						</Box>
+					</Pressable>
+				</VStack>
+				<VStack flex={1}>
+					<Pressable
+						onPress={() =>
+							props.navigation.navigate('AddAppointmentScreen')
+						}>
+						<Box bgColor={'#E8BD70'} m={2} borderRadius={20}>
+							<Text
+								p={2}
+								fontSize={'md'}
+								textAlign={'center'}
+								color={'#000'}
+								bold>
+								Add Appointment
+							</Text>
+						</Box>
+					</Pressable>
+				</VStack>
 			</HStack>
 			<CalendarStrip
 				scrollable

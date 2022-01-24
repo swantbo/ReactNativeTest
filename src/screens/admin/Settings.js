@@ -36,7 +36,7 @@ import {connect} from 'react-redux'
 import {useFormik} from 'formik'
 import * as Yup from 'yup'
 
-const LoginSchema = Yup.object().shape({
+const SettingsSchema = Yup.object().shape({
 	name: Yup.string().required('Required'),
 	phone: Yup.string()
 		.matches(/^[0-9]+$/, 'Must be only digits')
@@ -44,6 +44,7 @@ const LoginSchema = Yup.object().shape({
 		.max(10, 'Must be exactly 10 digits'),
 	bio: Yup.string().required('Required'),
 	mensPrice: Yup.string().required('Required'),
+	kidsPrice: Yup.string().required('Required'),
 	website: Yup.string().required('Required'),
 	instagram: Yup.string().required('Required'),
 	profilePhone: Yup.string().required('Required'),
@@ -67,11 +68,11 @@ function Settings(props) {
 
 	const {handleChange, handleBlur, handleSubmit, values, errors, touched} =
 		useFormik({
-			validationSchema: LoginSchema,
+			validationSchema: SettingsSchema,
 			initialValues: {
 				bio: `${barberProfile.bio}`,
 				mensPrice: `${barberProfile.price}`,
-				kidsPrice: `${barberProfile.kidsPrice}`,
+				kidsPrice: `${barberProfile.kidsHaircut}`,
 				website: `${barberProfile.website}`,
 				instagram: `${barberProfile.instagram}`,
 				profilePhone: `${barberProfile.phone}`,
@@ -241,12 +242,12 @@ function Settings(props) {
 						</Center>
 					</Pressable>
 				</Box>
-				<Box bgColor={'#121212'} borderRadius={20} mt={5} p={2} px={10}>
+				<Box bgColor={'#121212'} borderRadius={20} mt={5} p={2} px={5}>
 					<Heading fontSize={'xl'} mb={5} color={'#E8BD70'}>
 						Profile Info
 					</Heading>
 					<HStack alignItems={'center'}>
-						<Text pl={1} fontSize={'xl'}>
+						<Text pl={1} fontSize={'lg'}>
 							Bio
 						</Text>
 					</HStack>
@@ -264,7 +265,7 @@ function Settings(props) {
 						error={errors.bio}
 						touched={touched.bio}
 					/>
-					<Text pl={1} fontSize={'xl'}>
+					<Text pl={1} fontSize={'lg'}>
 						Men's Price
 					</Text>
 					{!!errors.mensPrice && touched.mensPrice && (
@@ -281,7 +282,24 @@ function Settings(props) {
 						error={errors.mensPrice}
 						touched={touched.mensPrice}
 					/>
-					<Text pl={1} fontSize={'xl'}>
+					<Text pl={1} fontSize={'lg'}>
+						Kid's Price
+					</Text>
+					{!!errors.kidsPrice && touched.kidsPrice && (
+						<Text style={{color: 'red'}}>{errors.kidsPrice}</Text>
+					)}
+					<Input
+						variant='underlined'
+						width={'100%'}
+						size={'lg'}
+						placeholder="Kid's Price"
+						defaultValue={values.kidsPrice}
+						onChangeText={handleChange('kidsPrice')}
+						onBlur={handleBlur('kidsPrice')}
+						error={errors.kidsPrice}
+						touched={touched.kidsPrice}
+					/>
+					<Text pl={1} fontSize={'lg'}>
 						Website
 					</Text>
 					{!!errors.website && touched.website && (
@@ -298,7 +316,7 @@ function Settings(props) {
 						error={errors.website}
 						touched={touched.website}
 					/>
-					<Text pl={1} fontSize={'xl'}>
+					<Text pl={1} fontSize={'lg'}>
 						Instagram
 					</Text>
 					{!!errors.instagram && touched.instagram && (
@@ -315,7 +333,7 @@ function Settings(props) {
 						error={errors.instagram}
 						touched={touched.instagram}
 					/>
-					<Text pl={1} fontSize={'xl'}>
+					<Text pl={1} fontSize={'lg'}>
 						Phone
 					</Text>
 					{!!errors.profilePhone && touched.profilePhone && (
@@ -335,11 +353,11 @@ function Settings(props) {
 						touched={touched.profilePhone}
 					/>
 				</Box>
-				<Box bgColor={'#121212'} borderRadius={20} mt={5} p={2} px={10}>
+				<Box bgColor={'#121212'} borderRadius={20} mt={5} p={2} px={5}>
 					<Heading fontSize={'xl'} mb={5} color={'#E8BD70'}>
 						Address & Location
 					</Heading>
-					<Text pl={1} fontSize={'xl'}>
+					<Text pl={1} fontSize={'lg'}>
 						Address
 					</Text>
 					{!!errors.address && touched.address && (
@@ -356,7 +374,7 @@ function Settings(props) {
 						error={errors.address}
 						touched={touched.address}
 					/>
-					<Text pl={1} fontSize={'xl'}>
+					<Text pl={1} fontSize={'lg'}>
 						Tuesday
 					</Text>
 					{!!errors.tuesday && touched.tuesday && (
@@ -373,7 +391,7 @@ function Settings(props) {
 						error={errors.tuesday}
 						touched={touched.tuesday}
 					/>
-					<Text pl={1} fontSize={'xl'}>
+					<Text pl={1} fontSize={'lg'}>
 						Wednesday
 					</Text>
 					{!!errors.wednesday && touched.wednesday && (
@@ -390,7 +408,7 @@ function Settings(props) {
 						error={errors.wednesday}
 						touched={touched.wednesday}
 					/>
-					<Text pl={1} fontSize={'xl'}>
+					<Text pl={1} fontSize={'lg'}>
 						Thursday
 					</Text>
 					{!!errors.thursday && touched.thursday && (
@@ -407,7 +425,7 @@ function Settings(props) {
 						error={errors.thursday}
 						touched={touched.thursday}
 					/>
-					<Text pl={1} fontSize={'xl'}>
+					<Text pl={1} fontSize={'lg'}>
 						Friday
 					</Text>
 					{!!errors.friday && touched.friday && (
@@ -424,7 +442,7 @@ function Settings(props) {
 						error={errors.friday}
 						touched={touched.friday}
 					/>
-					<Text pl={1} fontSize={'xl'}>
+					<Text pl={1} fontSize={'lg'}>
 						Saturday
 					</Text>
 					{!!errors.saturday && touched.saturday && (
@@ -448,13 +466,13 @@ function Settings(props) {
 					mt={5}
 					mb={5}
 					p={2}
-					px={10}>
+					px={5}>
 					<Heading fontSize={'xl'} mb={5} color={'#E8BD70'}>
 						Account Details
 					</Heading>
 					<HStack alignItems={'center'}>
 						<Icon name={'user'} color={'#fff'} size={16} />
-						<Text pl={1} fontSize={'xl'}>
+						<Text pl={1} fontSize={'lg'}>
 							Name
 						</Text>
 					</HStack>
@@ -474,7 +492,7 @@ function Settings(props) {
 					/>
 					<HStack alignItems={'center'}>
 						<Icon name={'phone'} color={'#fff'} size={16} />
-						<Text pl={1} fontSize={'xl'}>
+						<Text pl={1} fontSize={'lg'}>
 							Phone
 						</Text>
 					</HStack>

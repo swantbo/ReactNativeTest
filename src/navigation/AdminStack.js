@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-
+import {Button, Text} from 'native-base'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {
@@ -15,7 +15,7 @@ import PointsScreen from '../screens/admin/Points'
 import CalendarScreen from '../screens/admin/Calendar'
 import SearchScreen from '../screens/admin/Search'
 import SettingsScreen from '../screens/admin/Settings'
-import HomeScreen from '../screens/admin/Home'
+import HomeScreen from '../screens/client/Barber'
 import {Ionicons} from '@expo/vector-icons'
 import TimeOffScreen from '../screens/admin/Off'
 import OverviewScreen from '../screens/admin/OverView'
@@ -44,8 +44,7 @@ function AdminCalendarStackScreen({navigation}) {
 				name='AddAppointmentScreen'
 				options={{
 					title: 'Add Appointments',
-					...TransitionPresets.ModalTransition,
-					headerShown: false
+					...TransitionPresets.ModalTransition
 				}}
 				component={AddAppointmentScreen}
 			/>
@@ -53,8 +52,7 @@ function AdminCalendarStackScreen({navigation}) {
 				name='TimeOffScreen'
 				options={{
 					title: 'Time Off',
-					...TransitionPresets.ModalTransition,
-					headerShown: false
+					...TransitionPresets.ModalTransition
 				}}
 				component={TimeOffScreen}
 			/>
@@ -135,16 +133,29 @@ function AdminAboutStackScreen({navigation}) {
 				headerShadowVisible: false
 			}}>
 			<AdminAboutStack.Screen
+				name='EditProfile'
+				options={{
+					title: 'Settings',
+					headerTitleAlign: 'center',
+					headerRight: () => (
+						<Button
+							bgColor={'#E8BD70'}
+							m={1}
+							onPress={() => navigation.navigate('HomeScreen')}>
+							<Text color={'#000'} bold>
+								Preview
+							</Text>
+						</Button>
+					)
+				}}
+				component={SettingsScreen}
+			/>
+			<AdminAboutStack.Screen
 				name='HomeScreen'
 				options={{
 					headerShown: false
 				}}
 				component={HomeScreen}
-			/>
-			<AdminAboutStack.Screen
-				name='EditProfile'
-				options={{title: 'Settings', headerTitleAlign: 'center'}}
-				component={SettingsScreen}
 			/>
 		</AdminAboutStack.Navigator>
 	)
@@ -164,7 +175,6 @@ export class AdminStack extends Component {
 				screenOptions={{
 					tabBarStyle: {
 						backgroundColor: 'rgb(18, 18, 18)',
-						//backgroundColor: 'transparent',
 						position: 'relative',
 						borderTopColor: '#E8BD70',
 						bottom: 0,

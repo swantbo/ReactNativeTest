@@ -2,12 +2,10 @@ import moment from 'moment'
 import React, {useEffect, useState, useContext} from 'react'
 import {
 	SafeAreaView,
-	ScrollView,
 	ActivityIndicator,
 	Alert,
 	TouchableOpacity,
-	RefreshControl,
-	KeyboardAvoidingView
+	RefreshControl
 } from 'react-native'
 import CalendarStrip from 'react-native-calendar-strip'
 import {ListItem} from 'react-native-elements'
@@ -29,7 +27,8 @@ import {
 	FlatList,
 	Box,
 	Text,
-	Spacer
+	KeyboardAvoidingView,
+	ScrollView
 } from 'native-base'
 
 import createStyles from '../../styles/base'
@@ -222,178 +221,211 @@ function Appointment(props) {
 	}, [props])
 
 	return (
-		<View flex={1} bgColor={'#000'}>
-			<VStack bgColor={'#000'}>
-				<HStack bgColor={'#121212'} p={1}>
-					<VStack flex={2} alignItems={'flex-start'}>
-						<Heading size={'sm'}>
-							{selectedDate
-								? moment(selectedDate).format(
-										'ddd, MMM Do YYYY'
-								  ) + ' '
-								: 'Select Date & '}
-							{selectedTime ? '@ ' + selectedTime : 'Select Time'}
-						</Heading>
-						<Text fontSize='md'>
-							{haircutType === 'mens'
-								? "Men's Haircut "
-								: "Kid's Haircut "}
-						</Text>
-						<Button
-							bgColor={'#E8BD70'}
-							onPress={() =>
-								discount === false && userData?.points != 0
-									? setDiscount(true)
-									: setDiscount(false)
-							}>
-							<Text fontSize='md' color={'#000'} bold>
-								Goat Points: {userData?.points}
-							</Text>
-						</Button>
-					</VStack>
-					<VStack flex={1} alignItems={'flex-end'}>
-						<Heading size={'sm'}>
-							{haircutType === 'mens'
-								? barberInfo?.price
-								: barberInfo?.kidsHaircut}
-						</Heading>
-						<Text fontSize='md'>
-							{discount != false
-								? '-$' + insertDecimal(userData?.points)
-								: ' '}
-						</Text>
-						<Button
-							bgColor={'#E8BD70'}
-							size={'sm'}
-							onPress={() =>
-								scheduleAppointment(selectedDate, selectedTime)
-							}>
-							<Text fontSize='md' color={'#000'} bold>
-								Book{' '}
-								{discount != false
-									? '$' +
-									  subtractDiscount(
-											haircutType,
-											haircutType === 'kids'
-												? barberInfo?.kidsHaircut
-												: barberInfo?.price,
-											userData?.points
-									  )
-									: haircutType === 'mens'
-									? barberInfo?.price
-									: barberInfo?.kidsHaircut}
-							</Text>
-						</Button>
-					</VStack>
-				</HStack>
-				<CalendarStrip
-					scrollable
-					style={{
-						height: 100,
-						padding: 5
-					}}
-					calendarHeaderStyle={{color: '#E8BD70', fontSize: '18'}}
-					calendarColor={'#000'}
-					dateNumberStyle={{color: 'white'}}
-					dateNameStyle={{color: 'white'}}
-					iconContainer={{flex: 0.1}}
-					highlightDateNameStyle={{color: 'white'}}
-					highlightDateNumberStyle={{
-						fontWeight: 'bold',
-						color: 'white'
-					}}
-					highlightDateContainerStyle={styles.socialIcons}
-					startingDate={moment()}
-					minDate={moment()}
-					maxDate={moment().add(30, 'days')}
-					selectedDate={selectedDate}
-					onDateSelected={onDateSelected}
-					datesBlacklist={calendarDatesRemoved}
-				/>
-				{!isLoading && newTimes.length !== 0 ? (
-					<FlatList
-						horizontal
-						data={newTimes}
-						renderItem={({item}) => (
+		<>
+			<VStack flex={1} bgColor={'#000'}>
+				<ScrollView>
+					<CalendarStrip
+						scrollable
+						style={{
+							height: 100,
+							padding: 5
+						}}
+						calendarHeaderStyle={{
+							color: '#E8BD70',
+							fontSize: '18'
+						}}
+						calendarColor={'#000'}
+						dateNumberStyle={{color: 'white'}}
+						dateNameStyle={{color: 'white'}}
+						iconContainer={{flex: 0.1}}
+						highlightDateNameStyle={{color: 'white'}}
+						highlightDateNumberStyle={{
+							fontWeight: 'bold',
+							color: 'white'
+						}}
+						highlightDateContainerStyle={styles.socialIcons}
+						startingDate={moment()}
+						minDate={moment()}
+						maxDate={moment().add(30, 'days')}
+						selectedDate={selectedDate}
+						onDateSelected={onDateSelected}
+						datesBlacklist={calendarDatesRemoved}
+					/>
+					{!isLoading && newTimes.length !== 0 ? (
+						<FlatList
+							horizontal
+							data={newTimes}
+							renderItem={({item}) => (
+								<Box
+									bgColor={'#E8BD70'}
+									borderRadius={'10'}
+									m={'5'}>
+									<Text
+										onPress={() => selectedTimeChange(item)}
+										color={'#000'}
+										fontSize={'md'}
+										p={'1'}
+										bold>
+										{item}
+									</Text>
+								</Box>
+							)}
+							keyExtractor={(item) => item}
+						/>
+					) : isLoading ? (
+						<Center>
+							<Box
+								bgColor={'#E8BD70'}
+								borderRadius={'10'}
+								p={'1'}>
+								<ActivityIndicator color='#fff' size='large' />
+							</Box>
+						</Center>
+					) : (
+						newTimes.length == 0 && (
 							<Box
 								bgColor={'#E8BD70'}
 								borderRadius={'10'}
 								m={'5'}>
 								<Text
-									onPress={() => selectedTimeChange(item)}
 									color={'#000'}
 									fontSize={'md'}
 									p={'1'}
 									bold>
-									{item}
+									No Appointments Available
 								</Text>
 							</Box>
-						)}
-						keyExtractor={(item) => item}
-					/>
-				) : isLoading ? (
-					<Center>
-						<Box bgColor={'#E8BD70'} borderRadius={'10'} p={'1'}>
-							<ActivityIndicator color='#fff' size='large' />
-						</Box>
-					</Center>
-				) : (
-					newTimes.length == 0 && (
-						<Box bgColor={'#E8BD70'} borderRadius={'10'} m={'5'}>
-							<Text color={'#000'} fontSize={'md'} p={'1'} bold>
-								No Appointments Available
+						)
+					)}
+					<Box
+						m={'2'}
+						p={'3'}
+						borderRadius={'20'}
+						bgColor={'#121212'}>
+						<Heading size={'sm'} color={'#E8BD70'}>
+							Appoinment Type
+						</Heading>
+						<ListItem.CheckBox
+							containerStyle={styles.checkBox}
+							textStyle={{color: '#fff'}}
+							title="Men's Haircut"
+							checked={haircutType === 'mens' ? true : false}
+							onPress={() => setHaircutType('mens')}
+						/>
+						<ListItem.CheckBox
+							containerStyle={styles.checkBox}
+							textStyle={styles.text}
+							title="Kid's Haircut"
+							checked={haircutType === 'kids' ? true : false}
+							onPress={() => setHaircutType('kids')}
+						/>
+					</Box>
+					<Box
+						m={'2'}
+						p={'3'}
+						borderRadius={'20'}
+						bgColor={'#121212'}>
+						<Heading pb={'2'} size={'sm'} color={'#E8BD70'}>
+							For a Friend?
+						</Heading>
+						<Input
+							placeholder="Friend's Name (Optional)"
+							borderColor={'#fff'}
+							placeholderTextColor={'#fff'}
+							size={'md'}
+							p={'3'}
+							value={friend}
+							onChangeText={(text) => setFriend(text)}
+						/>
+						<Heading
+							pb={'2'}
+							pt={'2'}
+							size={'sm'}
+							color={'#E8BD70'}>
+							Comment?
+						</Heading>
+						<Input
+							placeholder='Comment (Optional)'
+							borderColor={'#fff'}
+							placeholderTextColor={'#fff'}
+							size={'md'}
+							p={'3'}
+							value={comment}
+							onChangeText={(text) => onChangeComment(text)}
+						/>
+					</Box>
+				</ScrollView>
+				<VStack justifyContent={'flex-end'} flex={1}>
+					<HStack bgColor={'#121212'} p={1}>
+						<VStack flex={2} alignItems={'flex-start'}>
+							<Heading size={'sm'}>
+								{selectedDate
+									? moment(selectedDate).format(
+											'ddd, MMM Do YYYY'
+									  ) + ' '
+									: 'Select Date & '}
+								{selectedTime
+									? '@ ' + selectedTime
+									: 'Select Time'}
+							</Heading>
+							<Text fontSize='md'>
+								{haircutType === 'mens'
+									? "Men's Haircut "
+									: "Kid's Haircut "}
 							</Text>
-						</Box>
-					)
-				)}
-				<Box m={'2'} p={'3'} borderRadius={'20'} bgColor={'#121212'}>
-					<Heading size={'sm'} color={'#E8BD70'}>
-						Appoinment Type
-					</Heading>
-					<ListItem.CheckBox
-						containerStyle={styles.checkBox}
-						textStyle={{color: '#fff'}}
-						title="Men's Haircut"
-						checked={haircutType === 'mens' ? true : false}
-						onPress={() => setHaircutType('mens')}
-					/>
-					<ListItem.CheckBox
-						containerStyle={styles.checkBox}
-						textStyle={styles.text}
-						title="Kid's Haircut"
-						checked={haircutType === 'kids' ? true : false}
-						onPress={() => setHaircutType('kids')}
-					/>
-				</Box>
-
-				<Box m={'2'} p={'3'} borderRadius={'20'} bgColor={'#121212'}>
-					<Heading pb={'2'} size={'sm'} color={'#E8BD70'}>
-						For a Friend?
-					</Heading>
-					<Input
-						placeholder="Friend's Name (Optional)"
-						borderColor={'#fff'}
-						placeholderTextColor={'#fff'}
-						size={'md'}
-						p={'3'}
-						value={friend}
-						onChangeText={(text) => setFriend(text)}
-					/>
-					<Heading pb={'2'} pt={'2'} size={'sm'} color={'#E8BD70'}>
-						Comment?
-					</Heading>
-					<Input
-						placeholder='Comment (Optional)'
-						borderColor={'#fff'}
-						placeholderTextColor={'#fff'}
-						size={'md'}
-						p={'3'}
-						value={comment}
-						onChangeText={(text) => onChangeComment(text)}
-					/>
-				</Box>
+							<Button
+								bgColor={'#E8BD70'}
+								onPress={() =>
+									discount === false && userData?.points != 0
+										? setDiscount(true)
+										: setDiscount(false)
+								}>
+								<Text fontSize='md' color={'#000'} bold>
+									Goat Points: {userData?.points}
+								</Text>
+							</Button>
+						</VStack>
+						<VStack flex={1} alignItems={'flex-end'}>
+							<Heading size={'sm'}>
+								{haircutType === 'mens'
+									? barberInfo?.price
+									: barberInfo?.kidsHaircut}
+							</Heading>
+							<Text fontSize='md'>
+								{discount != false
+									? '-$' + insertDecimal(userData?.points)
+									: ' '}
+							</Text>
+							<Button
+								bgColor={'#E8BD70'}
+								size={'sm'}
+								onPress={() =>
+									scheduleAppointment(
+										selectedDate,
+										selectedTime
+									)
+								}>
+								<Text fontSize='md' color={'#000'} bold>
+									Book{' '}
+									{discount != false
+										? '$' +
+										  subtractDiscount(
+												haircutType,
+												haircutType === 'kids'
+													? barberInfo?.kidsHaircut
+													: barberInfo?.price,
+												userData?.points
+										  )
+										: haircutType === 'mens'
+										? barberInfo?.price
+										: barberInfo?.kidsHaircut}
+								</Text>
+							</Button>
+						</VStack>
+					</HStack>
+				</VStack>
 			</VStack>
-		</View>
+		</>
 	)
 }
 

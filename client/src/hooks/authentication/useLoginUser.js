@@ -3,7 +3,7 @@ import axios from 'axios'
 // import {getToken} from '../../utils/helpers'
 
 export default async function useLoginUser() {
-	const url = 'https://441e-75-86-218-83.ngrok.io/users/authenticate'
+	const url = 'https://0e81-75-86-218-83.ngrok.io/users/authenticate'
 	const data = {
 		username: 'jason',
 		password: 'my-super-secret-password'
@@ -18,4 +18,3 @@ export default async function useLoginUser() {
 			console.log('error', error)
 		})
 }
-

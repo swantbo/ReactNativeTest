@@ -8,6 +8,7 @@ import AuthStack from './AuthStack'
 import HomeStack from './HomeStack'
 import AdminStack from './AdminStack'
 
+import axios from 'axios'
 import * as firebase from 'firebase'
 const auth = Firebase.auth()
 
@@ -17,37 +18,27 @@ export default function RootNavigator() {
 	const [isLoading, setIsLoading] = useState(true)
 
 	useEffect(() => {
-		const unsubscribeAuth = auth.onAuthStateChanged(
-			async (authenticatedUser) => {
-				try {
-					await (authenticatedUser
-						? setUser(authenticatedUser)
-						: setUser(null))
-					{
-						authenticatedUser
-							? await firebase
-									.firestore()
-									.collection('users')
-									.doc(authenticatedUser.uid)
-									.get()
-									.then((doc) => {
-										doc.data()?.admin === true
-											? setAdmin(true)
-											: setAdmin(false)
-									})
-							: setAdmin(false)
-					}
-					setIsLoading(false)
-				} catch (error) {
-					Alert.alert(
-						'Error',
-						`Unable to Logout, try again. ${error}`
-					)
-				}
+		const token =
+			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsImlhdCI6MTY0NDQ1MDE5MiwiZXhwIjoxNjQ1MDU0OTkyfQ.-kljIsOQaVcdHeOpDqSVWcrmf7fOPzndGfnOOWxShLY'
+		const url = 'https://0e81-75-86-218-83.ngrok.io/users/current'
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
 			}
-		)
-
-		return unsubscribeAuth
+		}
+		axios
+			.get(url, config)
+			.then((response) => {
+				const results = response.data
+				console.log('navigationResults', results)
+				setUser(results)
+				user?.role === 'admin' ? setAdmin(true) : setAdmin(false)
+				setIsLoading(false)
+			})
+			.catch((error) => {
+				console.log('error1', error)
+				setIsLoading(false)
+			})
 	}, [])
 
 	if (isLoading) {
@@ -62,7 +53,7 @@ export default function RootNavigator() {
 			</View>
 		)
 	}
-	//setAdmin(true)
+
 	return (
 		<NavigationContainer>
 			{user && admin !== true ? (

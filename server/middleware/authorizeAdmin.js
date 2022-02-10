@@ -1,10 +1,10 @@
 const jwt = require('express-jwt')
 const {secret} = require('config.json')
-const db = require('_helpers/db')
+const db = require('helpers/db')
 
-module.exports = authorize
+module.exports = authorizeAdmin
 
-function authorize() {
+function authorizeAdmin() {
 	return [
 		// authenticate JWT token and attach decoded token to request as req.user
 		jwt({secret, algorithms: ['HS256']}),
@@ -17,9 +17,11 @@ function authorize() {
 			// check user still exists
 			if (!user) return res.status(401).json({message: 'Unauthorized'})
 
-			// authorization successful
-			req.user = user.get()
-			next()
+			if (user.role === 'admin') {
+				// authorization successful
+				req.user = user.get()
+				next()
+			}
 		}
 	]
 }

@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const Joi = require('joi')
-const validateRequest = require('_middleware/validate-request')
-const authorizeAdmin = require('_middleware/authorizeAdmin')
+const validateRequest = require('middleware/validate-request')
+const authorizeAdmin = require('middleware/authorizeAdmin')
 const adminService = require('./admin.service')
 
 // routes

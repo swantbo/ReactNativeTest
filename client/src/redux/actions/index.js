@@ -5,6 +5,7 @@ import {
 	CLEAR_DATA
 } from '../constants'
 
+import axios from 'axios'
 import Firebase from '../../config/firebase'
 
 const auth = Firebase.auth()
@@ -26,19 +27,28 @@ export function reload() {
 
 export function fetchUser() {
 	return async (dispatch) => {
-		await Firebase.firestore()
-			.collection('users')
-			.doc(auth.currentUser.uid)
-			.get()
-			.then((doc) => {
-				if (doc.exists) {
+		const token =
+			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsImlhdCI6MTY0NDQ1MDE5MiwiZXhwIjoxNjQ1MDU0OTkyfQ.-kljIsOQaVcdHeOpDqSVWcrmf7fOPzndGfnOOWxShLY'
+		const url = 'https://0e81-75-86-218-83.ngrok.io/users/current'
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		}
+		await axios
+			.get(url, config)
+			.then((response) => {
+				const results = response.data
+				if (results) {
+					console.log('results2', results)
 					dispatch({
 						type: USER_STATE_CHANGE,
-						currentUser: doc.data()
+						currentUser: results
 					})
-				} else {
-					console.log('does not exist')
 				}
+			})
+			.catch((error) => {
+				console.log('error', error)
 			})
 	}
 }

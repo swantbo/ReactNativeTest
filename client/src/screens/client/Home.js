@@ -183,6 +183,7 @@ function Home(props) {
 	useEffect(() => {
 		const {currentUser, barber, appointments} = props
 		setTestUser(currentUser)
+		console.log('currentUser', currentUser)
 		setTestBarber(barber)
 		formatAppointments(appointments),
 			(async () => {

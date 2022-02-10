@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { NativeBaseProvider, extendTheme } from 'native-base';
+import {NativeBaseProvider, extendTheme} from 'native-base'
 
 import {AuthenticatedUserProvider} from './AuthenticatedUserProvider'
 import RootNavigator from './RootNavigator'
@@ -13,18 +13,18 @@ const store = createStore(rootReducer, applyMiddleware(thunk))
 
 export default function Routes() {
 	const theme = extendTheme({
-    colors: {
-      // Add new color
-      primary: {
-        50: '#fff',
-        100: '#E8BD70',
-        200: '#121212',
-      },
-    },
-    config: { 
-      initialColorMode: 'dark',
-    },
-  });
+		colors: {
+			// Add new color
+			primary: {
+				50: '#fff',
+				100: '#E8BD70',
+				200: '#121212'
+			}
+		},
+		config: {
+			initialColorMode: 'dark'
+		}
+	})
 	return (
 		<NativeBaseProvider theme={theme}>
 			<Provider store={store}>

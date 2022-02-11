@@ -19,5 +19,5 @@ function model(sequelize) {
 		website: {type: DataTypes.STRING, allowNull: false}
 	}
 
-	return sequelize.define('Admin', attributes, options)
+	return sequelize.define('Barber', attributes, options)
 }

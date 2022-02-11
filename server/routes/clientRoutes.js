@@ -4,35 +4,35 @@ const authorize = require('middleware/authorize')
 const ClientController = require('../controllers/ClientController')
 
 // CREATE User
-//router.post('/register', ClientController.registerSchema, ClientController.register)
+router.post('/create-user', ClientController.registerSchema, ClientController.createUser)
 
 // POST Login/Authenticate User
 router.post('/authenticate', ClientController.authenticateSchema, ClientController.authenticate)
 
 // POST Forgot Password
-// router.post('/forgot-password', ClientController.forgotPassword)
+router.post('/forgot-password', ClientController.forgotPassword)
 
 // POST Logout User
-// router.post('/logout', ClientController.logoutUser)
+router.post('/logout', ClientController.logout)
 
 // DELETE User
-// router.delete('/:id', authorize(), ClientController.deleteUser)
+router.delete('/:id', authorize(), ClientController.deleteUser)
 
 // UPDATE User Data
-// router.put('/:id', authorize(), ClientController.updateUser)
+router.put('/:id', authorize(), ClientController.updateUser)
 
 
 // GET User Appointments
-// router.get('/appointments', authorize(), ClientController.getUserAppointments)
+router.get('/appointments', authorize(), ClientController.getUserAppointments)
 
 // CREATE User Appointments
-// router.post('/appointments', authorize(), ClientController.createUserAppointments)
+router.post('/appointments', authorize(), ClientController.createUserAppointments)
 
 // DELETE User Appointments
-// router.delete('/appointments', authorize(), ClientController.deleteUserAppointments)
+router.delete('/appointments', authorize(), ClientController.deleteUserAppointments)
 
 
 // GET Barber Information
-// router.get('/barber', authorize(), ClientController.getBarber)
+router.get('/barber', authorize(), ClientController.getBarber)
 
 module.exports = router

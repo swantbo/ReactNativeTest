@@ -4,36 +4,35 @@ const authorize = require('middleware/authorize')
 const AdminController = require('../controllers/AdminController')
 
 // GET Barber Information
-// router.get('/barber', authorize(), AdminController.getBarberData)
+router.get('/barber', authorize(), AdminController.getBarberData)
 
 // POST Update BarberInfo
 // router.post('/barber', authorize(), AdminController.updateBarberData)
 
 // DELETE Update BarberInfo
-// router.delete('/barber', authorize(), AdminController.deleteBarberData)
+router.delete('/barber', authorize(), AdminController.deleteBarberData)
 
 // GET All Users
-//router.post('/users', authorize(), AdminController.updateUser)
+router.post('/users', authorize(), AdminController.getUsers)
 
 // POST Update Users
-//router.post('/users', authorize(), AdminController.updateUser)
+router.post('/users', authorize(), AdminController.updateUsers)
 
 // DELETE Users
-//router.post('/users', authorize(), AdminController.deleteUser)
+router.post('/users', authorize(), AdminController.deleteUsers)
 
 
 
 // GET Appointments
-// router.get('/appointments', authorize(), AdminController.getAppointments)
+router.get('/appointments', authorize(), AdminController.getAppointments)
 
 // CREATE Appointments
-// router.post('/appointments', authorize(), AdminController.createAppointments)
+router.post('/appointments', authorize(), AdminController.createAppointments)
 
 // PUT Update Appointments
-// router.put('/appointments', authorize(), AdminController.updateAppointments)
+router.put('/appointments', authorize(), AdminController.updateAppointments)
 
 // DELETE Appointments
-// router.delete('/appointments', authorize(), AdminController.deleteAppointments)
-
+router.delete('/appointments', authorize(), AdminController.deleteAppointments)
 
 module.exports = router
